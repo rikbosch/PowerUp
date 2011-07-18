@@ -1,4 +1,3 @@
-
 ## Integration with CI tools
 
 PowerUp has been very carefully constructed to play nicely with CI tools.
@@ -11,7 +10,7 @@ Essentially this boils down to ensuring standard output and error are written to
 PowerUp is influenced by a number of previous tools.
 In particular, many ideas are similar to the Nant based build system created by BBC Worldwide.
 
-The areas where this has manifested are:
+The areas where this has manifested are:  
 1. The method of substituting settings from a plain text settings file into templated files.
 2. The use of psexec to execute remote scripts, and the use of "cms.js" (originally described here http://forum.sysinternals.com/psexec-the-pipe-has-been-ended_topic10825.html) to control standard output.
 
