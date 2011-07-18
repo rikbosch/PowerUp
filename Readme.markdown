@@ -12,7 +12,7 @@ In particular, many ideas are similar to the Nant based build system created by 
 
 The areas where this has manifested are:  
 1. The method of substituting settings from a plain text settings file into templated files.  
-2. The use of psexec to execute remote scripts, and the use of "cms.js" (originally described here http://forum.sysinternals.com/psexec-the-pipe-has-been-ended_topic10825.html) to control standard output.  
+2. The use of psexec to execute remote scripts, and the use of "cmd.js" (originally described here http://forum.sysinternals.com/psexec-the-pipe-has-been-ended_topic10825.html) to control standard output.  
 
 Hopefully it is clear these are fair use adoptions of ideas, not re-purposing of intellectual property.  
 
