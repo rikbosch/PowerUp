@@ -2,8 +2,7 @@
 
 
 
-
-What about AppHarbour?
+## What about AppHarbour?
 
 Without a doubt, AppHarbour is a great tool for deploying simple cloud hosted websites.
 By design, AppHarbour has decided to be very simple. PowerUp gives far more control.
