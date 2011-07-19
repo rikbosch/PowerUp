@@ -1,3 +1,23 @@
+# Overview
+
+PowerUp is a build and deploy framework, written on top of Powershell and Psake.
+
+PowerUp works by building environment neutral packages of your software.
+In contrast to other types of packages, these packages are just simple zip files. Within this package are the files from your solution, plus a Powershell script describing what to do with these files.  
+
+As this script is Powershell, there is virtually no limit to what can be done. The capabilities bundled with PowerUp include:  
+1. Creating websites, app pools, virtual directories  
+2. Copying files quickly and robustly with robocopy  
+3. Deploying with Umbraco Courier  
+
+For most deployments, only 4 things need to be created:  
+
+1. A Nant script, describing how to build and what files are to be contained in the package.
+2. A plain text file with a list of configuration settings per environment
+3. A set of templates (typically web.config etc) with placeholders for the defined settings
+4. A Powershell file, to be executed on the destination machine
+
+
 ## Why use psexec when there is PowerShell Remoting?
 
 Psexec was used for two reasons. One is that it is very simple and reliable. Secondly, because powershell remoting had issues in our environment that proved difficult to overcome.  
