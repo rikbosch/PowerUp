@@ -92,7 +92,14 @@ PowerUp is influenced by a number of previous tools, including proprietary ones.
 In particular, many ideas are similar to the Nant based build system used by BBC Worldwide.
 
 The areas where this influence shows are in particular:  
-1. The method of substituting values from a plain text settings file into template files.  
+1. The idea of substituting values from a plain text settings file into template files.  
 2. The use of psexec to execute remote scripts, and the use of "cmd.js" (originally described here http://forum.sysinternals.com/psexec-the-pipe-has-been-ended_topic10825.html) to control standard output.  
 
 The intention is that these are fair-use adoptions of ideas.
+
+## Alternatives
+
+Bounce: https://github.com/refractalize/bounce. 
+
+The main difference is that Bounce is C# based. We decided on Powershell for its unparalleled breath of support for Windows, flexibility and to provide a very low barrier for entry. Bounce has other strengths - more maturity, clearer semantics and testability. There is future potential for the use of Bounce with PowerUp. 
+
