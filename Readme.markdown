@@ -44,7 +44,7 @@ So for most deployments, only 4 things need to be created:
 
 Yes. By default the Nant helper scripts assume a single .Net solution file. But this can easily be replaced with any set of build steps.
 
-## Why Nant, and not MSBuild/PowerShell?
+## Why Nant for building packages (and not MSBuild/PowerShell etc)?
 
 Nant is designed to build .Net solutions, and does so very well. It is exceptionally expressive when it comes to file copying, which creates a nice declarative syntax with which to construct packages. It is not so strong for performing deployments, due to its inexpressiveness as a general purpose scripting language. That is why both Nant and Powershell are used.
 
