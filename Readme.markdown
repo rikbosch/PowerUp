@@ -1,16 +1,29 @@
 # Overview
 
+## Basics
+
 PowerUp is a build and deploy framework, written on top of Powershell and Psake.
 
-PowerUp works by building environment neutral packages of your software.
-In contrast to other types of packages, these packages are just simple zip files. Within this package are the files from your solution, plus a Powershell script describing what to do with these files.  
+The philosophy of PowerUp is built on top the concept of deployment through "unremarkable" zipped packages of files. Rooted in the xcopy deployment mindset, it simply adds the plumbing required to make one package deployable in a number of different environments.
+
+## Packages
+
+In contrast to other types of deployment packages (msi's installshield etc), these packages are just simple zip files. Within these packages are the files from your solution, supporting PowerUp files (mostly PowerShell script files, cmdlets, and some 3rd party tools), and a Psake Powershell script describing what to do during the deploy.  
+
+## Settings
+
+Although packages are environment neutral, they also contain a settings file. This files lays out in plain text a set of key/value pairs describing the configuration of each environment. Not only are these settings available within the Powershell script, they can also be used to substitute into any plain text file.
+
+## Deployment scripts
 
 As this script is Powershell, there is virtually no limit to what can be done. The capabilities bundled with PowerUp include:  
 1. Creating websites, app pools, virtual directories  
 2. Copying files quickly and robustly with robocopy  
 3. Deploying with Umbraco Courier  
 
-For most deployments, only 4 things need to be created:  
+## Integration Steps Required
+
+So for most deployments, only 4 things need to be created:  
 
 1. A Nant script, describing how to build and what files are to be contained in the package.
 2. A plain text file with a list of configuration settings per environment
