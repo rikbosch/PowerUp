@@ -7,9 +7,9 @@ Contributions that incorporate powershell remoting would be welcome.
 ## Integration with CI tools
 
 PowerUp has been very carefully constructed to play nicely with CI tools.  
-Powershell, psexec and robocopy pose unique challenges in this area, which we have (hopefully!) overcome.
+Powershell, psexec and robocopy pose unique challenges in this area, which we have been overcome.
 
-Essentially this boils down to ensuring standard output and error are written to correctly, and that return codes are appropriate.
+Essentially these challenges amount to ensuring standard output and error are written to correctly, and that return codes are appropriate.
 
 ## Disclaimer of Influences
 
