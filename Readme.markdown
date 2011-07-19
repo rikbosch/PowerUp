@@ -38,7 +38,7 @@ So for most deployments, only 4 things need to be created:
 4. A Powershell file, to be executed on the destination machine
 
 
-# FAQa
+# FAQs
 
 ## Could I use PowerUp for projects not written in .Net??
 
