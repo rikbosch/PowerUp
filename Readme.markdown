@@ -12,7 +12,7 @@ In contrast to other types of deployment packages (msi's installshield etc), the
 
 ## Settings
 
-Although packages are environment neutral, they also contain a settings file. This files lays out in plain text a set of key/value pairs describing the configuration of each environment. Not only are these settings available within your Psake script, they can also be used to substitute into any plain text file you choose.
+Although packages are environment neutral, they also contain a settings file. This files lays out in plain text a set of key/value pairs describing the configuration of each environment. Not only are these settings available within your scripts, they can also be used to substitute into any plain text file you choose.
 
 ## Deployment scripts
 
@@ -101,5 +101,5 @@ The intention is that these are fair-use adoptions of ideas.
 
 Bounce: https://github.com/refractalize/bounce. 
 
-The main difference is that Bounce is C# based. We decided on Powershell for its unparalleled breath of support for Windows, flexibility and to provide a very low barrier for entry. Bounce has other strengths - more maturity, clearer semantics and testability. There is future potential for the use of Bounce with PowerUp. 
+The main difference is that Bounce is C# based. We decided on Powershell for its unparalleled breath of support in Windows, flexibility across languages, and to provide a very low barrier for entry. Bounce has other strengths - more maturity, clearer semantics and testability. There is future potential for the use of Bounce with PowerUp. 
 
