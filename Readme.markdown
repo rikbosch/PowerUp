@@ -27,10 +27,13 @@ The intention is that these are fair-use adoptions of ideas.
 Without a doubt, AppHarbour is a great tool for deploying simple cloud hosted websites.
 By design, AppHarbour has decided to be very simple. PowerUp gives far more control.
 
-In particular:
-- You can deploy more than websites
-- You can substitute virtually anything, not just app settings
-- You can run arbitrary powershell scripts, not be limited to a simple git-pull scenario
+Particular difference include:  
+- You can deploy more than websites (services, desktop applications)   
+- You can deploy code in any language (as long as it runs on Windows)    
+- You can substitute virtually anything, not just app settings  
+- You can run arbitrary powershell scripts
+- Deployments can be made from more than a single git repo    
 
-Horses for courses.
+This is very much a case of horses for courses.
+
 In theory, there is potential to allow PowerUp to enhance AppHarbour deployments. This has not been explored in detail at this stage.
