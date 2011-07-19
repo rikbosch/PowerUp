@@ -8,11 +8,11 @@ The philosophy of PowerUp is built on top the concept of deployment through "unr
 
 ## Packages
 
-In contrast to other types of deployment packages (msi's installshield etc), these packages are just simple zip files. Within these packages are the files from your solution, supporting PowerUp files (mostly PowerShell script files, cmdlets, and some 3rd party tools), and a Psake Powershell script describing what to do during the deploy.  
+In contrast to other types of deployment packages (msi's installshield etc), these packages are just simple zip files. Within these packages are the files from your solution, supporting PowerUp files (mostly PowerShell script files, cmdlets, and some 3rd party tools), and a Psake Powershell script you write, describing what must happen during the deploy.  
 
 ## Settings
 
-Although packages are environment neutral, they also contain a settings file. This files lays out in plain text a set of key/value pairs describing the configuration of each environment. Not only are these settings available within the Powershell script, they can also be used to substitute into any plain text file.
+Although packages are environment neutral, they also contain a settings file. This files lays out in plain text a set of key/value pairs describing the configuration of each environment. Not only are these settings available within your Psake script, they can also be used to substitute into any plain text file you choose.
 
 ## Deployment scripts
 
@@ -21,7 +21,14 @@ As this script is Powershell, there is virtually no limit to what can be done. T
 2. Copying files quickly and robustly with robocopy  
 3. Deploying with Umbraco Courier  
 
-## Integration Steps Required
+But of course, this is just the beginning. As PowerShell is the first class scripting environment in Windows, you are free to use any script, cmdlet or plain executable you choose. 
+
+In the near future, we expect to add support for:
+1. Database activities, such as backing up/restoring  
+2. Administration of scheduled tasks
+3. Installation of windows services
+
+## How to Integrate Into a Project
 
 So for most deployments, only 4 things need to be created:  
 
