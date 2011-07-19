@@ -30,7 +30,7 @@ By design, AppHarbour has decided to be very simple. PowerUp gives far more cont
 Particular difference include:  
 - You can deploy more than websites (services, desktop applications)   
 - You can deploy code in any language (as long as it runs on Windows)    
-- You can substitute virtually anything, not just app settings  
+- You can substitute any value within any text file, not just app settings  
 - You can run arbitrary powershell scripts
 - Deployments can be made from more than a single git repo    
 
