@@ -13,14 +13,14 @@ Essentially these challenges amount to ensuring standard output and error are wr
 
 ## Disclaimer of Influences
 
-PowerUp is influenced by a number of previous tools.
-In particular, many ideas are similar to the Nant based build system created by BBC Worldwide.
+PowerUp is influenced by a number of previous tools, including proprietary ones.
+In particular, many ideas are similar to the Nant based build system used by BBC Worldwide.
 
-The areas where this has manifested are:  
-1. The method of substituting settings from a plain text settings file into templated files.  
+The areas where this influence shows are in particular:  
+1. The method of substituting values from a plain text settings file into template files.  
 2. The use of psexec to execute remote scripts, and the use of "cmd.js" (originally described here http://forum.sysinternals.com/psexec-the-pipe-has-been-ended_topic10825.html) to control standard output.  
 
-It should be clear these are fair-use adoptions of ideas, not the use of proprietary code.
+The intention is that these are fair-use adoptions of ideas.
 
 ## What about AppHarbour?
 
