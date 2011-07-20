@@ -23,10 +23,10 @@ As the deployment script is written in Powershell, there is virtually no limit t
 
 But of course, this is just the beginning. As PowerShell is the first class scripting environment in Windows, you are free to use any script, cmdlet or plain executable you choose. 
 
-In the near future, we expect to add support for:
+In the near future, we expect to add support for:  
 1. Database activities, such as backing up/restoring  
-2. Administration of scheduled tasks
-3. Installation of windows services
+2. Administration of scheduled tasks  
+3. Installation of windows services  
 
 ## How to Integrate Into a Project
 
