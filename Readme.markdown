@@ -39,7 +39,7 @@ For most deployments, only 4 things need to be created:
 
 # FAQs
 
-## Could I use PowerUp for projects not written in .Net??
+## Could I use PowerUp for projects not written in .Net?
 
 Yes. By default the helper Nant script assumes a single .Net solution file. But this can easily be replaced with any set of build steps.
 
