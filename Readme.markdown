@@ -30,12 +30,12 @@ In the near future, we expect to add support for:
 
 ## How to Integrate Into a Project
 
-So for most deployments, only 4 things need to be created:  
+For most deployments, only 4 things need to be created:  
 
-1. A Nant script, describing how to build and what files are to be contained in the package.
-2. A plain text file with a list of configuration settings per environment
-3. A set of templates (typically web.configs) with placeholders for the defined settings
-4. A Powershell file, to be executed on the destination machine
+1. A Nant script, describing how to build and what files are to be contained in the package.  
+2. A plain text file with a list of configuration settings per environment  
+3. A set of templates (typically web.configs) with placeholders for the defined settings  
+4. A Powershell file, to be executed on the destination machine  
 
 # FAQs
 
