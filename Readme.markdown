@@ -55,6 +55,12 @@ Psexec was used for two reasons. One is that it is very simple and reliable. Sec
 
 Contributions that incorporate powershell remoting would be welcome.
 
+## What Permissions are Required?
+
+Due to the nature of most deployments, the permissions of the executing account have to be fairly elevated. Local admin would be required for most deployments. At the very least, you need to be local admin on the destination server for psexec to work.
+
+Obviously, if any scripts attempt to manipulate (for example) Active Directory, then domain admin rights may be required.
+
 ## Integration with CI tools
 
 PowerUp has been very carefully constructed to play nicely with CI tools.  
@@ -64,7 +70,7 @@ Essentially these challenges amount to ensuring standard output and error are wr
 
 ## What about Azure?
 
-I'm no expert. But as long as you can copy zip files and can run Powershell, any Windows environment should work.
+I'm no expert. But as long as you can copy zip files and can run Powershell, any Windows environment should be supported.
 
 ## What about AppHarbour?
 
