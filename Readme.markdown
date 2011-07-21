@@ -61,7 +61,7 @@ Having said that, it would be possible to adapt PowerUp to most configuration su
 
 ## Why use psexec when there is PowerShell Remoting?
 
-Psexec was used for two reasons. One is that it is very simple and reliable. Secondly, because powershell remoting had issues in our environment that proved difficult to overcome.  
+Psexec is used for two reasons. One is that it is very simple and reliable. Secondly, we experienced (fairly typical) issues setting up Powershell Remoting in our environment.  
 
 Contributions that incorporate powershell remoting would be welcome.
 
