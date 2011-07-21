@@ -21,7 +21,7 @@ As the deployment script is written in Powershell, there is virtually no limit t
 2. Copying files quickly and robustly with robocopy  
 3. Deploying with Umbraco Courier  
 
-But of course, this is just the beginning. As PowerShell is the first class scripting environment in Windows, you are free to use any script, cmdlet or plain executable you choose. 
+But of course, this is just the beginning. As PowerShell is the first class scripting environment in Windows, you are free to use any script, cmdlet or plain executable you choose.   
 
 In the near future, we expect to add support for:  
 1. Database activities, such as backing up/restoring  
@@ -51,7 +51,7 @@ Despite this, any other tool could be used to construct the packages (as long as
 
 ## Why Not Use Web Deployment Projects/Configuration Transformations?
 
-Couple of reasons:
+There are couple of reasons for this decision:
 1. You need to build for each environment  
 2. You can only use if for xml config files  
 3. You can only easily use it for web.config  
