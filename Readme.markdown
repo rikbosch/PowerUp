@@ -49,6 +49,16 @@ Nant is designed to build .Net solutions, and does so very well. It is exception
 
 Despite this, any other tool could be used to construct the packages (as long as they end up with the same structure). In fact, packages can even be created by hand, if so inclined.
 
+## Why Not Use Web Deployment Projects/Configuration Transformations?
+
+Couple of reasons:
+1. You need to build for each environment
+2. You can only use if for xml config files
+3. You can only easily use it for web.config
+4. It hides the settings within an xml transform, which prevents the centralisation of settings into a single, easy to read, file
+
+Having said that, it would be possible to adapt PowerUp to most configuration substitution schemes. The only restriction is that one package must contain everything required for all environments, without rebuilding.
+
 ## Why use psexec when there is PowerShell Remoting?
 
 Psexec was used for two reasons. One is that it is very simple and reliable. Secondly, because powershell remoting had issues in our environment that proved difficult to overcome.  
