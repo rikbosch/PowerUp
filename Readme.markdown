@@ -73,7 +73,7 @@ Obviously, if any scripts attempt to manipulate (for example) Active Directory, 
 
 ## Integration with CI tools
 
-PowerUp has been very carefully constructed to play nicely with CI tools.  
+PowerUp has been very carefully constructed to play nicely with CI tools. Our CI tool of choice is currently Bamboo, but TeamCity etc should function well.    
 Powershell, psexec and robocopy pose unique challenges in this area, which we have been overcome.
 
 Essentially these challenges amount to ensuring standard output and error are written to correctly, and that return codes are appropriate.
