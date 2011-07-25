@@ -87,10 +87,12 @@ Essentially these challenges amount to ensuring standard output and error are wr
 
 ## Who Can I Extend PowerUp?
 
-We expect extensions will mainly come from new cmdlets. There are a few ways this can be done:
-1. Write new cmdlets, and make a pull request to contribute back to PowerUP. It would be ideal for PowerUp to start being a repository of the very best deployment related cmdlets. These cmdlets will be almost always be useable by anyone, even if not throw the PowerUp framework.
-2. Use cmdlets you find elsewhere, imported only in your own psake deploy file.
-3. Write your own proprietary cmdlets, which never have to leave your organisation.
+We expect extension will mainly come from new cmdlets. There are a few ways this can be done:
+1. Write new cmdlets, and make a pull request to contribute back to PowerUP. It would be ideal for PowerUp to start being a repository of the very best deployment related cmdlets. These cmdlets will be almost always be useable by anyone, even if not throw the PowerUp framework.  
+2. Use cmdlets you find elsewhere, imported only in your own psake deploy file.  
+3. Write your own proprietary cmdlets, which never have to leave your organisation.  
+
+The core PowerUp framework should not need to change as much as the deployment cmdlets.
 
 ## What about Azure?
 
