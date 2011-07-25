@@ -85,6 +85,13 @@ Powershell, psexec and robocopy pose unique challenges in this area, which we ha
 
 Essentially these challenges amount to ensuring standard output and error are written to correctly, and that return codes are appropriate.
 
+## Who Can I Extend PowerUp?
+
+We expect extensions will mainly come from new cmdlets. There are a few ways this can be done:
+1. Write new cmdlets, and make a pull request to contribute back to PowerUP. It would be ideal for PowerUp to start being a repository of the very best deployment related cmdlets. These cmdlets will be almost always be useable by anyone, even if not throw the PowerUp framework.
+2. Use cmdlets you find elsewhere, imported only in your own psake deploy file.
+3. Write your own proprietary cmdlets, which never have to leave your organisation.
+
 ## What about Azure?
 
 I'm no expert. But as long as you can copy zip files and can run Powershell, any Windows environment should be supported.
