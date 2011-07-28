@@ -86,7 +86,7 @@ Powershell, psexec and robocopy pose unique challenges in this area, which we ha
 
 Essentially these challenges amount to ensuring standard output and error are written to correctly, and that return codes are appropriate.
 
-## Who Can I Extend PowerUp?
+## How Can I Extend PowerUp?
 
 We expect extension will mainly come from new cmdlets. There are a few ways this can be done:  
 1. Write new cmdlets, and make a pull request to contribute back to PowerUp. It would be ideal for PowerUp to start being a repository of the very best deployment related cmdlets. These cmdlets will be almost always be useable by anyone, even if not throw the PowerUp framework.  
