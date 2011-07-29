@@ -3,13 +3,12 @@ param([string]$deploymentEnvironment)
 function CopyPackage($settings)
 {	
 
-	. $currentPath\_powerup\common_deploy_functions.ps1
 	$remoteReleaseWorkingFolder = $settings['remote.temp.working.folder']	
 	$packageName = $settings['package.name']		
 	$fullDestinationFolder = $remoteReleaseWorkingFolder + '\' + $packageName
 			
 	echo "Copying deployment package to $fullDestinationFolder"
-	RobocopyMirrorDirectory $currentPath $fullDestinationFolder
+	Copy-MirroredDirectory $currentPath $fullDestinationFolder
 }
 
 function RunRemoteRelease($settings)
@@ -32,8 +31,10 @@ try {
 	echo "DeploymentEnvironment: $deploymentEnvironment"	
 	echo "SettingsFile: $currentPath\settings.txt"	
 	
-	$env:PSModulePath = $env:PSModulePath + ";$currentPath\_powerup\PowershellExtensions\"	
+	$env:PSModulePath = $env:PSModulePath + ";$currentPath\_powerup\PowershellExtensions\;$currentPath\_powerup\modules\"	
+	echo $env:PSModulePath
 	import-module AffinityId\Id.PowershellExtensions.dll
+	import-module .\_powerup\modules\common_deploy.psm1
 		
 	$settings = get-parsedsettings $currentPath\settings.txt $deploymentEnvironment 	
 		

@@ -44,8 +44,9 @@ try {
 	echo "Deploying package onto environment $deploymentEnvironment"	
 	echo "Deployment being run under account $env:username"
 	echo "Importing basic modules required by PowerUp"
-	$env:PSModulePath = $env:PSModulePath + ";$currentPath\_powerup\PowershellExtensions\"		
-	import-module .\_powerup\psake.psm1
+	$env:PSModulePath = $env:PSModulePath + ";$currentPath\_powerup\PowershellExtensions\"
+	import-module .\_powerup\modules\psake.psm1
+	import-module .\_powerup\modules\common_deploy.psm1
 	import-module AffinityId\Id.PowershellExtensions.dll
 
 	echo "Copying files specific to this environment to necessary folders within the package"
