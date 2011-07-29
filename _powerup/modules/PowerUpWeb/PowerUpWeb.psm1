@@ -60,8 +60,6 @@ function DeleteWebsite($websiteName)
 	}
 }
 
-
-
 function SetAppPoolProperties($appPoolName, $pipelineMode, $runtimeVersion)
 {
 	$appPool = Get-Item $appPoolsPath\$appPoolName
@@ -78,19 +76,6 @@ function SetAppPoolManagedPipelineMode($appPool, $pipelineMode)
 function SetAppPoolManagedRuntimeVersion($appPool, $runtimeVersion)
 {
 	$appPool.managedRuntimeVersion = $runtimeVersion
-}
-
-function RecreateAppPool($appPoolName, $pipelineMode, $runtimeVersion)
-{
-	DeleteAppPool $appPoolName
-	CreateAppPool $appPoolName
-	SetAppPoolProperties $appPoolName $pipelineMode $runtimeVersion
-}
-
-function RecreateWebsite($websiteName, $appPoolName, $fullPath, $protocol, $ip, $port, $hostHeader)
-{
-	DeleteWebsite $websiteName
-	CreateWebsite $websiteName $appPoolName $fullPath $protocol $ip $port $hostHeader
 }
 
 function CreateWebsite($websiteName, $appPoolName, $fullPath, $protocol, $ip, $port, $hostHeader)
@@ -162,11 +147,6 @@ function CreateSslBinding($certificate, $ip, $port)
 	set-location $existingPath
 }
 
-function AddBinding($websiteName, $protocol, $ip, $port, $hostHeader)
-{
-	echo "add binding for $websiteName, $protocol, $ip, $port, $hostHeader"
-	New-WebBinding -Name $websiteName -IP $ip -Port $port -Protocol $protocol -HostHeader $hostHeader
-}
 
 function StopWebItem($itemPath, $itemName)
 {
@@ -199,13 +179,6 @@ function StartWebItem($itemPath, $itemName)
 function WebItemExists($rootPath, $itemName)
 {
 	return ((dir $rootPath | ForEach-Object {$_.Name}) -contains $itemName)	
-}
-
-function MigrateDatabase([string]$connectionString, [string]$migrationsAssemblyPath)
-{	
-	echo "connectionString: $connectionString"
-	echo "migrationsAssemblyPath: $migrationsAssemblyPath"
-	push-databasemigrations -ConnectionString $connectionString -MigrationsAssemblyPath $migrationsAssemblyPath -Provider SqlServer2005  -DryRun $true -To -1
 }
 
 
@@ -256,3 +229,23 @@ if ($LoadAsSnapin)
         $ModuleLoaded = $true
     }
 }
+
+function Set-WebAppPool($appPoolName, $pipelineMode, $runtimeVersion)
+{
+	DeleteAppPool $appPoolName
+	CreateAppPool $appPoolName
+	SetAppPoolProperties $appPoolName $pipelineMode $runtimeVersion
+}
+
+function Set-WebSite($websiteName, $appPoolName, $fullPath, $hostHeader, $protocol="http", $ip="*", $port="80")
+{
+	DeleteWebsite $websiteName
+	CreateWebsite $websiteName $appPoolName $fullPath $protocol $ip $port $hostHeader
+}
+
+function New-WebSiteBinding($websiteName, $hostHeader, $protocol="http", $ip="*", $port="80")
+{
+	New-WebBinding -Name $websiteName -IP $ip -Port $port -Protocol $protocol -HostHeader $hostHeader
+}
+
+export-modulemember -function set-website,set-webapppool,New-WebSiteBinding
