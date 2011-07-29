@@ -32,7 +32,6 @@ try {
 	echo "SettingsFile: $currentPath\settings.txt"	
 	
 	$env:PSModulePath = $env:PSModulePath + ";$currentPath\_powerup\modules\"	
-	echo $env:PSModulePath
 	import-module AffinityId\Id.PowershellExtensions.dll
 	import-module PowerUpFileSystem
 		
