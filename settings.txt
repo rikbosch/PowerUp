@@ -5,3 +5,4 @@ Local
 	deployment.server		\\localhost
 	remote.temp.working.folder	c:\temp
 	local.temp.working.folder	c:\temp
+	deployment.root				c:\sites

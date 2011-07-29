@@ -1,6 +1,15 @@
-task default -depends Deploy
-task Deploy 
-{
+properties{
+	$packageFolder = Get-Location
+}
+
+
+task default -depends importmodules, deployfiles
+
+task importmodules {
+	Import-Module PowerUpFileSystem
 	Import-Module PowerUpWeb
-	Write-Host "deploying"
+}
+
+task deployfiles {
+	copy-mirroreddirectory $packageFolder\${package.name} ${deployment.root}\${package.name} 
 }
