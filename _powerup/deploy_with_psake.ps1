@@ -62,10 +62,10 @@ try {
 		
 	if (!$onlyFinalisePackage)
 	{
-		echo "Checking that this deployment is being run on the correct server"
+		echo "Checking that this deployment is being run on the correct server ($settings['deployment.server'])"
 		CheckForCorrectDeploymentServer $settings['deployment.server']
 		
-		echo "Calling package deployment script"
+		echo "Calling psake package deployment script"
 		$psake.use_exit_on_error = $true
 		invoke-psake $deployFile –parameters $settings
 	}
