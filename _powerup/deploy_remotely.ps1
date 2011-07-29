@@ -5,8 +5,8 @@ function CopyPackage($settings)
 
 	. $currentPath\_powerup\common_deploy_functions.ps1
 	$remoteReleaseWorkingFolder = $settings['remote.temp.working.folder']	
-	$projectName = $settings['project.name']		
-	$fullDestinationFolder = $remoteReleaseWorkingFolder + '\' + $projectName
+	$packageName = $settings['package.name']		
+	$fullDestinationFolder = $remoteReleaseWorkingFolder + '\' + $packageName
 			
 	echo "Copying deployment package to $fullDestinationFolder"
 	RobocopyMirrorDirectory $currentPath $fullDestinationFolder
@@ -16,9 +16,9 @@ function RunRemoteRelease($settings)
 {
 	$localReleaseWorkingFolder = $settings['local.temp.working.folder']
 	$deployServer = $settings['deployment.server']
-	$projectName = $settings['project.name']
+	$packageName = $settings['package.name']
 	
-	$fullLocalReleaseWorkingFolder = $localReleaseWorkingFolder + '\' + $projectName
+	$fullLocalReleaseWorkingFolder = $localReleaseWorkingFolder + '\' + $packageName
 	$batchFile = $fullLocalReleaseWorkingFolder + '\' + 'deploy.bat'
 	
 	echo "Executing package deployment on remote server $deployServer"
@@ -32,16 +32,7 @@ try {
 	echo "DeploymentEnvironment: $deploymentEnvironment"	
 	echo "SettingsFile: $currentPath\settings.txt"	
 	
-	$env:PSModulePath = $env:PSModulePath + ";$currentPath\_powerup\_PowershellExtensions\"
-	
-	if ($psversiontable.clrversion.major -lt 4)
-	{
-		Copy-Item $currentPath\_powerup\powershell.exe.config -destination C:\Windows\System32\WindowsPowerShell\v1.0 -force 
-		
-		#upgrading 
-		throw "Powershell CLR runtime version detected as not being .Net 4. This has been upgraded, but cannot take effect immediately. Please rerun deployment."
-	}
-	
+	$env:PSModulePath = $env:PSModulePath + ";$currentPath\_powerup\PowershellExtensions\"	
 	import-module AffinityId\Id.PowershellExtensions.dll
 		
 	$settings = get-parsedsettings $currentPath\settings.txt $deploymentEnvironment 	
@@ -50,8 +41,8 @@ try {
 	RunRemoteRelease($settings)
 }
 finally {
-try{
+	try{
 		remove-module Id.PowershellExtensions
-		}
-		catch{}
+	}
+	catch{}
 }

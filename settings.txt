@@ -1,0 +1,7 @@
+default
+	package.name			SimpleWebsite
+
+Local
+	deployment.server		\\localhost
+	remote.temp.working.folder	c:\temp
+	local.temp.working.folder	c:\temp

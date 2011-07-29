@@ -1,66 +1,79 @@
-# Helper script for those who want to run
-# psake without importing the module.
-param([string]$depoyFile = ".\deploy.ps1", [string]$deploymentEnvironment, [bool]$onlyFinalisePackage=$false)
-# use the following for mandatory settings: 
-# [string]$depoyFile = $(throw "-depoyFile is required.")
-try {
-	$ErrorActionPreference='Stop'
+param([string]$deployFile = ".\deploy.ps1", [string]$deploymentEnvironment, [bool]$onlyFinalisePackage=$false)
+
+function OverlayEnvironmentSpecificFiles($deploymentEnvironment)
+{
 	$currentPath = Get-Location
-
-	Write-Host "Deploy File: $depoyFile"
-	Write-Host "Deployment Environment: $deploymentEnvironment"
-	Write-Host "Settings File: $currentPath\settings.txt"
-	Write-Host "Templates Directory: $currentPath\_templates"
-	Write-Host "Environments Directory: $currentPath\_environments"
-	
-	$env:PSModulePath = $env:PSModulePath + ";$currentPath\_powerup\_PowershellExtensions\"
-		
-	import-module .\_powerup\psake.psm1
-	import-module Pscx
-	import-module AffinityId\Id.PowershellExtensions.dll
-	import-module .\_powerup\LoadWebAdministration.psm1
-
-	$settings = get-parsedsettings $currentPath\settings.txt $deploymentEnvironment 
-	
-	echo "Settings are:"
-	$settings | Format-Table -property *
 
 	if ((Test-Path $currentPath\_environments\$deploymentEnvironment -PathType Container) -eq $true)
 	{
 		Copy-Item $currentPath\_environments\$deploymentEnvironment\* -destination $currentPath\ -recurse -force   
 	}	
+}
+
+function OverlayTemplatedFiles($settings, $deploymentEnvironment)
+{
+	$currentPath = Get-Location
+	
+	if ((Test-Path $currentPath\_templates\ -PathType Container) -eq $false)
+	{
+		return
+	}
 
 	copy-substitutedsettingfiles -templatesDirectory $currentPath\_templates -targetDirectory $currentPath\_templatesoutput -deploymentEnvironment $deploymentEnvironment -settings $settings
 	
 	if ((Test-Path $currentPath\_templatesoutput\$deploymentEnvironment -PathType Container) -eq $true)
 	{
-	Copy-Item $currentPath\_templatesoutput\$deploymentEnvironment\* -destination $currentPath\ -recurse -force    
+		Copy-Item $currentPath\_templatesoutput\$deploymentEnvironment\* -destination $currentPath\ -recurse -force    
 	}
+}
+
+function CheckForCorrectDeploymentServer($expectedComputerName)
+{
+	$currentComputerName = gc env:computername
+	
+	if (!($expectedComputerName.ToLower().Contains("localhost")) -and !($expectedComputerName.ToLower().Contains($currentComputerName.ToLower())))
+	{
+		throw "Deployment halted, as it is being run against incorrect deployment server"
+	}
+}
+
+try {
+	$ErrorActionPreference='Stop'
+	$currentPath = Get-Location
+
+	echo "Deploying package onto environment $deploymentEnvironment"	
+	echo "Deployment being run under account $env:username"
+	echo "Importing basic modules required by PowerUp"
+	$env:PSModulePath = $env:PSModulePath + ";$currentPath\_powerup\PowershellExtensions\"		
+	import-module .\_powerup\psake.psm1
+	import-module AffinityId\Id.PowershellExtensions.dll
+
+	echo "Copying files specific to this environment to necessary folders within the package"
+	OverlayEnvironmentSpecificFiles $deploymentEnvironment
+
+	echo "Reading settings"		
+	$settings = get-parsedsettings $currentPath\settings.txt $deploymentEnvironment 
+	
+	echo "Package settings for this environment are:"
+	$settings | Format-Table -property *
+	
+	echo "Substituting and copying templated files"	
+	OverlayTemplatedFiles $settings $deploymentEnvironment
 		
 	if (!$onlyFinalisePackage)
 	{
-		$currentComputerName = gc env:computername
-		$expectedComputerName = $settings['deployment.server']
+		echo "Checking that this deployment is being run on the correct server"
+		CheckForCorrectDeploymentServer $settings['deployment.server']
 		
-		echo "Expected computer is $expectedComputerName"
-		echo "Current computer is $currentComputerName"
-								
-		if (!($expectedComputerName.ToLower().Contains("localhost")) -and !($expectedComputerName.ToLower().Contains($currentComputerName.ToLower())))
-		{
-			throw "Release halted, as being run against incorrect deployment server"
-		}
-	
+		echo "Calling package deployment script"
 		$psake.use_exit_on_error = $true
-		invoke-psake $depoyFile –parameters $settings
+		invoke-psake $deployFile –parameters $settings
 	}
-	
 }
 finally {
 try{
 		remove-module psake
-		remove-module pscx
 		remove-module Id.PowershellExtensions
-		remove-module WebAdministration
 		}
-		catch{}
+catch{}
 }

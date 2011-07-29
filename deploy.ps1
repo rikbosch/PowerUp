@@ -1,4 +1,5 @@
 task default -depends Deploy
 task Deploy 
-	Write-Host 
+{
+	Write-Host "deploying"
 }
