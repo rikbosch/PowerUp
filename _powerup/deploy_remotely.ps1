@@ -31,10 +31,10 @@ try {
 	echo "DeploymentEnvironment: $deploymentEnvironment"	
 	echo "SettingsFile: $currentPath\settings.txt"	
 	
-	$env:PSModulePath = $env:PSModulePath + ";$currentPath\_powerup\PowershellExtensions\;$currentPath\_powerup\modules\"	
+	$env:PSModulePath = $env:PSModulePath + ";$currentPath\_powerup\modules\"	
 	echo $env:PSModulePath
 	import-module AffinityId\Id.PowershellExtensions.dll
-	import-module .\_powerup\modules\common_deploy.psm1
+	import-module PowerUpFileSystem
 		
 	$settings = get-parsedsettings $currentPath\settings.txt $deploymentEnvironment 	
 		
@@ -44,6 +44,7 @@ try {
 finally {
 	try{
 		remove-module Id.PowershellExtensions
+		remove-module PowerUpFileSystem
 	}
 	catch{}
 }
