@@ -19,6 +19,7 @@ This includes file deployment, website creation with SSL, and Umbraco Courier.
 - The directory SimpleWebsite is an example website to deploy.
 - The files build_package.bat and build_package_deploy_local.bat are simply convenience batch files.
 - The files settings.txt, main.build and deploy.ps1 are the required files that are unique per package.
+- The directory _templates, used to create templated versions of any files that require values substituted into them (see below for more details)
 
 # Overview
 
