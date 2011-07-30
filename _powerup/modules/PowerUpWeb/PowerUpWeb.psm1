@@ -114,23 +114,6 @@ function GetSslCertificate($certName)
 	Get-ChildItem cert:\LocalMachine\MY | Where-Object {$_.Subject -match "${certName}"} | Select-Object -First 1
 }
 
-function EnsureSslBinding($certName, $ip, $port)
-{
-	echo "fetching cert"
-	$certificate = GetSslCertificate $certName
-	
-	if (!$certificate) {throw "Certificate for site $certName not in current store"}
-
-	if($ip -eq "*") {$ip = "0.0.0.0"}
-	
-	if(!(SslBindingExists $ip $port))
-	{
-		echo "creating new binding"
-		CreateSslBinding $certificate $ip $port
-	}
-	
-	echo "ssl binding complete"
-}
 
 function SslBindingExists($ip, $port)
 {
@@ -243,9 +226,38 @@ function Set-WebSite($websiteName, $appPoolName, $fullPath, $hostHeader, $protoc
 	CreateWebsite $websiteName $appPoolName $fullPath $protocol $ip $port $hostHeader
 }
 
+function Set-SelfSignedSslCertificate($certName)
+{	
+	if(!(GetSslCertificate $certName))
+	{
+		echo $PSScriptRoot
+		& "$PSScriptRoot\makecert.exe" -r -pe -n "CN=${certName}" -b 07/01/2008 -e 07/01/2020 -eku 1.3.6.1.5.5.7.3.1 -ss my -sr localMachine -sky exchange -sp "Microsoft RSA SChannel Cryptographic Provider" -sy 12
+	}
+}
+
+
 function New-WebSiteBinding($websiteName, $hostHeader, $protocol="http", $ip="*", $port="80")
 {
 	New-WebBinding -Name $websiteName -IP $ip -Port $port -Protocol $protocol -HostHeader $hostHeader
 }
 
-export-modulemember -function set-website,set-webapppool,New-WebSiteBinding
+function Set-SslBinding($certName, $ip, $port)
+{
+	echo "fetching cert"
+	$certificate = GetSslCertificate $certName
+	
+	if (!$certificate) {throw "Certificate for site $certName not in current store"}
+
+	if($ip -eq "*") {$ip = "0.0.0.0"}
+	
+	if(!(SslBindingExists $ip $port))
+	{
+		echo "creating new binding"
+		CreateSslBinding $certificate $ip $port
+	}
+	
+	echo "ssl binding complete"
+}
+
+
+export-modulemember -function set-website,set-webapppool,New-WebSiteBinding,Set-SelfSignedSslCertificate, set-sslbinding

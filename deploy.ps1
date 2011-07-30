@@ -8,7 +8,6 @@ task default -depends importmodules, deployfiles, createsite
 task importmodules {
 	Import-Module PowerUpFileSystem
 	Import-Module PowerUpWeb
-	Import-Module WebAdministration
 }
 
 task deployfiles {
@@ -19,4 +18,6 @@ task createsite {
 	set-webapppool "simplewebsite" "Integrated" "v4.0"
 	set-website "simplewebsite" "simplewebsite" ${deployment.root}\${package.name} "" "http" "*" 9000 	
 	new-websitebinding "simplewebsite" "www.sample.com"
+	set-selfsignedsslcertificate "simplewebsite"
+	set-sslbinding "simplewebsite" "123.123.123.123" 9000
 }
