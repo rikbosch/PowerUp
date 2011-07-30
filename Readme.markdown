@@ -9,14 +9,17 @@ This includes file deployment, website creation with SSL, and Umbraco Courier.
 
 - Git clone or download to any local directory  
 - Install the IIS Powershell snapin http://learn.iis.net/page.aspx/429/installing-the-iis-70-powershell-snap-in/  
-- Run build_package_deploy_local.bat to see a typical website build and deploy (to localhost)  
+- Run build_package_deploy_local.bat to see a two versions (a trunk and branch) of a typical website built and deployed to localhost.
+- Browse to localhost:9000 and localhost:10000 to see the trunk/branch http versions of the site
+- Browse to localhost:9001 and localhost:10001 to see the trunk/branch https versions of the site
 
 ## Source structure
 
 - All source in the _powerup directory is the core PowerUp framework that can be shared without modification across any number of packages. This can be done (for example) with an svn extern. Any changes to this directory should be treated as a fork.
 - The directory SimpleWebsite is an example website to deploy.
-- The files build_package.bat and build_package_deploy_local.bat are simply convenience batch files.
 - The files settings.txt, main.build and deploy.ps1 are the required files that are unique per package.
+- The directory _templates, used to create templated versions of any files that require values substituted into them (see below for more details)
+- The files build_package.bat and build_package_deploy_local.bat are simply convenience batch files.
 
 # Overview
 
