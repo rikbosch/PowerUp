@@ -3,8 +3,6 @@
 PowerUp is already been used internally by Affinity ID to release projects through to Live.
 This includes file deployment, website creation with SSL, and Umbraco Courier.
 
-The first version should be available here in early August 2011.
-
 # Overview
 
 ## Basics
