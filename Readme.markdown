@@ -17,9 +17,9 @@ This includes file deployment, website creation with SSL, and Umbraco Courier.
 
 - All source in the _powerup directory is the core PowerUp framework that can be shared without modification across any number of packages. This can be done (for example) with an svn extern. Any changes to this directory should be treated as a fork.
 - The directory SimpleWebsite is an example website to deploy.
-- The files build_package.bat and build_package_deploy_local.bat are simply convenience batch files.
 - The files settings.txt, main.build and deploy.ps1 are the required files that are unique per package.
 - The directory _templates, used to create templated versions of any files that require values substituted into them (see below for more details)
+- The files build_package.bat and build_package_deploy_local.bat are simply convenience batch files.
 
 # Overview
 
