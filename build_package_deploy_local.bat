@@ -1,3 +1,4 @@
 call build_package
-call _package\deploy Local
+cd _package
+call deploy Local
 pause

@@ -9,7 +9,10 @@
 	<echo message="${solution.dir}\SimpleWebsite"/>
     <copy todir="${package.dir}\SimpleWebsite" overwrite="true" flatten="false" includeemptydirs="true">
       <fileset basedir="${solution.dir}\SimpleWebsite">		
-		<include name="**"/>
+		<include name="**.aspx"/>
+		<include name="**.css"/>
+		<include name="**.js"/>
+		<include name="bin/**"/>
       </fileset>
     </copy>
   </target>
