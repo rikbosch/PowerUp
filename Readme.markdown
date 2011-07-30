@@ -3,6 +3,14 @@
 PowerUp is already been used internally by Affinity ID to release projects through to Live.
 This includes file deployment, website creation with SSL, and Umbraco Courier.
 
+# QuickStart
+
+(This quick start will work on any Windows installation with Powershell and IIS 7+ installed)
+
+- Git clone or download to any local directory 
+- Install the IIS Powershell snapin http://learn.iis.net/page.aspx/429/installing-the-iis-70-powershell-snap-in/
+- Run build_package_deploy_local.bat to see a typical website build and deploy (to localhost)
+
 # Overview
 
 ## Basics
