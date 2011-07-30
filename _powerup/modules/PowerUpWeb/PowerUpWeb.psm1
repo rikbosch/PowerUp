@@ -213,20 +213,20 @@ if ($LoadAsSnapin)
     }
 }
 
-function Set-WebAppPool($appPoolName, $pipelineMode, $runtimeVersion)
+function set-WebAppPool($appPoolName, $pipelineMode, $runtimeVersion)
 {
 	DeleteAppPool $appPoolName
 	CreateAppPool $appPoolName
 	SetAppPoolProperties $appPoolName $pipelineMode $runtimeVersion
 }
 
-function Set-WebSite($websiteName, $appPoolName, $fullPath, $hostHeader, $protocol="http", $ip="*", $port="80")
+function set-WebSite($websiteName, $appPoolName, $fullPath, $hostHeader, $protocol="http", $ip="*", $port="80")
 {
 	DeleteWebsite $websiteName
 	CreateWebsite $websiteName $appPoolName $fullPath $protocol $ip $port $hostHeader
 }
 
-function Set-SelfSignedSslCertificate($certName)
+function set-SelfSignedSslCertificate($certName)
 {	
 	if(!(GetSslCertificate $certName))
 	{
@@ -260,4 +260,4 @@ function Set-SslBinding($certName, $ip, $port)
 }
 
 
-export-modulemember -function set-website,set-webapppool,New-WebSiteBinding,Set-SelfSignedSslCertificate, set-sslbinding
+export-modulemember -function set-website,set-webapppool,New-WebSiteBinding,set-SelfSignedSslCertificate, set-sslbinding
