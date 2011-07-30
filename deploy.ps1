@@ -21,5 +21,4 @@ task recreatesite {
 	set-selfsignedsslcertificate "simplewebsite"
 	set-sslbinding "simplewebsite" "123.123.123.123" 9000
 	new-websitebinding "simplewebsite" "sample.com"  "https" "123.123.123.123" 9000
-
 }
