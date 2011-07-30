@@ -37,6 +37,7 @@ Although packages are environment neutral, they also contain a settings file. Th
 ## Deployment scripts
 
 As the deployment script is written in Powershell, there is virtually no limit to what can be done. The capabilities currently bundled within PowerUp include:  
+
 - Creating websites, app pools, virtual directories. Includes ssl administration.  
 - Copying files quickly and robustly with robocopy  
 - Deploying with Umbraco Courier  
@@ -44,6 +45,7 @@ As the deployment script is written in Powershell, there is virtually no limit t
 But of course, this is just the beginning. As PowerShell is the first class scripting environment in Windows, you are free to use any script, cmdlet or plain executable you choose.   
 
 In the near future, we expect to add support for:  
+
 - Database activities, such as backing up/restoring  
 - Administration of scheduled tasks  
 - Installation of windows services  
