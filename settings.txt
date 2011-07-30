@@ -1,8 +1,33 @@
 default
 	package.name			SimpleWebsite
+	root.folder				c:
+	website.name			${package.name}
 
 Local
-	deployment.server		\\localhost
-	remote.temp.working.folder	c:\temp
-	local.temp.working.folder	c:\temp
-	deployment.root				c:\sites
+	deployment.server			\\localhost
+	remote.temp.working.folder	${root.folder}\temp
+	local.temp.working.folder	${root.folder}\temp
+	deployment.root				${root.folder}\sites
+	environment.name			local
+	http.port					9000
+	https.port					9001
+
+LocalBranch
+	package.name				SimpleWebsiteBranch
+	deployment.server			\\localhost
+	remote.temp.working.folder	${root.folder}\temp
+	local.temp.working.folder	${root.folder}\temp
+	deployment.root				${root.folder}\sites
+	environment.name			localbranch
+	http.port					10000
+	https.port					10001
+
+Test
+	deployment.server			\\remoteservername
+	remote.temp.working.folder	${deployment.server}\c$\temp
+	local.temp.working.folder	${root.folder}\temp
+	deployment.root				${root.folder}\sites
+	environment.name			test
+	http.port					9000
+	https.port					9001
+

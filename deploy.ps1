@@ -11,14 +11,13 @@ task importmodules {
 }
 
 task deployfiles {
-	copy-mirroreddirectory $packageFolder\${package.name} ${deployment.root}\${package.name} 
+	copy-mirroreddirectory $packageFolder\SimpleWebsite ${deployment.root}\${package.name} 
 }
 
 task recreatesite {
-	set-webapppool "simplewebsite" "Integrated" "v4.0"
-	set-website "simplewebsite" "simplewebsite" ${deployment.root}\${package.name} "" "http" "*" 9000 	
-	new-websitebinding "simplewebsite" "www.sample.com"
-	set-selfsignedsslcertificate "simplewebsite"
-	set-sslbinding "simplewebsite" "123.123.123.123" 9000
-	new-websitebinding "simplewebsite" "sample.com"  "https" "123.123.123.123" 9000
+	set-webapppool ${website.name} "Integrated" "v4.0"
+	set-website ${website.name} ${website.name} ${deployment.root}\${package.name} "" "http" "*" ${http.port} 	
+	set-selfsignedsslcertificate ${website.name}
+	set-sslbinding ${website.name} "*" ${https.port} 
+	new-websitebinding ${website.name} ""  "https" "*" ${https.port} 
 }

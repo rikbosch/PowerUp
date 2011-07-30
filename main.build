@@ -12,6 +12,7 @@
 		<include name="**.aspx"/>
 		<include name="**.css"/>
 		<include name="**.js"/>
+		<include name="**.master"/>
 		<include name="bin/**"/>
       </fileset>
     </copy>
