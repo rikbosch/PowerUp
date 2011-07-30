@@ -37,25 +37,25 @@ Although packages are environment neutral, they also contain a settings file. Th
 ## Deployment scripts
 
 As the deployment script is written in Powershell, there is virtually no limit to what can be done. The capabilities currently bundled within PowerUp include:  
-1. Creating websites, app pools, virtual directories. Includes ssl administration.  
-2. Copying files quickly and robustly with robocopy  
-3. Deploying with Umbraco Courier  
+- Creating websites, app pools, virtual directories. Includes ssl administration.  
+- Copying files quickly and robustly with robocopy  
+- Deploying with Umbraco Courier  
 
 But of course, this is just the beginning. As PowerShell is the first class scripting environment in Windows, you are free to use any script, cmdlet or plain executable you choose.   
 
 In the near future, we expect to add support for:  
-1. Database activities, such as backing up/restoring  
-2. Administration of scheduled tasks  
-3. Installation of windows services  
+- Database activities, such as backing up/restoring  
+- Administration of scheduled tasks  
+- Installation of windows services  
 
 ## How to Integrate Into a Project
 
 For most deployments, only 4 things need to be created:  
 
-1. A Nant script, describing how to build and what files are to be contained in the package.  
-2. A plain text file with a list of configuration settings per environment  
-3. A set of templates (typically web.configs) with placeholders for the defined settings  
-4. A Powershell file, to be executed on the destination machine  
+- A Nant script, describing how to build and what files are to be contained in the package.  
+- A plain text file with a list of configuration settings per environment  
+- A set of templates (typically web.configs) with placeholders for the defined settings  
+- A Powershell file, to be executed on the destination machine  
 
 # FAQs
 
@@ -72,11 +72,11 @@ Despite this, any other tool could be used to construct the packages (as long as
 ## Why Not Use Web Deployment Projects/Configuration Transformations?
 
 There are couple of reasons behind this decision:  
-1. You need to build for each environment  
-2. You can only use if for xml config files  
-3. You can only easily use it for web.config  
-4. It hides the settings within an xml transform, which prevents the centralisation of settings into a single, easy to read, file  
-5. It is .Net only  
+- You need to build for each environment  
+- You can only use if for xml config files  
+- You can only easily use it for web.config  
+- It hides the settings within an xml transform, which prevents the centralisation of settings into a single, easy to read, file  
+- It is .Net only  
 
 Having said that, it would be possible to adapt PowerUp to most configuration substitution schemes. The only restriction is that one package must contain everything required for all environments, without rebuilding.
 
@@ -102,9 +102,9 @@ Essentially these challenges amount to ensuring standard output and error are wr
 ## How Can I Extend PowerUp?
 
 We expect extension will mainly come from new cmdlets. There are a few ways this can be done:  
-1. Write new cmdlets, and make a pull request to contribute back to PowerUp. It would be ideal for PowerUp to start being a repository of the very best deployment related cmdlets. These cmdlets will be almost always be useable by anyone, even if not throw the PowerUp framework.  
-2. Use cmdlets you find elsewhere, imported only in your own psake deploy file.  
-3. Write your own proprietary cmdlets, which never have to leave your organisation.  
+- Write new cmdlets, and make a pull request to contribute back to PowerUp. It would be ideal for PowerUp to start being a repository of the very best deployment related cmdlets. These cmdlets will be almost always be useable by anyone, even if not throw the PowerUp framework.  
+- Use cmdlets you find elsewhere, imported only in your own psake deploy file.  
+- Write your own proprietary cmdlets, which never have to leave your organisation.  
 
 The core PowerUp framework should not need to change as much as the deployment cmdlets.
 
@@ -137,8 +137,8 @@ PowerUp is influenced by a number of previous tools, including proprietary ones.
 In particular, many ideas are similar to the Nant based build system used by BBC Worldwide.
 
 The aspects where this influence shows are, in particular:  
-1. The idea of substituting values from a plain text settings file into template files.  
-2. The use of psexec to execute remote scripts, and the use of "cmd.js" (originally described here http://forum.sysinternals.com/psexec-the-pipe-has-been-ended_topic10825.html) to control standard output.  
+- The idea of substituting values from a plain text settings file into template files.  
+- The use of psexec to execute remote scripts, and the use of "cmd.js" (originally described here http://forum.sysinternals.com/psexec-the-pipe-has-been-ended_topic10825.html) to control standard output.  
 
 The intention is that these are fair-use adoptions of ideas.
 
