@@ -3,6 +3,23 @@
 PowerUp is already been used internally by Affinity ID to release projects through to Live.
 This includes file deployment, website creation with SSL, and Umbraco Courier.
 
+# QuickStart
+
+(This quick start will work on any Windows installation with Powershell and IIS 7+ installed)
+
+- Git clone or download to any local directory 
+- Install the IIS Powershell snapin http://learn.iis.net/page.aspx/429/installing-the-iis-70-powershell-snap-in/
+- Run build_package_deploy_local.bat to see a typical website build and deploy (to localhost)
+
+## Source structure
+
+All source in the _powerup directory is the core PowerUp framework that can be shared without modification across any number of projects. This can be done (for example) with an svn extern. Any changes to this directory should be treated as a fork.
+
+The directory SimpleWebsite is simply an example website you may wish to deploy.
+The files build_package.bat and build_package_deploy_local.bat are simply convenience batch files.
+
+The files settings.txt, main.build and deploy.ps1 are necessarily unique per project.
+
 # Overview
 
 ## Basics
