@@ -74,6 +74,7 @@ Despite this, any other tool could be used to construct the packages (as long as
 ## Why Not Use Web Deployment Projects/Configuration Transformations?
 
 There are couple of reasons behind this decision:  
+
 - You need to build for each environment  
 - You can only use if for xml config files  
 - You can only easily use it for web.config  
