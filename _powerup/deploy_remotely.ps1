@@ -4,6 +4,10 @@ function CopyPackage($settings)
 {	
 
 	$remoteReleaseWorkingFolder = $settings['remote.temp.working.folder']	
+	
+	if (!$remoteReleaseWorkingFolder)
+		{throw "The setting 'remote.temp.working.folder' is not set for this environment."}
+	
 	$packageName = $settings['package.name']		
 	$fullDestinationFolder = $remoteReleaseWorkingFolder + '\' + $packageName
 			
@@ -14,6 +18,10 @@ function CopyPackage($settings)
 function RunRemoteRelease($settings)
 {
 	$localReleaseWorkingFolder = $settings['local.temp.working.folder']
+	
+	if (!$localReleaseWorkingFolder)
+		{throw "The setting 'local.temp.working.folder' is not set for this environment."}
+	
 	$deployServer = $settings['deployment.server']
 	$packageName = $settings['package.name']
 	
