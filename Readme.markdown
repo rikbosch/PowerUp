@@ -10,14 +10,18 @@ This includes file deployment, website creation with SSL, and Umbraco Courier.
 - Git clone or download to any local directory  
 - Install the IIS Powershell snapin http://learn.iis.net/page.aspx/429/installing-the-iis-70-powershell-snap-in/  
 - Run build_package_deploy_local.bat to see a two versions (a trunk and branch) of a typical website built and deployed to localhost.
-- Browse to localhost:9000 and localhost:10000 to see the trunk/branch http versions of the site
-- Browse to localhost:9001 and localhost:10001 to see the trunk/branch https versions of the site
+- Browse to http://localhost:9000 and https://localhost:9001 to see the http/https version of trunk
+- Browse to http://localhost:10000 and https://localhost:10001 to see the http/https version of trunk
+
+# SlowStart
 
 ## Source structure
 
-- All source in the _powerup directory is the core PowerUp framework that can be shared without modification across any number of packages. This can be done (for example) with an svn extern. Any changes to this directory should be treated as a fork.
-- The directory SimpleWebsite is an example website to deploy.
-- The files settings.txt, main.build and deploy.ps1 are the required files that are unique per package.
+- The files in the _powerup directory is the core PowerUp framework that should be put in the root of the source tree your will be deploying. This can be done (for example) with an svn extern. Any changes to the _powerup folder should be treated as a fork or PowerUp. If you don't alter this directory, you should be able to upgrade powerup at any time.
+- The directory SimpleWebsite is the example website being deployed.
+- The file main.build is a Nant file the describes which files need to be added to the package. The nant file included within main.build (common.build) takes care of compiling your solution, adding the required PowerUp files, and zipping everything up.
+- The file deploy.ps1 (which is a psake file) describes what needs to be done to deploy your package to a server. This script can assume it is running on the destination server itself (so all paths are local etc)
+- The file settings.txt .
 - The directory _templates, used to create templated versions of any files that require values substituted into them (see below for more details)
 - The files build_package.bat and build_package_deploy_local.bat are simply convenience batch files.
 
