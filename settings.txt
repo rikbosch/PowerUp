@@ -1,7 +1,7 @@
 default
-	package.name			SimpleWebsite
+	package.name			Samples
 	root.folder				c:
-	website.name			${package.name}
+	website.name			SimpleWebsite
 
 Local
 	deployment.server			\\localhost
@@ -13,7 +13,7 @@ Local
 	https.port					9001
 
 LocalBranch
-	package.name				SimpleWebsiteBranch
+	website.name				SimpleWebsiteBranch
 	deployment.server			\\localhost
 	remote.temp.working.folder	${root.folder}\temp
 	local.temp.working.folder	${root.folder}\temp
