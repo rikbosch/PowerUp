@@ -69,14 +69,9 @@ function argsToArray()
     return result;
 }
 
-
-function maskPsExecPasswordParameter(psExecLogText) {
-
-    if (psExecLogText != null) {
-        var logWithMaskedPassword = psExecLogText.replace(/-p \S+ /, "-p ****** ");
-        return logWithMaskedPassword;
-    }
-    else return psExecLogText;
+function getWithMaskedPassword(text) {
+   if (text== null) { return ""; };
+   return text.replace(/-p \S+ /, "-p *********** ");
 }
 
 WScript.Echo("========== " + WScript.ScriptFullName + " ==========");
@@ -85,7 +80,7 @@ WScript.Echo("========== " + WScript.ScriptFullName + " ==========");
 var result = cmd(argsToArray().join(" "));
 
 //Show the run summary
-WScript.Echo("Ran command: " + maskPsExecPasswordParameter(result[0]));
+WScript.Echo("Ran command: " + getWithMaskedPassword(result[0]));
 WScript.Echo("Return code: " + result[1]);
 WScript.Echo("---------- PsExec ----------\n" + result[3]);
 WScript.Echo("---------- Command ---------\n" + result[2]);

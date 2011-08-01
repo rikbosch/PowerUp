@@ -4,7 +4,7 @@ default
 	website.name			SimpleWebsite
 
 Local
-	deployment.server			\\localhost
+	deployment.server			\\localhost  
 	remote.temp.working.folder	${root.folder}\temp
 	local.temp.working.folder	${root.folder}\temp
 	deployment.root				${root.folder}\sites
