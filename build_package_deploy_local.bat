@@ -1,5 +1,5 @@
-rem call build_package
-rem cd _package
-rem call deploy Local
-rem call deploy LocalBranch
-rem pause
+call build_package
+cd _package
+call deploy Local
+call deploy LocalBranch
+pause
