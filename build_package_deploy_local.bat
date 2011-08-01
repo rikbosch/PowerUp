@@ -1,5 +1,5 @@
 call build_package
 cd _package
-call deploy Local
-call deploy LocalBranch
+call deploy_remotely Local
+call deploy_remotely LocalBranch
 pause
