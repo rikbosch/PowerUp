@@ -1,7 +1,19 @@
 # Status
 
-PowerUp is already been used internally by Affinity ID to release projects through to Live.
-This includes file deployment, website creation with SSL, and Umbraco Courier.
+PowerUp is already been used internally by Affinity ID to release projects through to Live.  
+This includes file deployment, website creation (with SSL), and Umbraco Courier.  
+
+PowerUp is still under active development. The core framework will soon be extended to handle:  
+
+- Deploying to more than one destination server, possibly through capistrano/pseabee syntax  
+- MSBuild as an alternative to Nant for building packages  
+- Powershell remoting as an alternative to psexec
+- Git/svn pulls of packages for unattended deployments
+
+In addition to the core framework, deployment modules are being created all the time. Coming up are:  
+
+- Database admin, such as backing up/restoring and migrations   
+- Administration of scheduled tasks, windows services  
 
 # QuickStart
 
@@ -41,13 +53,6 @@ As the deployment script is written in Powershell, there is essentially no limit
 - Deploying with Umbraco Courier  
 
 But, of course, this is just the beginning. As PowerShell is the first class scripting environment in Windows, you are free to use any script, cmdlet or plain executable you choose.  
-
-In the near future, we expect to specifically add support for:  
-
-- Database activities, such as backing up/restoring and migrations   
-- Administration of scheduled tasks  
-- Installation of windows services  
-- Deploying to more than one destination server
 
 ## How to Integrate Into a Project
 
