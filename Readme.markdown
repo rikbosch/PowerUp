@@ -13,17 +13,6 @@ This includes file deployment, website creation with SSL, and Umbraco Courier.
 - Browse to http://localhost:9000 and https://localhost:9001 to see the http/https version of trunk
 - Browse to http://localhost:10000 and https://localhost:10001 to see the http/https version of trunk
 
-# SlowStart
-
-## Source structure
-
-- The files in the _powerup directory is the core PowerUp framework that should be put in the root of the source tree your will be deploying. This can be done (for example) with an svn extern. Any changes to the _powerup folder should be treated as a fork or PowerUp. If you don't alter this directory, you should be able to upgrade powerup at any time.
-- The directory SimpleWebsite is the example website being deployed.
-- The file main.build is a Nant file the describes which files need to be added to the package. The nant file included within main.build (common.build) takes care of compiling your solution, adding the required PowerUp files, and zipping everything up.
-- The file deploy.ps1 (which is a psake file) describes what needs to be done to deploy your package to a server. This script can assume it is running on the destination server itself (so all paths are local etc)
-- The file settings.txt .
-- The directory _templates, used to create templated versions of any files that require values substituted into them (see below for more details)
-- The files build_package.bat and build_package_deploy_local.bat are simply convenience batch files.
 
 # Overview
 
@@ -57,14 +46,24 @@ In the near future, we expect to add support for:
 - Administration of scheduled tasks  
 - Installation of windows services  
 
+## Source structure
+
+- The files in the _powerup directory is the core PowerUp framework that should be put in the root of the source tree your will be deploying. This can be done (for example) with an svn extern. Any changes to the _powerup folder should be treated as a fork or PowerUp. If you don't alter this directory, you should be able to upgrade powerup at any time.
+- The directory SimpleWebsite is the example website being deployed.
+- The file main.build is a Nant file the describes which files need to be added to the package. The nant file included within main.build (common.build) takes care of compiling your solution, adding the required PowerUp files, and zipping everything up.
+- The file deploy.ps1 (which is a psake file) describes what needs to be done to deploy your package to a server. This script can assume it is running on the destination server itself (so all paths are local etc)
+- The file settings.txt .
+- The directory _templates, used to create templated versions of any files that require values substituted into them (see below for more details)
+- The files build_package.bat and build_package_deploy_local.bat are simply convenience batch files.
+
 ## How to Integrate Into a Project
 
 For most deployments, only 4 things need to be created:  
 
-- A Nant script, describing how to build and what files are to be contained in the package.  
-- A plain text file with a list of configuration settings per environment  
-- A set of templates (typically web.configs) with placeholders for the defined settings  
-- A Powershell file, to be executed on the destination machine  
+- The nant script main.build, describing how to build and what files are to be contained in the package.  
+- A plain text file (settings.txt) with a list of configuration settings per environment  
+- A set of templates (typically web.configs) with placeholders for the defined settings (_templates folder)
+- A Powershell file (deploy.ps1), to be executed on the destination machine  
 
 # FAQs
 
