@@ -3,7 +3,7 @@
 PowerUp is already been used internally by Affinity ID to release projects through to Live.  
 This includes file deployment, website creation (with SSL), and Umbraco Courier.  
 
-PowerUp is still under active development. The core framework will soon be extended to handle:  
+PowerUp is under active development. The core framework will soon be extended to handle:  
 
 - Deploying to more than one destination server, possibly through capistrano/pseabee syntax  
 - MSBuild as an alternative to Nant for building packages  
