@@ -1,3 +1,9 @@
+## Introduction
+
+PowerUp is a build and deployment framework, written on top of Powershell and Psake.
+
+The philosophy of PowerUp is based on the concept of deployment through "unremarkable" zipped packages of files. Rooted in the xcopy deployment mindset, it simply adds the plumbing required to make one package deployable in a number of different environments. It also provides the framework and some bundled tools to enable the configuration of Windows servers (ie, create websites etc).
+
 # Status
 
 PowerUp is already been used internally by Affinity ID to release projects through to Live.  
@@ -28,13 +34,7 @@ To run, do the following:
 - Browse to http://localhost:9000 and https://localhost:9001 to see the http/https version of trunk
 - Browse to http://localhost:10000 and https://localhost:10001 to see the http/https version of trunk
 
-# Overview
-
-## Basics
-
-PowerUp is a build and deployment framework, written on top of Powershell and Psake.
-
-The philosophy of PowerUp is based on the concept of deployment through "unremarkable" zipped packages of files. Rooted in the xcopy deployment mindset, it simply adds the plumbing required to make one package deployable in a number of different environments. It also provides the framework and some bundled tools to enable the configuration of Windows servers (ie, create websites etc).
+# Full Details
 
 ## Packages
 
