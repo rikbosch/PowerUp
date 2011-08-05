@@ -5,14 +5,16 @@ This includes file deployment, website creation with SSL, and Umbraco Courier.
 
 # QuickStart
 
-(This quick start will work on any Windows installation with Powershell and IIS 7+ installed)
+This quick start will work on any Windows installation with Powershell and IIS 7+ installed.
+It demonstrates the build and automated deployment of a simple Asp.Net web application.
+
+To run, do the following:  
 
 - Git clone or download to any local directory
 - Install the IIS Powershell snapin http://learn.iis.net/page.aspx/429/installing-the-iis-70-powershell-snap-in/
-- Run build_package_deploy_local.bat to see two versions (a trunk and branch) of a typical website built and deployed to localhost.
+- Run build_package_deploy_local.bat to deploy two versions (a trunk and branch) of a typical website built to localhost.
 - Browse to http://localhost:9000 and https://localhost:9001 to see the http/https version of trunk
 - Browse to http://localhost:10000 and https://localhost:10001 to see the http/https version of trunk
-
 
 # Overview
 
@@ -20,11 +22,11 @@ This includes file deployment, website creation with SSL, and Umbraco Courier.
 
 PowerUp is a build and deployment framework, written on top of Powershell and Psake.
 
-The philosophy of PowerUp is based on the concept of deployment through "unremarkable" zipped packages of files. Rooted in the xcopy deployment mindset, it simply adds the plumbing required to make one package deployable in a number of different environments. It also provides the framework and bundled tools to enable the configuration of Windows servers.
+The philosophy of PowerUp is based on the concept of deployment through "unremarkable" zipped packages of files. Rooted in the xcopy deployment mindset, it simply adds the plumbing required to make one package deployable in a number of different environments. It also provides the framework and some bundled tools to enable the configuration of Windows servers (ie, create websites etc).
 
 ## Packages
 
-In contrast to other types of deployment packages (msis, installshield etc), PowerUp packages are just simple zip files. Within these packages are the files from your solution, supporting PowerUp files (mostly PowerShell script files, cmdlets, and some 3rd party tools), and a Psake Powershell script you write (which describes what must happen during the deployment).  
+In contrast to other types of deployment packages (msis, installshield etc), PowerUp packages are just simple zip files. Within these packages are the files from your solution, supporting PowerUp files (mostly PowerShell script files, cmdlets, and some 3rd party tools), and a few files per project to direct how the package should deploy.  
 
 ## Settings
 
@@ -32,29 +34,20 @@ Although packages are environment neutral, they also contain a settings file. Th
 
 ## Deployment scripts
 
-As the deployment script is written in Powershell, there is virtually no limit to what can be done. The capabilities currently bundled within PowerUp include:  
+As the deployment script is written in Powershell, there is essentially no limit to what can be done. The capabilities currently bundled within PowerUp (by way of cmdlet modules) include:  
 
-- Creating websites, app pools, virtual directories. Includes ssl administration.  
+- Creating websites, app pools, virtual directories. Includes ssl creation    
 - Copying files quickly and robustly with robocopy  
 - Deploying with Umbraco Courier  
 
-But of course, this is just the beginning. As PowerShell is the first class scripting environment in Windows, you are free to use any script, cmdlet or plain executable you choose.   
+But, of course, this is just the beginning. As PowerShell is the first class scripting environment in Windows, you are free to use any script, cmdlet or plain executable you choose.  
 
-In the near future, we expect to add support for:  
+In the near future, we expect to specifically add support for:  
 
-- Database activities, such as backing up/restoring  
+- Database activities, such as backing up/restoring and migrations   
 - Administration of scheduled tasks  
 - Installation of windows services  
-
-## Source structure
-
-- The files in the _powerup directory is the core PowerUp framework that should be put in the root of the source tree your will be deploying. This can be done (for example) with an svn extern. Any changes to the _powerup folder should be treated as a fork or PowerUp. If you don't alter this directory, you should be able to upgrade powerup at any time.
-- The directory SimpleWebsite is the example website being deployed.
-- The file main.build is a Nant file the describes which files need to be added to the package. The nant file included within main.build (common.build) takes care of compiling your solution, adding the required PowerUp files, and zipping everything up.
-- The file deploy.ps1 (which is a psake file) describes what needs to be done to deploy your package to a server. This script can assume it is running on the destination server itself (so all paths are local etc)
-- The file settings.txt .
-- The directory _templates, used to create templated versions of any files that require values substituted into them (see below for more details)
-- The files build_package.bat and build_package_deploy_local.bat are simply convenience batch files.
+- Deploying to more than one destination server
 
 ## How to Integrate Into a Project
 
@@ -64,6 +57,16 @@ For most deployments, only 4 things need to be created:
 - A plain text file (settings.txt) with a list of configuration settings per environment  
 - A set of templates (typically web.configs) with placeholders for the defined settings (_templates folder)
 - A Powershell file (deploy.ps1), to be executed on the destination machine  
+
+## Full Explaination of Source Structure
+
+- The files in the _powerup directory are the core PowerUp framework that should be put in the root of the source tree your will be deploying. This can be done (for example) with an svn extern. Any changes to the _powerup folder should be treated as a fork or PowerUp. If you don't alter this directory, you should be able to upgrade powerup at any time.
+- The directory SimpleWebsite is the example website being deployed.
+- The file main.build is a Nant file the describes which files need to be added to the package. The nant file included within main.build (common.build) takes care of compiling your solution, adding the required PowerUp files, and zipping everything up.
+- The file deploy.ps1 (which is a psake file) describes what needs to be done to deploy your package to a server. This script can assume it is running on the destination server itself (so all paths are local etc)
+- The file settings.txt .
+- The directory _templates, used to create templated versions of any files that require values substituted into them (see below for more details)
+- The files build_package.bat and build_package_deploy_local.bat are simply convenience batch files.
 
 # FAQs
 
