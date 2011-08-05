@@ -35,7 +35,7 @@ namespace Id.PowershellExtensions.ParsedSettings
         {
             using (StreamReader sr = new StreamReader(File))
             {
-                return sr.ReadToEnd().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                return sr.ReadToEnd().Replace("\n", "\r\n").Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             }
         }
     }
