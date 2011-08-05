@@ -9,7 +9,7 @@ This includes file deployment, website creation with SSL, and Umbraco Courier.
 
 - Git clone or download to any local directory
 - Install the IIS Powershell snapin http://learn.iis.net/page.aspx/429/installing-the-iis-70-powershell-snap-in/
-- Run build_package_deploy_local.bat to see a two versions (a trunk and branch) of a typical website built and deployed to localhost.
+- Run build_package_deploy_local.bat to see two versions (a trunk and branch) of a typical website built and deployed to localhost.
 - Browse to http://localhost:9000 and https://localhost:9001 to see the http/https version of trunk
 - Browse to http://localhost:10000 and https://localhost:10001 to see the http/https version of trunk
 
