@@ -73,8 +73,6 @@ function SetAppPoolManagedRuntimeVersion($appPool, $runtimeVersion)
 
 function CreateWebsite($websiteName, $appPoolName, $fullPath, $protocol, $ip, $port, $hostHeader)
 {		
-	echo "Creating site $websiteName"
-	
 	New-Item $sitesPath\$websiteName -physicalPath $fullPath -applicationPool $appPoolName -bindings @{protocol="http";bindingInformation="${ip}:${port}:${hostHeader}"}
 }
 
@@ -106,7 +104,6 @@ function CreateSslBinding($certificate, $ip, $port)
 	$existingPath = get-location
 	set-location $bindingsPath
 	
-	echo "${ip}!${port}"
 	$certificate | new-item "${ip}!${port}"
 	set-location $existingPath
 }
@@ -117,11 +114,9 @@ function StopWebItem($itemPath, $itemName)
 	if (WebItemExists $itemPath $itemName)
 	{
 		$state = (Get-WebItemState $itemPath\$itemName).Value
-		Write-Host "$itemName is $state"
 		if ($state -eq "started")
 		{
 			Stop-WebItem $itemPath\$itemName
-			Write-Host "Stopped $itemName"
 		}
 	}
 }
@@ -141,11 +136,9 @@ function StartWebItem($itemPath, $itemName)
 	if (WebItemExists $itemPath $itemName)
 	{
 		$state = (Get-WebItemState $itemPath\$itemName).Value
-		Write-Host "$itemName is $state"
 		if ($state -eq "stopped")
 		{
 			Start-WebItem $itemPath\$itemName
-			Write-Host "Started $itemName"
 		}
 	}
 }
@@ -206,6 +199,7 @@ if ($LoadAsSnapin)
 
 function set-WebAppPool($appPoolName, $pipelineMode, $runtimeVersion)
 {
+	echo "Recreating apppool $appPoolName with pipeline mode $pipelineMode and .Net version $runtimeVersion"
 	DeleteAppPool $appPoolName
 	CreateAppPool $appPoolName
 	SetAppPoolProperties $appPoolName $pipelineMode $runtimeVersion
@@ -213,15 +207,17 @@ function set-WebAppPool($appPoolName, $pipelineMode, $runtimeVersion)
 
 function set-WebSite($websiteName, $appPoolName, $fullPath, $hostHeader, $protocol="http", $ip="*", $port="80")
 {
+	echo "Recreating website $websiteName with path $fullPath, app pool $apppoolname, bound to to host header $hostHeader with IP $ip, port $port over $protocol"
 	DeleteWebsite $websiteName
 	CreateWebsite $websiteName $appPoolName $fullPath $protocol $ip $port $hostHeader
 }
 
 function set-SelfSignedSslCertificate($certName)
 {	
+	echo "Ensuring existance of self signed ssl certificate $certName"
 	if(!(GetSslCertificate $certName))
 	{
-		echo $PSScriptRoot
+		echo "Creating self signed ssl certificate $certName"
 		& "$PSScriptRoot\makecert.exe" -r -pe -n "CN=${certName}" -b 07/01/2008 -e 07/01/2020 -eku 1.3.6.1.5.5.7.3.1 -ss my -sr localMachine -sky exchange -sp "Microsoft RSA SChannel Cryptographic Provider" -sy 12
 	}
 }
@@ -229,12 +225,13 @@ function set-SelfSignedSslCertificate($certName)
 
 function New-WebSiteBinding($websiteName, $hostHeader, $protocol="http", $ip="*", $port="80")
 {
+	echo "Binding website $websiteName to host header $hostHeader with IP $ip, port $port over $protocol"
 	New-WebBinding -Name $websiteName -IP $ip -Port $port -Protocol $protocol -HostHeader $hostHeader
 }
 
 function Set-SslBinding($certName, $ip, $port)
 {
-	echo "fetching cert"
+	echo "Binding certifcate $certName to IP $ip, port $port"
 	$certificate = GetSslCertificate $certName
 	
 	if (!$certificate) {throw "Certificate for site $certName not in current store"}
@@ -243,20 +240,20 @@ function Set-SslBinding($certName, $ip, $port)
 	
 	if(!(SslBindingExists $ip $port))
 	{
-		echo "creating new binding"
 		CreateSslBinding $certificate $ip $port
 	}
 	
-	echo "ssl binding complete"
 }
 
 function new-webapplication($websiteName, $appPoolName, $subPath, $physicalPath)
 {
+	echo "Adding application $subPath to web site $websiteName pointing to $physicalPath running under app pool  $appPoolName"
 	New-Item $sitesPath\$websiteName\$subPath -physicalPath $physicalPath -applicationPool $appPoolName -type Application 
 }
 
 function Stop-AppPoolAndSite($appPoolName, $siteName)
 {
+	echo "Stopping app pool $appPoolName and site $siteName"
 	StopAppPool($appPoolName)
 	StopSite($siteName)
 }
@@ -264,13 +261,14 @@ function Stop-AppPoolAndSite($appPoolName, $siteName)
 
 function Start-AppPoolAndSite($appPoolName, $siteName)
 {
+	echo "Starting app pool $appPoolName and site $siteName"
 	StartSite($siteName)
 	StartAppPool($appPoolName)
 }
 
 function set-apppoolidentitytouser($appPoolName, $userName, $password)
 {
-	echo "Setting $appPoolName to be run under $userName"
+	echo "Setting $appPoolName to be run under the identity $userName"
 	$appPool = Get-Item $appPoolsPath\$appPoolName
 	$appPool.processModel.username =  $userName
 	$appPool.processModel.password = $password
