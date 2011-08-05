@@ -1,0 +1,16 @@
+﻿first
+	fruit	apple
+	colour	blue
+	animal	dog
+
+another
+	colour	yellow
+ fruit	kiwi
+	animal
+	
+	
+
+
+
+
+	
