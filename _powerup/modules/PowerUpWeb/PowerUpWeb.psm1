@@ -60,13 +60,6 @@ function DeleteWebsite($websiteName)
 	}
 }
 
-function SetAppPoolProperties($appPoolName, $pipelineMode, $runtimeVersion)
-{
-	$appPool = Get-Item $appPoolsPath\$appPoolName
-	SetAppPoolManagedPipelineMode $appPool $pipelineMode
-	SetAppPoolManagedRuntimeVersion $appPool $runtimeVersion
-	$appPool | set-item
-}
 
 function SetAppPoolManagedPipelineMode($appPool, $pipelineMode)
 {
@@ -85,21 +78,9 @@ function CreateWebsite($websiteName, $appPoolName, $fullPath, $protocol, $ip, $p
 	New-Item $sitesPath\$websiteName -physicalPath $fullPath -applicationPool $appPoolName -bindings @{protocol="http";bindingInformation="${ip}:${port}:${hostHeader}"}
 }
 
-function SetAppPoolIdentityToUser($appPoolName, $userName, $password)
-{
-	echo "Setting $appPoolName to be run under $userName"
-	$appPool = Get-Item $appPoolsPath\$appPoolName
-	$appPool.processModel.username =  $userName
-	$appPool.processModel.password = $password
-	$appPool.processModel.identityType = 3
-	$appPool | set-item
-	
-}
 
-function AddApplication($websiteName, $appPoolName, $subPath, $physicalPath)
-{
-	New-Item $sitesPath\$websiteName\$subPath -physicalPath $physicalPath -applicationPool $appPoolName -type Application 
-}
+
+
 
 function EnsureSelfSignedSslCertificate($certName)
 {	
@@ -144,7 +125,17 @@ function StopWebItem($itemPath, $itemName)
 		}
 	}
 }
-  
+
+
+function SetAppPoolProperties($appPoolName, $pipelineMode, $runtimeVersion)
+{
+	$appPool = Get-Item $appPoolsPath\$appPoolName
+	SetAppPoolManagedPipelineMode $appPool $pipelineMode
+	SetAppPoolManagedRuntimeVersion $appPool $runtimeVersion
+	$appPool | set-item
+}
+ 
+
 function StartWebItem($itemPath, $itemName)
 {
 	if (WebItemExists $itemPath $itemName)
@@ -259,5 +250,33 @@ function Set-SslBinding($certName, $ip, $port)
 	echo "ssl binding complete"
 }
 
+function new-webapplication($websiteName, $appPoolName, $subPath, $physicalPath)
+{
+	New-Item $sitesPath\$websiteName\$subPath -physicalPath $physicalPath -applicationPool $appPoolName -type Application 
+}
 
-export-modulemember -function set-website,set-webapppool,New-WebSiteBinding,set-SelfSignedSslCertificate, set-sslbinding
+function Stop-AppPoolAndSite($appPoolName, $siteName)
+{
+	StopAppPool($appPoolName)
+	StopSite($siteName)
+}
+
+
+function Start-AppPoolAndSite($appPoolName, $siteName)
+{
+	StartSite($siteName)
+	StartAppPool($appPoolName)
+}
+
+function set-apppoolidentitytouser($appPoolName, $userName, $password)
+{
+	echo "Setting $appPoolName to be run under $userName"
+	$appPool = Get-Item $appPoolsPath\$appPoolName
+	$appPool.processModel.username =  $userName
+	$appPool.processModel.password = $password
+	$appPool.processModel.identityType = 3
+	$appPool | set-item
+	
+}
+
+export-modulemember -function set-apppoolidentitytouser, new-webapplication, start-apppoolandsite, stop-apppoolandsite, set-website,set-webapppool,New-WebSiteBinding,set-SelfSignedSslCertificate, set-sslbinding
