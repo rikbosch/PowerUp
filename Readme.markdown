@@ -2,7 +2,7 @@
 
 PowerUp is a build and deployment framework, written on top of Powershell and Psake.  
 
-PowerUp prefers to be simple, low obligation and require very little to be used. There is nothing to be installed, with the only dependency being Powershell. Its designed for people that want deployments to be simple. 
+PowerUp prefers to be simple, low obligation and require very little to be used. There is nothing to be installed, with the only dependency being Powershell. Its designed for people that think deployments really shouldn't be complicated. 
 
 The philosophy of PowerUp is based on the concept of deployment through "unremarkable" zipped packages of files. Rooted in the xcopy deployment mindset, it simply adds the plumbing required to make one package deployable in a number of different environments. It also provides the framework and some bundled tools to enable the configuration of Windows servers (ie, create websites etc).
 
