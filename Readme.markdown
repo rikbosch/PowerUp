@@ -23,6 +23,8 @@ In addition to the core framework, deployment modules are being created all the 
 - Database admin, such as backing up/restoring and migrations   
 - Administration of scheduled tasks, windows services  
 
+Follow @powerupdeploy on Twitter to keep up to date with progress.
+
 # QuickStart
 
 This quick start will work on any Windows installation with Powershell and IIS 7+ installed.
