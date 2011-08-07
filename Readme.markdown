@@ -28,7 +28,7 @@ Follow @powerupdeploy on Twitter to keep up to date with progress.
 # QuickStart
 
 This quick start will work on any Windows installation with Powershell and IIS 7+ installed.
-It demonstrates the build and automated deployment of a simple Asp.Net web application.
+It demonstrates the build and automated deployment of a simple Asp.Net web application. The best way to understand PowerUp is to run it and trace through what is happening. 
 
 To run, do the following:  
 
