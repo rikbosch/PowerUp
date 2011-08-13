@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+	DefaultTargets="clean-package;clean-bin;compile-solution;package-project;copy-deploy-files;zip-package">
+	
+	 <PropertyGroup>
+    <MSBuildCommunityTasksPath>$(MSBuildThisFileDirectory)\_powerup\MSBuild.Community.Tasks</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets"/>
+  
+  <ItemGroup>
+        <Solution Include="SampleSolution.sln">
+            <Properties>Configuration=Release</Properties>
+        </Solution>
+    </ItemGroup>
+	
+		<PropertyGroup>
+			<PackageFolder>_package</PackageFolder>
+		</PropertyGroup>
+
+
+	 <Target Name="clean-package">
+    <RemoveDir Directories="$(PackageFolder)" />	
+    <MakeDir Directories="$(PackageFolder)" />
+  </Target>
+
+	<Target Name="copy-deploy-files">
+		<ItemGroup>
+			<PowerUp Include="_powerup\**\*.*" Exclude="_powerup\nant\**"/>
+			<Environments Include="_environments\**\*.*" />
+			<Templates Include="_templates\**\*.*" />
+			<FilesForRoot Include="$(PackageFolder)\_powerup\deploy_remotely.bat;$(PackageFolder)\_powerup\deploy.bat;$(PackageFolder)\_powerup\create_package_for_environment.bat" />
+		</ItemGroup>
+		
+		<Copy			
+            SourceFiles="@(PowerUp)"
+            DestinationFolder="$(PackageFolder)\_powerup\%(RecursiveDir)"
+        />
+		
+		<Copy			
+            SourceFiles="@(Environments)"
+            DestinationFolder="$(PackageFolder)\_environments\%(RecursiveDir)"
+        />
+
+		<Copy			
+            SourceFiles="@(Templates)"
+            DestinationFolder="$(PackageFolder)\_templates\%(RecursiveDir)"
+        />
+
+		<Copy			
+            SourceFiles="deploy.ps1;settings.txt"
+            DestinationFolder="$(PackageFolder)\"
+        /> 
+		
+		<Move
+			SourceFiles="@(FilesForRoot)"
+			DestinationFolder="$(PackageFolder)\"
+			/>
+			
+	</Target>
+  
+	<Target Name="package-project">
+		<PropertyGroup>
+			<WebsiteDir>SimpleWebsite</WebsiteDir>
+		</PropertyGroup>
+				
+		<ItemGroup>
+			<ExcludedWebsiteFiles Include="**\*.cs;**\*.csproj*;**\obj\**;**\*.pbd" />
+			<WebsiteFiles Include="$(WebsiteDir)\**\*.*" Exclude="@(ExcludedWebsiteFiles)" />
+		</ItemGroup>		
+		
+		
+		<Copy			
+            SourceFiles="@(WebsiteFiles)"
+            DestinationFolder="$(PackageFolder)\$(WebsiteDir)\%(RecursiveDir)"
+        />
+	</Target>
+	
+	<Target Name="zip-package">
+	
+	<ItemGroup>
+			<ZipFiles Include="_package\**\*.*" />
+		</ItemGroup>	
+	
+		<Zip Files="@(ZipFiles)"
+       WorkingDirectory="$(PackageFolder)" 
+       ZipFileName="_package\package.zip"
+       ZipLevel="9" /> 
+	
+	
+	</Target>
+  
+	<Target Name="clean-bin">
+    <ItemGroup>
+      <BinFiles Include="**\bin\*.*" Exclude="_package\**\*.*;_powerup\**\*.*;Powershellextensions\**\*.*;**\_Environments\"/>
+    </ItemGroup>
+    <Delete Files="@(BinFiles)" />
+  </Target>
+	
+  <Target Name="compile-solution">
+        <MSBuild Projects="@(Solution)" />
+    </Target>
+</Project>

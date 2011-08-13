@@ -42,6 +42,7 @@
     <copy todir="${package.dir}" overwrite="true" flatten="false" includeemptydirs="true">
       <fileset basedir="${solution.dir}">  				
 		<include name="_powerup\**"/>
+		<exclude name="_powerup\nant\**"/>
 		<include name="_Environments\**"/>
 		<include name="_Templates\**"/>
 		<include name="deploy.ps1"/>
