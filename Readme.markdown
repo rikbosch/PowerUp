@@ -14,7 +14,6 @@ This includes file deployment, website creation (with SSL), and Umbraco Courier.
 PowerUp is under active development. The core framework will soon be extended to handle:  
 
 - Deploying to more than one destination server, possibly through capistrano/pseabee syntax  
-- MSBuild as an alternative to Nant for building packages  
 - Powershell remoting as an alternative to psexec
 - Git/svn pulls of packages for unattended deployments
 
@@ -62,7 +61,7 @@ But, of course, this is just the beginning. As PowerShell is the first class scr
 
 For most deployments, only 4 things need to be created:  
 
-- The nant script main.build, describing how to build and what files are to be contained in the package.  
+- The nant script main.build or msbuild file main.msbuild, describing how to build and what files are to be contained in the package.  
 - A plain text file (settings.txt) with a list of configuration settings per environment  
 - A set of templates (typically web.configs) with placeholders for the defined settings (_templates folder)
 - A Powershell file (deploy.ps1), to be executed on the destination machine  
@@ -72,6 +71,7 @@ For most deployments, only 4 things need to be created:
 - The files in the _powerup directory are the core PowerUp framework that should be put in the root of the source tree your will be deploying. This can be done (for example) with an svn extern. Any changes to the _powerup folder should be treated as a fork or PowerUp. If you don't alter this directory, you should be able to upgrade powerup at any time.
 - The directory SimpleWebsite is the example website being deployed.
 - The file main.build is a Nant file the describes which files need to be added to the package. The nant file included within main.build (common.build) takes care of compiling your solution, adding the required PowerUp files, and zipping everything up.
+- The file main.msbuild is a MSBuild file equivalent in end result to the nant file. Which you use (nant vs msbuild) is up to you.
 - The file deploy.ps1 (which is a psake file) describes what needs to be done to deploy your package to a server. This script can assume it is running on the destination server itself (so all paths are local etc)
 - The file settings.txt .
 - The directory _templates, used to create templated versions of any files that require values substituted into them (see below for more details)
@@ -83,11 +83,15 @@ For most deployments, only 4 things need to be created:
 
 Yes. By default the helper Nant script assumes a single .Net solution file. But this can easily be replaced with any set of build steps.
 
-## Why Nant for building packages (and not MSBuild/PowerShell etc)?
+## Why have both Nant and MSBuild for building packages, but Powershell for deployments?
 
-Nant is designed to build .Net solutions, and does so very well. It is exceptionally expressive when it comes to file copying, which creates a nice declarative syntax with which to construct packages. It is not so strong for performing deployments, due to its inexpressiveness as a general purpose scripting language, and its restriction to calling nant tasks and command line executables. That is why both Nant and Powershell are used with PowerUp.
+Nant and MSBuild are both designed to build .Net solutions, and do so very well. They are exceptionally expressive when it comes to file copying, which creates a nice declarative syntax with which to construct packages. They are not, however, so strong for performing deployments, due their inexpressiveness as general purpose scripting languages.
 
-Despite this, any other tool could be used to construct the packages (as long as they end up with the same structure). In fact, packages can even be created by hand, if so inclined.
+That is why both Nant/MSBuild and Powershell are used with PowerUp.
+
+Nant and MSBuild are both included as options simply as there are many build scripts already out in the wild, and providing both lowers the barrier to entry.
+
+Having done both, I personally still prefer Nant.
 
 ## Why Not Use Web Deployment Projects/Configuration Transformations?
 
