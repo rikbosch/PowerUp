@@ -23,16 +23,18 @@ In addition to the core framework, deployment modules are being created all the 
 - Database admin, such as backing up/restoring and migrations   
 - Administration of scheduled tasks, windows services  
 
+Follow @powerupdeploy on Twitter to keep up to date with progress.
+
 # QuickStart
 
 This quick start will work on any Windows installation with Powershell and IIS 7+ installed.
-It demonstrates the build and automated deployment of a simple Asp.Net web application.
+It demonstrates the build and automated deployment of a simple Asp.Net web application. The best way to understand PowerUp is to run it and trace through what is happening. 
 
 To run, do the following:  
 
 - Git clone or download to any local directory
 - Install the IIS Powershell snapin http://learn.iis.net/page.aspx/429/installing-the-iis-70-powershell-snap-in/
-- Run build_package_deploy_local.bat to deploy two versions (a trunk and branch) of a typical website built to localhost.
+- Run build_package_deploy_local.bat to deploy two versions (a trunk and branch) of a typical website to localhost
 - Browse to http://localhost:9000 and https://localhost:9001 to see the http/https version of trunk
 - Browse to http://localhost:10000 and https://localhost:10001 to see the http/https version of branch
 

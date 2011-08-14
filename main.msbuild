@@ -2,11 +2,15 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
 	DefaultTargets="build">
 
+	  <PropertyGroup>
+    <BuildConfiguration>Release</BuildConfiguration>
+  </PropertyGroup>
+
 	<Import Project="$(MSBuildThisFileDirectory)\_powerup\common.targets"/>
 
   <ItemGroup>
     <Solution Include="SampleSolution.sln">
-      <Properties>Configuration=Release</Properties>
+      <Properties>Configuration=$(BuildConfiguration)</Properties>
     </Solution>
   </ItemGroup>
 
