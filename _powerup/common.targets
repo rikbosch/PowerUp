@@ -3,13 +3,11 @@
 
   <PropertyGroup>
     <MSBuildCommunityTasksPath>$(MSBuildThisFileDirectory)\MSBuild.Community.Tasks</MSBuildCommunityTasksPath>
+    <PackageFolder>_package</PackageFolder>
+	<PackageName>Manual</PackageName>
   </PropertyGroup>
 
   <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets"/>
-
-  <PropertyGroup>
-    <PackageFolder>_package</PackageFolder>
-  </PropertyGroup>
 
   <Target Name="Build">
 	<CallTarget Targets="clean-package;clean-bin;compile-solution;package-project;copy-deploy-files;zip-package"/>
@@ -58,7 +56,7 @@
 
     <Zip Files="@(ZipFiles)"
        WorkingDirectory="$(PackageFolder)"
-       ZipFileName="@(PackageFolder)\package.zip"
+       ZipFileName="$(PackageFolder)\package_$(PackageName).zip"
        ZipLevel="9" />
   </Target>
 
