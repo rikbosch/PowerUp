@@ -1,4 +1,4 @@
-param([string]$deployFile = ".\deploy.ps1", [string]$deploymentEnvironment, [bool]$onlyFinalisePackage=$false)
+param([string]$deployFile = ".\deploy.ps1", [string]$deploymentEnvironment, [bool]$onlyFinalisePackage=$false, $tasks="")
 
 function OverlayEnvironmentSpecificFiles($deploymentEnvironment)
 {
@@ -53,6 +53,7 @@ try {
 
 	echo "Reading settings"		
 	$settings = get-parsedsettings $currentPath\settings.txt $deploymentEnvironment 
+	$settings['deployment.environment'] = $deploymentEnvironment 
 	
 	echo "Package settings for this environment are:"
 	$settings | Format-Table -property *
@@ -68,7 +69,7 @@ try {
 		
 		echo "Calling psake package deployment script"
 		$psake.use_exit_on_error = $true
-		invoke-psake $deployFile –parameters $settings
+		invoke-psake $deployFile $tasks –parameters $settings
 	}
 }
 finally {
