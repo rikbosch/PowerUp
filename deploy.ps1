@@ -9,8 +9,12 @@ task importmodules {
 	import-module powerupweb
 }
 
-task deploy -depends importmodules {
-	invoke-remotetask ${deployment.server} web-deploy
+task deploy -depends importmodules, distributepackages {
+	invoke-remotetask @(${deployment.server}, ${deployment.server}) web-deploy
+}
+
+task distributepackages {
+	copy-package ${remote.temp.working.folder}
 }
 
 task web-deploy -depends importmodules, deployfiles, recreatesite
@@ -27,25 +31,26 @@ task recreatesite {
 	new-websitebinding ${website.name} ""  "https" "*" ${https.port} 
 }
 
-function invoke-remotetask($server, $tasks)
+function invoke-remotetask($servers, $tasks)
 {	
-	CopyPackage
+	foreach ($server in $servers)
+	{
+		if (!${local.temp.working.folder})
+			{throw "The setting 'local.temp.working.folder' is not set for this environment."}
+			
+		$fullLocalReleaseWorkingFolder = ${local.temp.working.folder} + '\' + ${package.name}
+		$batchFile = $fullLocalReleaseWorkingFolder + '\' + 'deploy.bat'
 
-	if (!${local.temp.working.folder})
-		{throw "The setting 'local.temp.working.folder' is not set for this environment."}
-		
-	$fullLocalReleaseWorkingFolder = ${local.temp.working.folder} + '\' + ${package.name}
-	$batchFile = $fullLocalReleaseWorkingFolder + '\' + 'deploy.bat'
-
-	cmd /c cscript.exe _powerup\cmd.js _powerup\psexec.exe ${deployment.server} /accepteula -w $fullLocalReleaseWorkingFolder $batchFile ${deployment.environment} $tasks
+		cmd /c cscript.exe _powerup\cmd.js _powerup\psexec.exe $server /accepteula -w $fullLocalReleaseWorkingFolder $batchFile ${deployment.environment} $tasks
+	}
 }
 
-function CopyPackage()
+function copy-package($remotePath)
 {		
 	if (!${remote.temp.working.folder})
 		{throw "The setting 'remote.temp.working.folder' is not set for this environment."}
 	
-	$fullDestinationFolder = ${remote.temp.working.folder} + '\' + ${package.name}
+	$fullDestinationFolder = $remotePath  + '\' + ${package.name}
 			
 	echo "Copying deployment package to $fullDestinationFolder"
 	Copy-MirroredDirectory $packageFolder $fullDestinationFolder
