@@ -4,7 +4,7 @@ function invoke-remotetask($servers, $tasks, $deploymentEnvironment, $fullLocalR
 	{			
 		$batchFile = $fullLocalReleaseWorkingFolder + '\' + 'deploy.bat'
 
-		cmd /c cscript.exe _powerup\cmd.js _powerup\psexec.exe $server /accepteula -w $fullLocalReleaseWorkingFolder $batchFile $deploymentEnvironment $tasks
+		cmd /c cscript.exe _powerup\cmd.js $PSScriptRoot\psexec.exe $server /accepteula -w $fullLocalReleaseWorkingFolder $batchFile $deploymentEnvironment $tasks
 	}
 }
 
