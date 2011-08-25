@@ -47,6 +47,7 @@ try {
 	$env:PSModulePath = $env:PSModulePath + ";$currentPath\_powerup\modules\"
 	import-module psake.psm1
 	import-module AffinityId\Id.PowershellExtensions.dll
+	import-module powerupremote
 
 	echo "Copying files specific to this environment to necessary folders within the package"
 	OverlayEnvironmentSpecificFiles $deploymentEnvironment
