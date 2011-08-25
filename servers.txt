@@ -1,0 +1,12 @@
+default
+	root.folder				c:
+	
+localhost
+	server.name					\\localhost
+	remote.temp.working.folder	${root.folder}\temp
+	local.temp.working.folder	${root.folder}\temp
+
+localhost2
+	server.name					\\localhost
+	remote.temp.working.folder	${root.folder}\temp2
+	local.temp.working.folder	${root.folder}\temp2

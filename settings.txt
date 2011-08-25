@@ -2,11 +2,10 @@ default
 	package.name			Samples
 	root.folder				c:
 	website.name			SimpleWebsite
+	all.servers				${web.servers}
 
 Local
-	deployment.server			\\localhost  
-	remote.temp.working.folder	${root.folder}\temp
-	local.temp.working.folder	${root.folder}\temp
+	web.servers					localhost;localhost2 
 	deployment.root				${root.folder}\sites
 	environment.name			local
 	http.port					9000
@@ -14,9 +13,7 @@ Local
 
 LocalBranch
 	website.name				SimpleWebsiteBranch
-	deployment.server			\\localhost
-	remote.temp.working.folder	${root.folder}\temp
-	local.temp.working.folder	${root.folder}\temp
+	web.servers					localhost;localhost2 
 	deployment.root				${root.folder}\sites
 	environment.name			localbranch
 	http.port					10000

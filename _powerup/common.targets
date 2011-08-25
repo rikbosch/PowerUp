@@ -39,7 +39,7 @@
             DestinationFolder="$(PackageFolder)\_templates\%(RecursiveDir)"/>
 
     <Copy
-            SourceFiles="deploy.ps1;settings.txt"
+            SourceFiles="deploy.ps1;settings.txt;servers.txt"
             DestinationFolder="$(PackageFolder)\"/>
 
     <Move

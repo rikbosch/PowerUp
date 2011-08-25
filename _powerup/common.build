@@ -47,6 +47,7 @@
 		<include name="_Templates\**"/>
 		<include name="deploy.ps1"/>
 		<include name="settings.txt"/>
+		<include name="servers.txt"/>
       </fileset>
     </copy>
 	<move todir="${package.dir}" overwrite="true">

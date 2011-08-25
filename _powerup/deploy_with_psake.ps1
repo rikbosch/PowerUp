@@ -48,6 +48,7 @@ try {
 	import-module psake.psm1
 	import-module AffinityId\Id.PowershellExtensions.dll
 	import-module powerupremote
+	
 
 	echo "Copying files specific to this environment to necessary folders within the package"
 	OverlayEnvironmentSpecificFiles $deploymentEnvironment
@@ -63,11 +64,7 @@ try {
 	OverlayTemplatedFiles $settings $deploymentEnvironment
 		
 	if (!$onlyFinalisePackage)
-	{
-		$deploymentServer = $settings['deployment.server']
-		echo "Checking that this deployment is being run on the correct server $deploymentServer"
-		CheckForCorrectDeploymentServer $deploymentServer
-		
+	{		
 		echo "Calling psake package deployment script"
 		$psake.use_exit_on_error = $true
 		invoke-psake $deployFile $tasks –parameters $settings

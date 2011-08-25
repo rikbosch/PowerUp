@@ -1,4 +1,5 @@
 properties{
+	$packageFolder = get-location
 }
 
 task default -depends deploy
@@ -9,14 +10,13 @@ task importmodules {
 }
 
 task deploy -depends importmodules, distributepackages {
-	$remoteFolder = ${local.temp.working.folder} + '\' + ${package.name}
-	invoke-remotetask @(${deployment.server}, ${deployment.server}) web-deploy ${deployment.environment} $remoteFolder 
+	$webservers = get-serversettings $packageFolder\servers.txt ${web.servers}
+	invoke-remotetask $webservers web-deploy ${deployment.environment} ${package.name}
 }
 
-task distributepackages 
-{
-	$remotePath = ${remote.temp.working.folder} + '\' + ${package.name}
-	copy-package $remotePath
+task distributepackages {
+	$servers = get-serversettings $packageFolder\servers.txt ${all.servers}
+	copy-packages $servers ${package.name}
 }
 
 task web-deploy -depends importmodules, deployfiles, recreatesite
@@ -32,3 +32,4 @@ task recreatesite {
 	set-sslbinding ${website.name} "*" ${https.port} 
 	new-websitebinding ${website.name} ""  "https" "*" ${https.port} 
 }
+
