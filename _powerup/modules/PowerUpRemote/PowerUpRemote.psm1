@@ -5,7 +5,7 @@ function invoke-remotetask($servers, $tasks, $deploymentEnvironment, $packageNam
 		$fullLocalReleaseWorkingFolder = $server['local.temp.working.folder'] + '\' + $packageName
 		$batchFile = $fullLocalReleaseWorkingFolder + '\' + 'deploy.bat'
 
-		cmd /c cscript.exe _powerup\cmd.js $PSScriptRoot\psexec.exe $server['server.name'] /accepteula -w $fullLocalReleaseWorkingFolder $batchFile $deploymentEnvironment $tasks
+		cmd /c cscript.exe $PSScriptRoot\cmd.js $PSScriptRoot\psexec.exe $server['server.name'] /accepteula -w $fullLocalReleaseWorkingFolder $batchFile $deploymentEnvironment $tasks
 	}
 }
 
