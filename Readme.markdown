@@ -2,18 +2,20 @@
 
 PowerUp is a build and deployment framework, written on top of Powershell and Psake.  
 
-PowerUp prefers to be simple, low obligation and require very little to be used. There is nothing to be installed, with the only dependency being Powershell. Its designed for people that think deployments really shouldn't be complicated. 
+PowerUp prefers to be simple, low obligation and require very little. There is nothing to be installed, with the only dependency being Powershell. It is designed for people that think deployments really shouldn't be complicated. 
 
 The philosophy of PowerUp is based on the concept of deployment through "unremarkable" zipped packages of files. Rooted in the xcopy deployment mindset, it simply adds the plumbing required to make one package deployable in a number of different environments. It also provides the framework and some bundled tools to enable the configuration of Windows servers (ie, create websites etc).
 
 # Status
+
+*Due to a recent refactor to allow remote execution of psake tasks, some of the following documentation is currently out of date.
+This should be correct early September.*
 
 PowerUp is already been used internally by Affinity ID to release projects through to Live.  
 This includes file deployment, website creation (with SSL), and Umbraco Courier.  
 
 PowerUp is under active development. The core framework will soon be extended to handle:  
 
-- Deploying to more than one destination server, possibly through capistrano/pseabee syntax  
 - Powershell remoting as an alternative to psexec
 - Git/svn pulls of packages for unattended deployments
 
