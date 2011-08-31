@@ -2,17 +2,22 @@
 
 PowerUp is a build and deployment framework, written on top of Powershell and Psake.  
 
-PowerUp prefers to be simple, low obligation and require very little. There is nothing to be installed, with the only dependency being Powershell. It is designed for people that think deployments really shouldn't be complicated. 
+PowerUp prefers to be simple, low obligation and assumes very little. 
+There is nothing to be installed, with the only dependency being Powershell. 
 
-The philosophy of PowerUp is based on the concept of deployment through "unremarkable" zipped packages of files. Rooted in the xcopy deployment mindset, it simply adds the plumbing required to make one package deployable in a number of different environments. It also provides the framework and some bundled tools to enable the configuration of Windows servers (ie, create websites etc).
+It is designed for people that rightly think deployments really shouldn't be complicated. 
+
+The philosophy of PowerUp is based on the concept of deployment through "unremarkable" zipped packages of files. 
+Rooted in the xcopy deployment mindset, it simply adds the plumbing required to make one package deployable in a number of different environments.
+It also bundles convenient  tools to enable the configuration of Windows servers (ie, create websites etc).
 
 # Status
 
 *Due to a recent refactor to allow remote execution of psake tasks, some of the following documentation is currently out of date.
 This should be correct early September 2011. In the mean time, please follow the quickstart guide, and examine the deploy.ps1 file to understand how the current version works*
 
-PowerUp is already been used internally by Affinity ID to release projects through to Live.  
-This includes file deployment, website creation (with SSL), and Umbraco Courier.  
+PowerUp is already being regularly used internally by Affinity ID to release projects through to Live.  
+This includes file deployment, website creation (with SSL), and Umbraco Courier revision publications.  
 
 PowerUp is under active development. The core framework will soon be extended to handle:  
 
