@@ -1,30 +1,22 @@
 default
 	package.name			Samples
-	root.folder				c:
 	website.name			SimpleWebsite
 	all.servers				${web.servers}
+	deployment.root			${root.drive}\sites
+	http.port				80
+	https.port				443
 
-Local
-	web.servers					localhost;localhost2 
-	deployment.root				${root.folder}\sites
-	environment.name			local
-	http.port					9000
-	https.port					9001
+local
+	web.servers				localhost 
+	root.drive				c:
+	http.port				9000
+	https.port				9001
 
-LocalBranch
-	website.name				SimpleWebsiteBranch
-	web.servers					localhost;localhost2 
-	deployment.root				${root.folder}\sites
-	environment.name			localbranch
-	http.port					10000
-	https.port					10001
-
-Test
-	deployment.server			\\remoteservername
-	remote.temp.working.folder	${deployment.server}\c$\temp
-	local.temp.working.folder	${root.folder}\temp
-	deployment.root				${root.folder}\sites
-	environment.name			test
-	http.port					9000
-	https.port					9001
+staging
+	web.servers				stagingweb
+	root.drive				e:
+	
+live
+	web.servers				liveweb1;liveweb2 
+	root.drive				g:
 

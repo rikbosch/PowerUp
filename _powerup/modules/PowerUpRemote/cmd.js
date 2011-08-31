@@ -74,8 +74,6 @@ function getWithMaskedPassword(text) {
    return text.replace(/-p \S+ /, "-p *********** ");
 }
 
-WScript.Echo("========== " + WScript.ScriptFullName + " ==========");
-
 //Convert arguments to array then join items into a string separated by a space
 var result = cmd(argsToArray().join(" "));
 

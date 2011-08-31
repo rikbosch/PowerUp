@@ -1,31 +1,25 @@
 properties{
-	$packageFolder = get-location
 }
 
 task default -depends deploy
+
+task deploy -depends importmodules, distributepackages {
+	invoke-remotetask ${web.servers} web-deploy ${deployment.environment} ${package.name}
+}
 
 task importmodules {
 	import-module powerupfilesystem
 	import-module powerupweb
 }
 
-task deploy -depends importmodules, distributepackages {
-	$webservers = get-serversettings $packageFolder\servers.txt ${web.servers}
-	invoke-remotetask $webservers web-deploy ${deployment.environment} ${package.name}
-}
-
 task distributepackages {
-	$servers = get-serversettings $packageFolder\servers.txt ${all.servers}
-	copy-packages $servers ${package.name}
+	copy-packages ${all.servers} ${package.name}
 }
 
-task web-deploy -depends importmodules, deployfiles, recreatesite
-
-task deployfiles  {
+task web-deploy -depends importmodules {
+	$packageFolder = get-location
 	copy-mirroreddirectory $packageFolder\simplewebsite ${deployment.root}\${website.name} 
-}
 
-task recreatesite {
 	set-webapppool ${website.name} "Integrated" "v4.0"
 	set-website ${website.name} ${website.name} ${deployment.root}\${website.name} "" "http" "*" ${http.port} 	
 	set-selfsignedsslcertificate ${website.name}

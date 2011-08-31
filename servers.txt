@@ -1,12 +1,16 @@
 default
-	root.folder				c:
+	temp.root.drive				c
+	remote.temp.working.folder	${server.name}\${temp.root.drive}$\packages
+	local.temp.working.folder	${temp.root.drive}:\packages
 	
 localhost
 	server.name					\\localhost
-	remote.temp.working.folder	${root.folder}\temp
-	local.temp.working.folder	${root.folder}\temp
 
-localhost2
-	server.name					\\localhost
-	remote.temp.working.folder	${root.folder}\temp2
-	local.temp.working.folder	${root.folder}\temp2
+stagingweb
+	server.name					\\staging.exampledomain
+
+liveweb1
+	server.name					\\live1.exampledomain
+
+liveweb2
+	server.name					\\live2.exampledomain

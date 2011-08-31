@@ -1,4 +1,4 @@
-param([string]$deployFile = ".\deploy.ps1", [string]$deploymentEnvironment, [bool]$onlyFinalisePackage=$false, $tasks="")
+param([string]$deployFile = ".\deploy.ps1", [string]$deploymentEnvironment, [bool]$onlyFinalisePackage=$false, $tasks="default")
 
 function OverlayEnvironmentSpecificFiles($deploymentEnvironment)
 {
