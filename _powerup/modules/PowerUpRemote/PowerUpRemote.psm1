@@ -1,4 +1,4 @@
-function invoke-remotetask($serverNames, $tasks, $deploymentEnvironment, $packageName )
+function invoke-remotetasks( $tasks, $serverNames, $deploymentEnvironment, $packageName )
 {	
 	$currentLocation = get-location
 	$servers = get-serversettings $currentLocation\servers.txt $serverNames
@@ -53,4 +53,4 @@ function get-serverSettings($settingsFile, $serverList)
 	$servers
 }
 				
-export-modulemember -function invoke-remotetask, copy-packages, get-serverSettings
+export-modulemember -function invoke-remotetasks, copy-packages, get-serverSettings

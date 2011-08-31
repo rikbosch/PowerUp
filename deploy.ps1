@@ -4,7 +4,7 @@ properties{
 task default -depends deploy
 
 task deploy -depends importmodules, distributepackages {
-	invoke-remotetask ${web.servers} web-deploy ${deployment.environment} ${package.name}
+	invoke-remotetasks web-deploy ${web.servers} ${deployment.environment} ${package.name}
 }
 
 task importmodules {
