@@ -79,9 +79,7 @@ namespace Id.PowershellExtensions.UmbracoResources
             }
             catch(Exception ex)
             {
-                logger.Log(ex.Message);
-                logger.Log(ex.StackTrace);
-                logger.Log(ex.ToString());
+                logger.Log(ex);
             }
             finally
             {

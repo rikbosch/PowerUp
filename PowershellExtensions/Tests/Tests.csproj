@@ -92,6 +92,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CourierWebServiceInitializerTests.cs" />
     <Compile Include="DatabaseMigratorTests.cs" />
     <Compile Include="Doubles\PsCmdletLoggerDouble.cs" />
     <Compile Include="Doubles\RepositoryProviderDouble.cs" />

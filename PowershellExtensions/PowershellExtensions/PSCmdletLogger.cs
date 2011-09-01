@@ -21,5 +21,10 @@ namespace Id.PowershellExtensions
         {
             parent.WriteVerbose(message);
         }
+
+        public void Log(System.Exception ex)
+        {
+            parent.WriteVerbose(Helpers.GetFullExceptionMessage(ex));
+        }
     }
 }
