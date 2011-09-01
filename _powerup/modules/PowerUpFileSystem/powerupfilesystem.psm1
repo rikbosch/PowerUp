@@ -34,4 +34,6 @@ function Copy-MirroredDirectory([string]$sourceDirectory, [string]$destinationDi
 	}
 }
 
-Export-ModuleMember Copy-MirroredDirectory
+Set-Alias Copy-Directory RobocopyDirectory
+
+Export-ModuleMember -function Copy-MirroredDirectory, RobocopyDirectory -alias Copy-Directory

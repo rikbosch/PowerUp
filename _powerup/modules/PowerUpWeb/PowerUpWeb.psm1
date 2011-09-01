@@ -75,13 +75,19 @@ function CreateWebsite($websiteName, $appPoolName, $fullPath, $protocol, $ip, $p
 	New-Item $sitesPath\$websiteName -physicalPath $fullPath -applicationPool $appPoolName -bindings @{protocol="http";bindingInformation="${ip}:${port}:${hostHeader}"}
 }
 
-function EnsureSelfSignedSslCertificate($certName)
-{	
-	if(!(GetSslCertificate $certName))
+function ConfigureWebsiteForSsl($useSelfSignedCert, $websiteName, $certificateName, $ipAddress, $port, $url)
+{
+	if ([System.Convert]::ToBoolean($useSelfSignedCert))
 	{
-		& "$PSScriptRoot\makecert" -r -pe -n "CN=${certName}" -b 07/01/2008 -e 07/01/2020 -eku 1.3.6.1.5.5.7.3.1 -ss my -sr localMachine -sky exchange -sp "Microsoft RSA SChannel Cryptographic Provider" -sy 12
+		echo "set-selfsignedsslcertificate ${certificateName}"
+		set-selfsignedsslcertificate ${certificateName}
 	}
+		
+	set-sslbinding $certificateName $ipAddress $port
+	new-websitebinding $websiteName $url "https" $ipAddress $port 
 }
+
+
 
 function GetSslCertificate($certName)
 {
@@ -216,6 +222,13 @@ function set-SelfSignedSslCertificate($certName)
 		& "$PSScriptRoot\makecert.exe" -r -pe -n "CN=${certName}" -b 07/01/2008 -e 07/01/2020 -eku 1.3.6.1.5.5.7.3.1 -ss my -sr localMachine -sky exchange -sp "Microsoft RSA SChannel Cryptographic Provider" -sy 12
 	}
 }
+function EnsureSelfSignedSslCertificate($certName)
+{	
+	if(!(GetSslCertificate $certName))
+	{
+		& "$PSScriptRoot\makecert" -r -pe -n "CN=${certName}" -b 07/01/2008 -e 07/01/2020 -eku 1.3.6.1.5.5.7.3.1 -ss my -sr localMachine -sky exchange -sp "Microsoft RSA SChannel Cryptographic Provider" -sy 12
+	}
+}
 
 
 function New-WebSiteBinding($websiteName, $hostHeader, $protocol="http", $ip="*", $port="80")
@@ -272,4 +285,4 @@ function set-apppoolidentitytouser($appPoolName, $userName, $password)
 	
 }
 
-export-modulemember -function set-apppoolidentitytouser, new-webapplication, start-apppoolandsite, stop-apppoolandsite, set-website,set-webapppool,New-WebSiteBinding,set-SelfSignedSslCertificate, set-sslbinding
+export-modulemember -function set-apppoolidentitytouser, new-webapplication, start-apppoolandsite, stop-apppoolandsite, set-website,set-webapppool,New-WebSiteBinding,set-SelfSignedSslCertificate, set-sslbinding, ConfigureWebsiteForSsl

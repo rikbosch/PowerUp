@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<target name="build-package-common" depends="clean compile-solution package-project copy-build-files zip-package" /> 
   <property name="build.configuration" value="Release" unless="${property::exists('build.configuration')}" />
   <property name="build.platform" value="Any CPU" />
   <property name="build.number" value="Manual" unless="${property::exists('build.number')}" />
   <property name="build.verbosity" value="Normal" />
   <property name="build.vcs.number" value="0" />  
+  <property name="solution.name" value="${project::get-name()}" unless="${property::exists('solution.name')}" />
   <property name="solution.dir" value="${project::get-base-directory()}" />  
   <property name="package.dir" value="${solution.dir}\_package" />
+
+
+	<target name="build-package-common" depends="clean compile-solution package-project copy-build-files zip-package" /> 
 
   <target name="clean">
     <call target="clean-package"/>
@@ -52,7 +55,6 @@
     </copy>
 	<move todir="${package.dir}" overwrite="true">
 		<fileset basedir="${package.dir}\_powerup">  					
-			<include name="deploy_remotely.bat"/>
 			<include name="deploy.bat"/>
 			<include name="create_package_for_environment.bat"/>
 		</fileset>

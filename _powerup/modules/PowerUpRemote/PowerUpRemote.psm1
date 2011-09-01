@@ -26,14 +26,23 @@ function invoke-remotetasks( $tasks, $serverNames, $deploymentEnvironment, $pack
 }
 
 function copy-packages($serverNames, $packageName)
-{		
+{	
 	$currentLocation = get-location
+	
 	$servers = get-serversettings $currentLocation\servers.txt $serverNames
 	import-module powerupfilesystem
 
 	foreach ($server in $servers)
-	{			
-		$remotePath = $server['remote.temp.working.folder'] + '\' + $packageName
+	{	
+		$remoteDir = $server['remote.temp.working.folder']
+		$serverName = $server['server.name']
+		
+		if(!$remoteDir)
+		{
+			throw "Setting remote.temp.working.folder not set for server $serverName"
+		}
+	
+		$remotePath = $remoteDir + '\' + $packageName
 		echo "Copying deployment package to $remotePath"
 		Copy-MirroredDirectory $currentLocation $remotePath
 	}
@@ -42,11 +51,17 @@ function copy-packages($serverNames, $packageName)
 function get-serverSettings($settingsFile, $serverList)
 {
 	$serverNames = $serverList.split(';')
+	
+	if (!$serverNames)
+	{
+		$serverNames = @($serverList)
+	}
+		
 	$servers = @()
 	
 	foreach($serverName in $serverNames)
 	{
-		$serverSettings = get-parsedsettings $settingsFile $servername
+		$serverSettings = get-parsedsettings $settingsFile $serverName		
 		$servers += $serverSettings
 	}
 	
