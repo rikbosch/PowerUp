@@ -25,6 +25,26 @@ function invoke-remotetasks( $tasks, $serverNames, $deploymentEnvironment, $pack
 	}
 }
 
+function invoke-remotetasks-ps( $tasks, $serverNames, $deploymentEnvironment, $packageName )
+{	
+	$currentLocation = get-location
+	$servers = get-serversettings $currentLocation\servers.txt $serverNames
+
+	foreach ($server in $servers)
+	{			
+		$serverName = $server['server.name']
+		echo "===== Beginning execution of tasks $tasks on server $serverName ====="
+	
+		$fullLocalReleaseWorkingFolder = $server['local.temp.working.folder'] + '\' + $packageName
+		$psakeFile = $fullLocalReleaseWorkingFolder + '\' + 'deploy_with_psake.ps1'
+
+		Invoke-Command { powershell -inputformat none -command "$psakeFile -buildFile .\deploy.ps1 -deploymentEnvironment $deploymentEnvironment -tasks $tasks"} -computername $serverName
+		
+		echo "========= Finished execution of tasks $tasks on server $serverName ====="
+
+	}
+}
+
 function copy-packages($serverNames, $packageName)
 {	
 	$currentLocation = get-location
@@ -68,4 +88,4 @@ function get-serverSettings($settingsFile, $serverList)
 	$servers
 }
 				
-export-modulemember -function invoke-remotetasks, copy-packages, get-serverSettings
+export-modulemember -function invoke-remotetasks, invoke-remotetasks-ps, copy-packages, get-serverSettings
