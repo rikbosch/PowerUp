@@ -87,5 +87,25 @@ function get-serverSettings($settingsFile, $serverList)
 	
 	$servers
 }
+
+function enable-psremotingforpowerup
+{
+	$nlm = [Activator]::CreateInstance([Type]::GetTypeFromCLSID([Guid]"{DCB00C01-570F-4A9B-8D69-199FDBA5723B}"))
+	$connections = $nlm.getnetworkconnections()
+	
+	$connections |foreach {
+		if ($_.getnetwork().getcategory() -eq 0)
+		{
+			$_.getnetwork().setcategory(1)
+		}
+	}
+
+	Enable-PSRemoting -Force 
+
+	$currentPath = get-location
+	Copy-Item $currentPath\_powerup\powershell.exe.config -destination C:\Windows\System32\wsmprovhost.exe.config -force
+}
+
+
 				
-export-modulemember -function invoke-remotetasks, invoke-remotetasks-ps, copy-packages, get-serverSettings
+export-modulemember -function invoke-remotetasks, invoke-remotetasks-ps, copy-packages, get-serverSettings, enable-psremotingforpowerup
