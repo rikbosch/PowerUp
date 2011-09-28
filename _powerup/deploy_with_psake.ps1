@@ -15,17 +15,6 @@ try {
 	import-module poweruptemplates
 	import-module powerupsettings
 	
-	echo "Copying files specific to this environment to necessary folders within the package"
-	merge-environmentspecificfiles $deploymentEnvironment
-
-	echo "Reading settings"		
-	$settings = get-parsedsettings $currentPath\settings.txt $deploymentEnvironment 
-	
-	echo "Package settings for this environment are:"
-	$settings | Format-Table -property *
-	
-	echo "Substituting and copying templated files"	
-	merge-templates $settings $deploymentEnvironment
 		
 	if (!$onlyFinalisePackage)
 	{		
