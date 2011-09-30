@@ -5,17 +5,16 @@ include .\_powerup\commontasks.ps1
 
 task default -depends deploy
 
-task deploy -depends importmodules, importsettings {
+task deploy -depends importsettings {
+	import-module powerupremote
+	
 	invoke-remotetasks web-deploy ${web.servers} ${deployment.profile} ${package.name}
 }
 
-task importmodules {
+task web-deploy -depends importsettings {
 	import-module powerupfilesystem
 	import-module powerupweb
-	import-module powerupremote
-}
 
-task web-deploy -depends importsettings, importmodules {
 	$packageFolder = get-location
 	copy-mirroreddirectory $packageFolder\simplewebsite ${deployment.root}\${website.name} 
 
