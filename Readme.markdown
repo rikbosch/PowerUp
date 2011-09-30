@@ -13,9 +13,6 @@ It also bundles convenient  tools to enable the configuration of Windows servers
 
 # Status
 
-*Due to a recent refactor to allow remote execution of psake tasks, some of the following documentation is currently out of date.
-This should be correct early September 2011. In the mean time, please follow the quickstart guide, and examine the deploy.ps1 file to understand how the current version works*
-
 PowerUp is already being regularly used internally by Affinity ID to release projects through to Live.  
 This includes file deployment, website creation (with SSL), and Umbraco Courier revision publications.  
 
@@ -30,6 +27,7 @@ In addition to the core framework, deployment modules are being created all the 
 - Administration of scheduled tasks, windows services  
 
 Follow @powerupdeploy on Twitter to keep up to date with progress.
+Also, I will be posting a series a blog entries at http://llevera.wordpress.com/2011/09/04/building-powerup-the-exclusive-behind-the-scenes-making-of-mini-series/ which will detail the design and use of PowerUp.
 
 # QuickStart
 
@@ -40,132 +38,12 @@ To run, do the following:
 
 - Git clone or download to any local directory
 - Install the IIS Powershell snapin http://learn.iis.net/page.aspx/429/installing-the-iis-70-powershell-snap-in/
-- Run build_package_deploy_local.bat to deploy two versions (a trunk and branch) of a typical website to localhost
+- Run build_package_nant_deploy_local.bat to deploy a typical website to localhost
 - Browse to http://localhost:9000 and https://localhost:9001 to see the http/https version of trunk
-- Browse to http://localhost:10000 and https://localhost:10001 to see the http/https version of branch
 
-# Full Details
+# Disclaimer of Background Influences
 
-## Packages
-
-In contrast to other types of deployment packages (msis, installshield etc), PowerUp packages are just simple zip files. Within these packages are the files from your solution, supporting PowerUp files (mostly PowerShell script files, cmdlets, and some 3rd party tools), and a few files per project to direct how the package should deploy.  
-
-## Settings
-
-Although packages are environment neutral, they also contain a settings file. This files lays out in plain text a set of key/value pairs describing the configuration of each environment. Not only are these settings available within your scripts, they can also be used to substitute into any plain text file.
-
-## Deployment scripts
-
-As the deployment script is written in Powershell, there is essentially no limit to what can be done. The capabilities currently bundled within PowerUp (by way of cmdlet modules) include:  
-
-- Creating websites, app pools, virtual directories. Includes ssl creation    
-- Copying files quickly and robustly with robocopy  
-- Deploying with Umbraco Courier  
-
-But, of course, this is just the beginning. As PowerShell is the first class scripting environment in Windows, you are free to use any script, cmdlet or plain executable you choose.  
-
-## How to Integrate Into a Project
-
-For most deployments, only 4 things need to be created:  
-
-- The nant script main.build or msbuild file main.msbuild, describing how to build and what files are to be contained in the package.  
-- A plain text file (settings.txt) with a list of configuration settings per environment  
-- A set of templates (typically web.configs) with placeholders for the defined settings (_templates folder)
-- A Powershell file (deploy.ps1), to be executed on the destination machine  
-
-## Full Explaination of Source Structure
-
-- The files in the _powerup directory are the core PowerUp framework that should be put in the root of the source tree your will be deploying. This can be done (for example) with an svn extern. Any changes to the _powerup folder should be treated as a fork or PowerUp. If you don't alter this directory, you should be able to upgrade powerup at any time.
-- The directory SimpleWebsite is the example website being deployed.
-- The file main.build is a Nant file the describes which files need to be added to the package. The nant file included within main.build (common.build) takes care of compiling your solution, adding the required PowerUp files, and zipping everything up.
-- The file main.msbuild is a MSBuild file equivalent in end result to the nant file. Which you use (nant vs msbuild) is up to you.
-- The file deploy.ps1 (which is a psake file) describes what needs to be done to deploy your package to a server. This script can assume it is running on the destination server itself (so all paths are local etc)
-- The file settings.txt .
-- The directory _templates, used to create templated versions of any files that require values substituted into them (see below for more details)
-- The files build_package.bat and build_package_deploy_local.bat are simply convenience batch files.
-
-# FAQs
-
-## Could I use PowerUp for projects not written in .Net?
-
-Yes. By default the helper Nant script assumes a single .Net solution file. But this can easily be replaced with any set of build steps.
-
-## Why have both Nant and MSBuild for building packages, but Powershell for deployments?
-
-Nant and MSBuild are both designed to build .Net solutions, and do so very well. They are exceptionally expressive when it comes to file copying, which creates a nice declarative syntax with which to construct packages. They are not, however, so strong for performing deployments, due their inexpressiveness as general purpose scripting languages.
-
-That is why both Nant/MSBuild and Powershell are used with PowerUp.
-
-Nant and MSBuild are both included as options simply as there are many build scripts already out in the wild, and providing both lowers the barrier to entry.
-
-Having done both, I personally still prefer Nant.
-
-## Why Not Use Web Deployment Projects/Configuration Transformations?
-
-There are couple of reasons behind this decision:  
-
-- You need to build for each environment  
-- You can only use if for xml config files  
-- You can only easily use it for web.config  
-- It hides the settings within an xml transform, which prevents the centralisation of settings into a single, easy to read, file  
-- It is .Net only  
-
-Having said that, it would be possible to adapt PowerUp to most configuration substitution schemes. The only restriction is that one package must contain everything required for all environments, without rebuilding.
-
-## Why use psexec when there is PowerShell Remoting?
-
-Psexec is used for two reasons. One is that it is very simple and reliable. Secondly, we experienced (fairly typical) issues setting up Powershell Remoting in our environment.  
-
-Contributions that incorporate powershell remoting would be welcome.
-
-## What Permissions are Required?
-
-Due to the nature of most deployments, the permissions of the executing account have to be fairly elevated. Local admin would be required for most deployments. At the very least, you need to be local admin on the destination server for psexec to work.
-
-Obviously, if any scripts attempt to manipulate (for example) Active Directory, then domain admin rights may be required.
-
-## Integration with CI tools
-
-PowerUp has been very carefully constructed to play nicely with CI tools. Our CI tool of choice is currently Bamboo, but TeamCity etc should function well.    
-Powershell, psexec and robocopy pose unique challenges in this area, which we have been overcome.
-
-Essentially these challenges amount to ensuring standard output and error are written to correctly, and that return codes are appropriate.
-
-## How Can I Extend PowerUp?
-
-We expect extension will mainly come from new cmdlets. There are a few ways this can be done:  
-- Write new cmdlets, and make a pull request to contribute back to PowerUp. It would be ideal for PowerUp to start being a repository of the very best deployment related cmdlets. These cmdlets will be almost always be useable by anyone, even if not throw the PowerUp framework.  
-- Use cmdlets you find elsewhere, imported only in your own psake deploy file.  
-- Write your own proprietary cmdlets, which never have to leave your organisation.  
-
-The core PowerUp framework should not need to change as much as the deployment cmdlets.
-
-## What about Azure?
-
-I'm no expert. But as long as you can copy zip files and can run Powershell, any Windows environment should be supported.
-
-## What about AppHarbour?
-
-Without a doubt, AppHarbour is a great tool for deploying simple cloud hosted websites.
-By design, AppHarbour has decided to be very simple. PowerUp gives far more control.
-
-Particular difference include:  
-- You can deploy more than websites (services, desktop applications)   
-- You can deploy code in any language (as long as it runs on Windows)    
-- You can substitute any value within any text file, not just app settings  
-- You can run arbitrary powershell scripts  
-- Deployments can be made from more than a single git repo    
-
-This is very much a case of horses for courses.
-
-In theory, there is potential to allow PowerUp to enhance AppHarbour deployments. This has not been explored in detail at this stage.
-
-
-# Appendix
-
-## Disclaimer of Background Influences
-
-PowerUp is influenced by a number of previous tools, including proprietary ones.
+PowerUp is influenced by a number of existing tools, including proprietary ones.
 In particular, many ideas are similar to the Nant based build system used by BBC Worldwide.
 
 The aspects where this influence shows are, in particular:  
