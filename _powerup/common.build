@@ -53,6 +53,7 @@
 		<include name="servers.txt"/>
       </fileset>
     </copy>
+	<echo file="${package.dir}\timestamp"></echo>
 	<move todir="${package.dir}" overwrite="true">
 		<fileset basedir="${package.dir}\_powerup">  					
 			<include name="deploy.bat"/>

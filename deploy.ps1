@@ -5,17 +5,14 @@ include .\_powerup\commontasks.ps1
 
 task default -depends deploy
 
-task deploy -depends importsettings, importmodules, distributepackages {
-	invoke-remotetasks web-deploy ${web.servers} ${deployment.environment} ${package.name}
+task deploy -depends importmodules, importsettings {
+	invoke-remotetasks web-deploy ${web.servers} ${deployment.profile} ${package.name}
 }
 
 task importmodules {
 	import-module powerupfilesystem
 	import-module powerupweb
-}
-
-task distributepackages {
-	copy-packages ${all.servers} ${package.name}
+	import-module powerupremote
 }
 
 task web-deploy -depends importsettings, importmodules {

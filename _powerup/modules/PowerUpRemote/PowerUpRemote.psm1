@@ -1,22 +1,24 @@
 
-function invoke-remotetasks( $tasks, $serverNames, $deploymentEnvironment, $packageName, $tool=$null)
+function invoke-remotetasks($tasks, $serverNames, $deploymentEnvironment, $packageName, $remoteexecutiontool=$null, $settingsFile="servers.txt")
 {
 	$currentLocation = get-location
-	$servers = get-serversettings $currentLocation\servers.txt $serverNames
+	$servers = get-serversettings $currentLocation\$settingsFile $serverNames
 
+	copy-package $servers $packageName
+	
 	foreach ($server in $servers)
 	{			
-		if (!$tool)
+		if (!$remoteexecutiontool)
 		{	
-			$tool = $server['remote.task.execution.tool']
+			$remoteexecutiontool = $server['remote.task.execution.remoteexecutiontool']
 			
-			if (!$tool)
+			if (!$remoteexecutiontool)
 			{
-				$tool = 'psexec'
+				$remoteexecutiontool = 'psexec'
 			}			
 		}
 				
-		if ($tool -eq 'psremoting')
+		if ($remoteexecutiontool -eq 'psremoting')
 		{
 			invoke-remotetaskwithremoting $tasks $server $deploymentEnvironment $packageName
 		}
@@ -42,7 +44,7 @@ function invoke-remotetaskswithremoting( $tasks, $serverNames, $deploymentEnviro
 function invoke-remotetaskwithpsexec( $tasks, $server, $deploymentEnvironment, $packageName )
 {
 	$serverName = $server['server.name']
-	echo "===== Beginning execution of tasks $tasks on server $serverName ====="
+	write-host "===== Beginning execution of tasks $tasks on server $serverName ====="
 
 	$fullLocalReleaseWorkingFolder = $server['local.temp.working.folder'] + '\' + $packageName
 	$batchFile = $fullLocalReleaseWorkingFolder + '\' + 'deploy.bat'
@@ -56,27 +58,24 @@ function invoke-remotetaskwithpsexec( $tasks, $server, $deploymentEnvironment, $
 		cmd /c cscript.exe $PSScriptRoot\cmd.js $PSScriptRoot\psexec.exe \\$serverName /accepteula -w $fullLocalReleaseWorkingFolder $batchFile $deploymentEnvironment $tasks		
 	}
 	
-	echo "========= Finished execution of tasks $tasks on server $serverName ====="
+	write-host "========= Finished execution of tasks $tasks on server $serverName ====="
 }
 
 function invoke-remotetaskwithremoting( $tasks, $server, $deploymentEnvironment, $packageName )
 {	
 	$serverName = $server['server.name']
-	echo "===== Beginning execution of tasks $tasks on server $serverName ====="
+	write-host "===== Beginning execution of tasks $tasks on server $serverName ====="
 
 	$fullLocalReleaseWorkingFolder = $server['local.temp.working.folder'] + '\' + $packageName
 
 	$command = ".$psakeFile -buildFile $deployFile -deploymentEnvironment $deploymentEnvironment -tasks $tasks"		
 	Invoke-Command -scriptblock { param($workingFolder, $env, $tasks) set-location $workingFolder; .\_powerup\deploy_with_psake.ps1 -buildFile .\deploy.ps1 -deploymentEnvironment $env -tasks $tasks } -computername $serverName -ArgumentList $fullLocalReleaseWorkingFolder, $deploymentEnvironment, $tasks 
 	
-	echo "========= Finished execution of tasks $tasks on server $serverName ====="
+	write-host "========= Finished execution of tasks $tasks on server $serverName ====="
 }
 
-function copy-packages($serverNames, $packageName)
-{	
-	$currentLocation = get-location
-	
-	$servers = get-serversettings $currentLocation\servers.txt $serverNames
+function copy-package($servers, $packageName)
+{		
 	import-module powerupfilesystem
 
 	foreach ($server in $servers)
@@ -88,15 +87,32 @@ function copy-packages($serverNames, $packageName)
 		{
 			throw "Setting remote.temp.working.folder not set for server $serverName"
 		}
-	
+			
 		$remotePath = $remoteDir + '\' + $packageName
-		echo "Copying deployment package to $remotePath"
-		Copy-MirroredDirectory $currentLocation $remotePath
+		$currentLocation = get-location
+
+		$packageCopyRequired = $false
+				
+		if ((!(Test-Path $remotePath\timestamp) -or !(Test-Path $currentLocation\timestamp)))
+		{		
+			$packageCopyRequired = $true
+		}
+		else
+		{
+			$packageCopyRequired = !((Get-Item $remotePath\timestamp).LastWriteTime -eq (Get-Item $currentLocation\timestamp).LastWriteTime)
+		}
+		
+		if ($packageCopyRequired)
+		{	
+			write-host "Copying deployment package to $remotePath"
+			Copy-MirroredDirectory $currentLocation $remotePath
+		}
 	}
 }	
 
 function get-serverSettings($settingsFile, $serverList)
 {
+	import-module AffinityId\Id.PowershellExtensions.dll
 	$serverNames = $serverList.split(';')
 	
 	if (!$serverNames)
@@ -133,4 +149,4 @@ function enable-psremotingforpowerup
 	Copy-Item $currentPath\_powerup\powershell.exe.config -destination C:\Windows\System32\wsmprovhost.exe.config -force
 }
 				
-export-modulemember -function invoke-remotetasks, invoke-remotetaskswithpsexec, invoke-remotetaskswithremoting, copy-packages, get-serverSettings, enable-psremotingforpowerup
+export-modulemember -function invoke-remotetasks, invoke-remotetaskswithpsexec, invoke-remotetaskswithremoting, get-serversettings, enable-psremotingforpowerup
