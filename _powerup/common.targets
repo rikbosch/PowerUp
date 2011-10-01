@@ -26,6 +26,12 @@
       <FilesForRoot Include="$(PackageFolder)\_powerup\deploy.bat" />
     </ItemGroup>
 
+	<WriteLinesToFile
+            File="$(PackageFolder)\package.id"
+            Lines="$(SolutionName)"
+            Overwrite="true"
+            />
+	
     <Copy
             SourceFiles="@(PowerUp)"
             DestinationFolder="$(PackageFolder)\_powerup\%(RecursiveDir)"/>
@@ -68,6 +74,13 @@
   </Target>
 
   <Target Name="compile-solution">
+    <ItemGroup>
+    <Solution Include="$(SolutionName).sln">
+      <Properties>Configuration=$(BuildConfiguration)</Properties>
+    </Solution>
+  </ItemGroup>
+
+  
     <MSBuild Projects="@(Solution)" />
   </Target>
 </Project>
