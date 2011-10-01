@@ -9,7 +9,6 @@
 
 	<Import Project="$(MSBuildThisFileDirectory)\_powerup\common.targets"/>
 
-
   <Target Name="package-project">
     <PropertyGroup>
       <WebsiteDir>SimpleWebsite</WebsiteDir>
