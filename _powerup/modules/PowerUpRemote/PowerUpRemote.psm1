@@ -93,13 +93,13 @@ function copy-package($servers, $packageName)
 
 		$packageCopyRequired = $false
 				
-		if ((!(Test-Path $remotePath\timestamp) -or !(Test-Path $currentLocation\timestamp)))
+		if ((!(Test-Path $remotePath\package.id) -or !(Test-Path $currentLocation\package.id)))
 		{		
 			$packageCopyRequired = $true
 		}
 		else
 		{
-			$packageCopyRequired = !((Get-Item $remotePath\timestamp).LastWriteTime -eq (Get-Item $currentLocation\timestamp).LastWriteTime)
+			$packageCopyRequired = !((Get-Item $remotePath\package.id).LastWriteTime -eq (Get-Item $currentLocation\package.id).LastWriteTime)
 		}
 		
 		if ($packageCopyRequired)

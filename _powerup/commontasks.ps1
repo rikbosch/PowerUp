@@ -17,7 +17,9 @@ function getPlainTextServerSettings($serverName)
 function run($task, $servers)
 {
 	import-module powerupremote	
-	invoke-remotetasks $task $servers ${deployment.profile} ${package.name} $serverSettingsScriptBlock
+	$currentPath = Get-Location
+	$packageName =	Get-Content $currentPath\package.id	
+	invoke-remotetasks $task $servers ${deployment.profile} $packageName $serverSettingsScriptBlock
 }
 
 task importsettings {

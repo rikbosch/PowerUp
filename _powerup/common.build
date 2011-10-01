@@ -53,17 +53,16 @@
 		<include name="servers.txt"/>
       </fileset>
     </copy>
-	<echo file="${package.dir}\timestamp"></echo>
+	<echo file="${package.dir}\package.id">${solution.name}</echo>
 	<move todir="${package.dir}" overwrite="true">
 		<fileset basedir="${package.dir}\_powerup">  					
 			<include name="deploy.bat"/>
-			<include name="create_package_for_environment.bat"/>
 		</fileset>
 	</move>
   </target> 
   
   <target name="zip-package">
-	<zip zipfile="${package.dir}\package_${build.number}.zip">
+	<zip zipfile="${package.dir}\package_${solution.name}_${build.number}.zip">
 	  <fileset basedir="${package.dir}">
 		<include name="**\*.*" />		
 	  </fileset>

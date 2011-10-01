@@ -1,5 +1,4 @@
 default
-	package.name			Samples
 	website.name			SimpleWebsite
 	deployment.root			${root.drive}\sites
 	http.port				80
