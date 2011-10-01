@@ -1,20 +1,39 @@
+function getPlainTextDeploymentProfileSettings($deploymentProfile)
+{
+	import-module AffinityId\Id.PowershellExtensions.dll
+	$currentPath = Get-Location
+
+	get-parsedsettings $currentPath\settings.txt $deploymentProfile
+}
+
+function getPlainTextServerSettings($serverName)
+{
+	import-module AffinityId\Id.PowershellExtensions.dll
+	$currentPath = Get-Location
+
+	get-parsedsettings $currentPath\servers.txt $serverName
+}
+
+function run($task, $servers)
+{
+	import-module powerupremote	
+	invoke-remotetasks $task $servers ${deployment.profile} ${package.name} $serverSettingsScriptBlock
+}
 
 task importsettings {
 	import-module powerupsettings
-	import-module AffinityId\Id.PowershellExtensions.dll
 	import-module poweruptemplates
 
-	$currentPath = Get-Location
-
-	echo "Copying files specific to this profile to necessary folders within the package"
-	merge-environmentspecificfiles ${deployment.profile}
-
-	$settings = get-parsedsettings $currentPath\settings.txt ${deployment.profile}
-	import-settings $settings
+	$deploymentProfileSettings = &$deploymentProfileSettingsScriptBlock ${deployment.profile}
+	import-settings $deploymentProfileSettings
 		
 	echo "Package settings for this profile are:"
-	$settings | Format-Table -property *
+	$deploymentProfileSettings | Format-Table -property *
 	
 	echo "Substituting and copying templated files"	
-	merge-templates $settings ${deployment.profile}
+	merge-templates $deploymentProfileSettings ${deployment.profile}
 }
+
+$deploymentProfileSettingsScriptBlock = $function:getPlainTextDeploymentProfileSettings
+$serverSettingsScriptBlock = $function:getPlainTextServerSettings
+

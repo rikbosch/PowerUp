@@ -1,8 +1,8 @@
 
-function invoke-remotetasks($tasks, $serverNames, $deploymentEnvironment, $packageName, $remoteexecutiontool=$null, $settingsFile="servers.txt")
+function invoke-remotetasks($tasks, $serverNames, $deploymentEnvironment, $packageName, $settingsFunction, $remoteexecutiontool=$null)
 {
 	$currentLocation = get-location
-	$servers = get-serversettings $currentLocation\$settingsFile $serverNames
+	$servers = get-serversettings $settingsFunction $serverNames
 
 	copy-package $servers $packageName
 	
@@ -110,9 +110,8 @@ function copy-package($servers, $packageName)
 	}
 }	
 
-function get-serverSettings($settingsFile, $serverList)
+function get-serverSettings($settingsFunction, $serverList)
 {
-	import-module AffinityId\Id.PowershellExtensions.dll
 	$serverNames = $serverList.split(';')
 	
 	if (!$serverNames)
@@ -124,7 +123,7 @@ function get-serverSettings($settingsFile, $serverList)
 	
 	foreach($serverName in $serverNames)
 	{
-		$serverSettings = get-parsedsettings $settingsFile $serverName		
+		$serverSettings = &$settingsFunction $serverName		
 		$servers += $serverSettings
 	}
 	
@@ -149,4 +148,4 @@ function enable-psremotingforpowerup
 	Copy-Item $currentPath\_powerup\powershell.exe.config -destination C:\Windows\System32\wsmprovhost.exe.config -force
 }
 				
-export-modulemember -function invoke-remotetasks, invoke-remotetaskswithpsexec, invoke-remotetaskswithremoting, get-serversettings, enable-psremotingforpowerup
+export-modulemember -function invoke-remotetasks, invoke-remotetaskswithpsexec, invoke-remotetaskswithremoting, enable-psremotingforpowerup

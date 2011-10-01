@@ -23,7 +23,7 @@
       <PowerUp Include="_powerup\**\*.*" Exclude="_powerup\nant\**;_powerup\MSBuild.Community.Tasks\**"/>
       <Environments Include="_environments\**\*.*" />
       <Templates Include="_templates\**\*.*" />
-      <FilesForRoot Include="$(PackageFolder)\_powerup\deploy.bat;$(PackageFolder)\_powerup\create_package_for_environment.bat" />
+      <FilesForRoot Include="$(PackageFolder)\_powerup\deploy.bat" />
     </ItemGroup>
 
     <Copy
