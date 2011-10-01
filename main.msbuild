@@ -3,11 +3,15 @@
 	DefaultTargets="build">
 
 	  <PropertyGroup>
-    <BuildConfiguration>Release</BuildConfiguration>
-  </PropertyGroup>
+		<SolutionName>SampleSolution</SolutionName>
+		<BuildConfiguration>Release</BuildConfiguration>
+	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)\_powerup\common.targets"/>
 
+	<PropertyGroup>
+	</PropertyGroup>
+	
   <ItemGroup>
     <Solution Include="SampleSolution.sln">
       <Properties>Configuration=$(BuildConfiguration)</Properties>
