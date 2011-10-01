@@ -36,7 +36,9 @@ To run, do the following:
 - Git clone or download to any local directory
 - Install the IIS Powershell snapin http://learn.iis.net/page.aspx/429/installing-the-iis-70-powershell-snap-in/
 - Run build_package_nant_deploy_local.bat to deploy a typical website to localhost
-- Browse to http://localhost:9000 and https://localhost:9001 to see the http/https version of trunk
+- Browse to http://localhost:9000 
+
+This quickstart can be found in more detail here: http://llevera.wordpress.com/2011/10/01/powerup-quickstart/
 
 # Disclaimer of Background Influences
 
