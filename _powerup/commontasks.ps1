@@ -26,6 +26,8 @@ tasksetup {
 	& $setupScriptBlock
 }
 
+task default -depends deploy 
+
 function mergeSettingsAndProcessTemplates()
 {
 	import-module powerupsettings

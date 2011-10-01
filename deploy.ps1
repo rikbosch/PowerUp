@@ -1,7 +1,5 @@
 include .\_powerup\commontasks.ps1
 
-task default -depends deploy
-
 task deploy {
 	run web-deploy ${web.servers} 
 }
