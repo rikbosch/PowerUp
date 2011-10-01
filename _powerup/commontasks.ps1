@@ -22,7 +22,12 @@ function run($task, $servers)
 	invoke-remotetasks $task $servers ${deployment.profile} $packageName $serverSettingsScriptBlock
 }
 
-task importsettings {
+tasksetup {
+	& $setupScriptBlock
+}
+
+function mergeSettingsAndProcessTemplates()
+{
 	import-module powerupsettings
 	import-module poweruptemplates
 
@@ -36,6 +41,8 @@ task importsettings {
 	merge-templates $deploymentProfileSettings ${deployment.profile}
 }
 
+
 $deploymentProfileSettingsScriptBlock = $function:getPlainTextDeploymentProfileSettings
 $serverSettingsScriptBlock = $function:getPlainTextServerSettings
+$setupScriptBlock = $function:mergeSettingsAndProcessTemplates
 

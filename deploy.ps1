@@ -1,15 +1,12 @@
-properties{
-}
-
 include .\_powerup\commontasks.ps1
 
 task default -depends deploy
 
-task deploy -depends importsettings {
+task deploy {
 	run web-deploy ${web.servers} 
 }
 
-task web-deploy -depends importsettings {
+task web-deploy  {
 	import-module powerupfilesystem
 	import-module powerupweb
 
@@ -22,4 +19,3 @@ task web-deploy -depends importsettings {
 	set-sslbinding ${website.name} "*" ${https.port} 
 	new-websitebinding ${website.name} ""  "https" "*" ${https.port} 
 }
-
