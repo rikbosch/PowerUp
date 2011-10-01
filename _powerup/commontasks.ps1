@@ -19,7 +19,14 @@ function run($task, $servers)
 	import-module powerupremote	
 	$currentPath = Get-Location
 	$packageName =	Get-Content $currentPath\package.id	
-	invoke-remotetasks $task $servers ${deployment.profile} $packageName $serverSettingsScriptBlock
+	
+	$serverNames = $servers.split(';')
+	if (!$serverNames)
+	{
+		$serverNames = @($servers)
+	}
+	
+	invoke-remotetasks $task $serverNames ${deployment.profile} $packageName $serverSettingsScriptBlock
 }
 
 tasksetup {

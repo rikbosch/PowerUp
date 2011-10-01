@@ -5,7 +5,7 @@ default
 	https.port				443
 
 local
-	web.servers				localhost 
+	web.servers				localhost
 	root.drive				c:
 	http.port				9000
 	https.port				9001
