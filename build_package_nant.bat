@@ -1,2 +1,2 @@
-_powerup\nant\bin\nant build-package
+_powerup\nant\bin\nant
 pause
