@@ -1,22 +1,17 @@
-<project default="build-package">
-	<target name="build-package" depends="build-package-common" />
-    <property name="solution.name" value="SampleSolution" />
-  
-  <include buildfile="_powerup\common.build" />
-  <target name="package-project" depends="copy-website" />
-  	
-  <target name="copy-website">
-	<echo message="${solution.dir}\SimpleWebsite"/>
-    <copy todir="${package.dir}\SimpleWebsite" overwrite="true" flatten="false" includeemptydirs="true">
-      <fileset basedir="${solution.dir}\SimpleWebsite">		
-		<include name="**.aspx"/>
-		<include name="**.css"/>
-		<include name="**.js"/>
-		<include name="**.master"/>
-		<include name="bin/**"/>
-      </fileset>
-    </copy>
-  </target>
+<project default="build-package-common">
+	<include buildfile="_powerup\common.build" />
 
+	<property name="solution.name" value="SampleSolution" />
   
+	<target name="package-project">
+		<copy todir="${package.dir}\SimpleWebsite" overwrite="true" flatten="false" includeemptydirs="true">
+			<fileset basedir="${solution.dir}\SimpleWebsite">		
+				<include name="**.aspx"/>
+				<include name="**.css"/>
+				<include name="**.js"/>
+				<include name="**.master"/>
+				<include name="bin/**"/>
+			</fileset>
+		</copy>
+	</target>
 </project>
