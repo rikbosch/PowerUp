@@ -1,17 +1,30 @@
-function getPlainTextDeploymentProfileSettings($deploymentProfile)
-{
-	import-module AffinityId\Id.PowershellExtensions.dll
-	$currentPath = Get-Location
 
-	get-parsedsettings $currentPath\settings.txt $deploymentProfile
-}
 
 function getPlainTextServerSettings($serverName)
 {
-	import-module AffinityId\Id.PowershellExtensions.dll
-	$currentPath = Get-Location
+	getPlainTextSettings $serverName servers.txt
+}
 
-	get-parsedsettings $currentPath\servers.txt $serverName
+function getPlainTextDeploymentProfileSettings($deploymentProfile)
+{
+	getPlainTextSettings $deploymentProfile settings.txt
+}
+
+function getPlainTextSettings($parameter, $fileName)
+{
+	$currentPath = Get-Location
+	$fullFilePath = "$currentPath\$fileName"
+
+	write-host $fullFilePath
+	
+	import-module AffinityId\Id.PowershellExtensions.dll
+
+	if (!(test-path $fullFilePath))
+	{
+		return $null
+	}
+	
+	get-parsedsettings $fullFilePath $parameter
 }
 
 function run($task, $servers)
@@ -41,13 +54,17 @@ function mergeSettingsAndProcessTemplates()
 	import-module poweruptemplates
 
 	$deploymentProfileSettings = &$deploymentProfileSettingsScriptBlock ${deployment.profile}
-	import-settings $deploymentProfileSettings
-		
-	echo "Package settings for this profile are:"
-	$deploymentProfileSettings | Format-Table -property *
 	
-	echo "Substituting and copying templated files"	
-	merge-templates $deploymentProfileSettings ${deployment.profile}
+	if ($deploymentProfileSettings)
+	{
+		import-settings $deploymentProfileSettings
+			
+		echo "Package settings for this profile are:"
+		$deploymentProfileSettings | Format-Table -property *
+		
+		echo "Substituting and copying templated files"	
+		merge-templates $deploymentProfileSettings ${deployment.profile}
+	}
 }
 
 
