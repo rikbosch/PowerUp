@@ -57,8 +57,14 @@ function invoke-remotetaskwithpsexec( $tasks, $server, $deploymentEnvironment, $
 	{
 		cmd /c cscript.exe $PSScriptRoot\cmd.js $PSScriptRoot\psexec.exe \\$serverName /accepteula -w $fullLocalReleaseWorkingFolder $batchFile $deploymentEnvironment $tasks		
 	}
-	
+		
 	write-host "====== Finished execution of tasks $tasks on server $serverName ====="
+
+	if ($lastexitcode -ne 0)
+	{
+		throw "Remotely executed task(s) failed with return code $lastexitcode"
+	}
+	
 }
 
 function invoke-remotetaskwithremoting( $tasks, $server, $deploymentEnvironment, $packageName )
