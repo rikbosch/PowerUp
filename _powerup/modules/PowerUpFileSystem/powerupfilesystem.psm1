@@ -1,4 +1,13 @@
 
+function Ensure-Directory([string]$directory)
+{
+	if (!(Test-Path $directory -PathType Container))
+	{
+		Write-Host "Creating folder $directory"
+		New-Item $directory -type directory
+	}
+}
+
 function ReplaceDirectory([string]$sourceDirectory, [string]$destinationDirectory)
 {
 	if (Test-Path $destinationDirectory -PathType Container)
@@ -32,8 +41,12 @@ function Copy-MirroredDirectory([string]$sourceDirectory, [string]$destinationDi
 		Write-Host "Successfully mirrored to $destinationDirectory "
 		cmd /c #reset the lasterrorcode strangely set by robocopy to be non-0
 	}
+	else
+	{
+		throw "Robocopy failed to mirror to $destinationDirectory. Exited with exit code $lastexitcode"
+	}
 }
 
 Set-Alias Copy-Directory RobocopyDirectory
 
-Export-ModuleMember -function Copy-MirroredDirectory, RobocopyDirectory -alias Copy-Directory
+Export-ModuleMember -function Ensure-Directory, Copy-MirroredDirectory, RobocopyDirectory -alias Copy-Directory
