@@ -43,10 +43,17 @@ function run($task, $servers)
 }
 
 tasksetup {
-	& $setupScriptBlock
+	& $preprocessPackageScriptBlock
+	& $processSettingsScriptBlock
 }
 
 task default -depends deploy 
+
+function touchPackageIdFile()
+{
+	$path = get-location 
+	(Get-Item $path\package.id).LastWriteTime = [datetime]::Now
+}
 
 function mergeSettingsAndProcessTemplates()
 {
@@ -70,5 +77,6 @@ function mergeSettingsAndProcessTemplates()
 
 $deploymentProfileSettingsScriptBlock = $function:getPlainTextDeploymentProfileSettings
 $serverSettingsScriptBlock = $function:getPlainTextServerSettings
-$setupScriptBlock = $function:mergeSettingsAndProcessTemplates
+$processSettingsScriptBlock = $function:mergeSettingsAndProcessTemplates
+$preprocessPackageScriptBlock = $function:touchPackageIdFile
 
