@@ -1,9 +1,9 @@
-param([string]$buildNumber)
 $currentPath = Get-Location
 
+copy-item _powerup\unzip.exe $currentPath\unzipexe.exe
 
-$zipFile = "$currentPath\package_$buildNumber.zip"
-_powerup\unzip.exe -o -q $zipFile 
+$zipFiles = Get-ChildItem $currentPath | where { $_.extension -eq ".zip" }
+$zipFiles | % { .\unzipexe.exe -o -q $_ }
 
-Remove-Item $currentPath\package_$buildNumber.zip
-
+$zipFiles | Remove-Item
+remove-item $currentPath\unzipexe.exe

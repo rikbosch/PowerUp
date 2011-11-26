@@ -237,6 +237,12 @@ function New-WebSiteBinding($websiteName, $hostHeader, $protocol="http", $ip="*"
 	New-WebBinding -Name $websiteName -IP $ip -Port $port -Protocol $protocol -HostHeader $hostHeader
 }
 
+function New-WebSiteBindingNonHttp($websiteName, $protocol, $bindingInformation)
+{
+	echo "Binding website $websiteName to binding information $bindingInformation over $protocol"
+	New-ItemProperty $sitesPath\$websiteName –name bindings –value @{protocol="$protocol";bindingInformation="$bindingInformation"}
+}
+
 function Set-SslBinding($certName, $ip, $port)
 {
 	write-host "Binding certifcate $certName to IP $ip, port $port"
@@ -282,7 +288,27 @@ function set-apppoolidentitytouser($appPoolName, $userName, $password)
 	$appPool.processModel.password = $password
 	$appPool.processModel.identityType = 3
 	$appPool | set-item
-	
 }
 
-export-modulemember -function set-apppoolidentitytouser, new-webapplication, start-apppoolandsite, stop-apppoolandsite, set-website,set-webapppool,New-WebSiteBinding,set-SelfSignedSslCertificate, set-sslbinding, set-WebsiteForSsl
+function set-apppoolidentityType($appPoolName, [int]$identityType)
+{
+	echo "Setting $appPoolName to be run under the identityType $identityType"
+	$appPool = Get-Item $appPoolsPath\$appPoolName
+	$appPool.processModel.identityType = $identityType
+	$appPool | set-item
+}
+
+function set-apppoolstartMode($appPoolName, [int]$startMode)
+{
+	echo "Setting $appPoolName to be run with startMode $startMode"
+	$appPool = Get-Item $appPoolsPath\$appPoolName
+	$appPool.startMode = $startMode
+	$appPool | set-item
+}
+
+function set-property($applicationPath, $propertyName, $value)
+{
+	Set-ItemProperty $sitesPath\$applicationPath -name $propertyName -value $value
+}
+
+export-modulemember -function set-apppoolidentitytouser, set-apppoolidentityType, set-apppoolstartMode, new-webapplication, start-apppoolandsite, stop-apppoolandsite, set-website,set-webapppool,New-WebSiteBinding,New-WebSiteBindingNonHttp,set-SelfSignedSslCertificate, set-sslbinding, ConfigureWebsiteForSsl, set-property
