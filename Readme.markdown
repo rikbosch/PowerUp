@@ -18,14 +18,15 @@ This includes file deployment, website creation (with SSL), App Fabric, MSMQ, Am
 
 The basic framework should now be fairly stable.
 Different deployment cmdlets are being actively developed all the time. Coming up are:  
-
 - Database admin, such as backing up/restoring and migrations   
 - Administration of scheduled tasks and windows services  
+- "Rolling" no-downtime website deployments, in the style of capistrano
+- Simplified, declarative syntax for common website deployments  
 
-Other aspects that may make an appearance in the future are
-- SSRS maintenance
-- Sharepoint administration
-- Alertnative setting formats (eg YML)
+Other aspects that may make an appearance in the future are:  
+- SSRS maintenance  
+- Sharepoint administration  
+- Alertnative setting formats (eg YML)  
 
 Follow @powerupdeploy on Twitter to keep up to date with progress.
 Also, I will be posting a series a blog entries at http://llevera.wordpress.com/2011/09/04/building-powerup-the-exclusive-behind-the-scenes-making-of-mini-series/ which will detail the design and use of PowerUp.
@@ -68,3 +69,8 @@ http://code.google.com/p/uppercut/
 Largely a build and test running framework, not a deployment one.
 In theory, UppercuT could be used as an alternative to straight Nant to create PowerUp packages.
 It does, however, build a package per environment which goes against the environment neutrality built into PowerUp packages.
+
+### Pstrami
+https://github.com/jhicks/pstrami
+
+Has an attractively closer similarity to capistrano in terms of the script syntax, but has less functionality overall.
