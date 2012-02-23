@@ -1,4 +1,4 @@
-
+$iisPath = "IIS:\"
 $sitesPath = "IIS:\sites"
 $appPoolsPath = "IIS:\apppools"
 $bindingsPath = "IIS:\sslbindings"
@@ -272,7 +272,6 @@ function Stop-AppPoolAndSite($appPoolName, $siteName)
 	StopSite($siteName)
 }
 
-
 function Start-AppPoolAndSite($appPoolName, $siteName)
 {
 	write-host "Starting app pool $appPoolName and site $siteName"
@@ -311,4 +310,4 @@ function set-property($applicationPath, $propertyName, $value)
 	Set-ItemProperty $sitesPath\$applicationPath -name $propertyName -value $value
 }
 
-export-modulemember -function set-apppoolidentitytouser, set-apppoolidentityType, set-apppoolstartMode, new-webapplication, start-apppoolandsite, stop-apppoolandsite, set-website,set-webapppool,New-WebSiteBinding,New-WebSiteBindingNonHttp,set-SelfSignedSslCertificate, set-sslbinding, ConfigureWebsiteForSsl, set-property
+export-modulemember -function set-apppoolidentitytouser, set-apppoolidentityType, set-apppoolstartMode, new-webapplication, start-apppoolandsite, start-apppool, start-site, stop-apppoolandsite, set-website,set-webapppool,New-WebSiteBinding,New-WebSiteBindingNonHttp,set-SelfSignedSslCertificate, set-sslbinding, Set-WebsiteForSsl, set-property

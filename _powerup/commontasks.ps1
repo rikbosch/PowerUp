@@ -14,8 +14,6 @@ function getPlainTextSettings($parameter, $fileName)
 {
 	$currentPath = Get-Location
 	$fullFilePath = "$currentPath\$fileName"
-
-	write-host $fullFilePath
 	
 	import-module AffinityId\Id.PowershellExtensions.dll
 
@@ -46,12 +44,17 @@ function run($task, $servers, $remoteWorkingSubFolder = $null)
 	invoke-remotetasks $task $serverNames ${deployment.profile} $remoteWorkingSubFolder $serverSettingsScriptBlock
 }
 
-tasksetup {
-	& $preprocessPackageScriptBlock
-	& $processSettingsScriptBlock
+
+task default -depends preprocesspackage, deploy 
+
+task preprocesspackage {
+	touchPackageIdFile
+	& $processTemplatesScriptBlock
 }
 
-task default -depends deploy 
+tasksetup {
+	mergeSettings
+}
 
 function touchPackageIdFile()
 {
@@ -59,7 +62,19 @@ function touchPackageIdFile()
 	(Get-Item $path\package.id).LastWriteTime = [datetime]::Now
 }
 
-function mergeSettingsAndProcessTemplates()
+function mergeSettings()
+{
+	import-module powerupsettings
+
+	$deploymentProfileSettings = &$deploymentProfileSettingsScriptBlock ${deployment.profile}
+	
+	if ($deploymentProfileSettings)
+	{
+		import-settings $deploymentProfileSettings
+	}
+}
+
+function processTemplates()
 {
 	import-module powerupsettings
 	import-module poweruptemplates
@@ -67,13 +82,11 @@ function mergeSettingsAndProcessTemplates()
 	$deploymentProfileSettings = &$deploymentProfileSettingsScriptBlock ${deployment.profile}
 	
 	if ($deploymentProfileSettings)
-	{
-		import-settings $deploymentProfileSettings
-			
-		echo "Package settings for this profile are:"
+	{			
+		Write-Host "Package settings for this profile are:"
 		$deploymentProfileSettings | Format-Table -property *
 		
-		echo "Substituting and copying templated files"	
+		Write-Host "Substituting and copying templated files"	
 		merge-templates $deploymentProfileSettings ${deployment.profile}
 	}
 }
@@ -81,6 +94,5 @@ function mergeSettingsAndProcessTemplates()
 
 $deploymentProfileSettingsScriptBlock = $function:getPlainTextDeploymentProfileSettings
 $serverSettingsScriptBlock = $function:getPlainTextServerSettings
-$processSettingsScriptBlock = $function:mergeSettingsAndProcessTemplates
-$preprocessPackageScriptBlock = $function:touchPackageIdFile
+$processTemplatesScriptBlock = $function:processTemplates
 
