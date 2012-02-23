@@ -13,15 +13,19 @@ It also bundles convenient  tools to enable the configuration of Windows servers
 
 # Status
 
-PowerUp is already being regularly used internally by Affinity ID to release projects through to Live.  
-This includes file deployment, website creation (with SSL), and Umbraco Courier revision publications.  
+PowerUp is already being regularly used internally by Affinity ID to release projects through to production.  
+This includes file deployment, website creation (with SSL), App Fabric, MSMQ, Amazon Web Services, database migrations, fonts and Umbraco Courier revision publications.  
 
 The basic framework should now be fairly stable.
 Different deployment cmdlets are being actively developed all the time. Coming up are:  
 
 - Database admin, such as backing up/restoring and migrations   
-- Administration of scheduled tasks, windows services  
-- MSMQ creation and management
+- Administration of scheduled tasks and windows services  
+
+Other aspects that may make an appearance in the future are
+- SSRS maintenance
+- Sharepoint administration
+- Alertnative setting formats (eg YML)
 
 Follow @powerupdeploy on Twitter to keep up to date with progress.
 Also, I will be posting a series a blog entries at http://llevera.wordpress.com/2011/09/04/building-powerup-the-exclusive-behind-the-scenes-making-of-mini-series/ which will detail the design and use of PowerUp.
