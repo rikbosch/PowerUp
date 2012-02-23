@@ -92,6 +92,8 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NewDatabaseWindowsLoginTests.cs" />
+    <Compile Include="NewDatabaseUserAndLoginTests.cs" />
     <Compile Include="CourierWebServiceInitializerTests.cs" />
     <Compile Include="DatabaseMigratorTests.cs" />
     <Compile Include="Doubles\PsCmdletLoggerDouble.cs" />
@@ -123,6 +125,7 @@
     <None Include="ExampleMigrationAssemblies\Id.VisaDebitMicrositeAU.DatabaseMigrations.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="ExampleSettingsFiles\Servers.txt" />
     <Content Include="ExampleUmbracoRevisions\V1\manifest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -190,6 +193,7 @@
     </Content>
     <None Include="ExampleMigrationAssemblies\migrations.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="ExampleMigrationAssemblies\migrations.xsd">
       <SubType>Designer</SubType>

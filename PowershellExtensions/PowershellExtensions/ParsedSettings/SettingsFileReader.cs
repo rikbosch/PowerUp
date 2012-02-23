@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 
 namespace Id.PowershellExtensions.ParsedSettings
@@ -35,7 +36,7 @@ namespace Id.PowershellExtensions.ParsedSettings
         {
             using (StreamReader sr = new StreamReader(File))
             {
-                return sr.ReadToEnd().Replace("\n", "\r\n").Replace("\r\r\n", "\r\n").Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                return sr.ReadToEnd().Replace("\n", "\r\n").Replace("\r\r\n", "\r\n").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.TrimEnd()).Where(x => !string.IsNullOrEmpty(x));
             }
         }
     }

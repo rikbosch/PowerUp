@@ -1,5 +1,4 @@
-﻿using Id.PowershellExtensions.PushDatabaseMigration;
-using System.Management.Automation;
+﻿using System.Management.Automation;
 
 namespace Id.PowershellExtensions
 {

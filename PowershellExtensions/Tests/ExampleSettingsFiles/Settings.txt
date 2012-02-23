@@ -7,5 +7,5 @@ Live
 	Other	2
 
 Dev
-	Thing	3
-	Other	4
+	thing	3
+	other	4

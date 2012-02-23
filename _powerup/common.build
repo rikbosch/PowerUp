@@ -10,7 +10,7 @@
   <property name="package.dir" value="${solution.dir}\_package" />
 
 
-	<target name="build-package-common" depends="clean compile-solution package-project copy-build-files zip-package" /> 
+  <target name="build-package-common" depends="clean compile-solution package-project copy-build-files zip-package" /> 
 
   <target name="clean">
     <call target="clean-package"/>
@@ -27,6 +27,7 @@
 		<fileset basedir="${solution.dir}">
 			<include name="**\bin\*.*" />
 			<include name="**\bin\**\" />
+			<exclude name="**\bin\*.refresh\" />
 			<exclude name="**\_Environments\" />
 			<exclude name="**\_PowerUp\" />
 		</fileset>
@@ -37,13 +38,13 @@
   <target name="compile-solution">    
     <msbuild project="${solution.dir}\${solution.name}.sln" verbosity="${build.verbosity}">
       <arg value="/property:Configuration=${build.configuration}" />
-	  <arg value="/property:Platform=${build.platform}" />
+	  <arg value="/property:Platform=${build.platform}" />  
     </msbuild>
   </target>
    
     <target name="copy-build-files">
     <copy todir="${package.dir}" overwrite="true" flatten="false" includeemptydirs="true">
-      <fileset basedir="${solution.dir}">  				
+      <fileset basedir="${solution.dir}">
 		<include name="_powerup\**"/>
 		<exclude name="_powerup\nant\**"/>
 		<include name="_Environments\**"/>
@@ -55,7 +56,7 @@
     </copy>
 	<echo file="${package.dir}\package.id">${solution.name}</echo>
 	<move todir="${package.dir}" overwrite="true">
-		<fileset basedir="${package.dir}\_powerup">  					
+		<fileset basedir="${package.dir}\_powerup">
 			<include name="deploy.bat"/>
 		</fileset>
 	</move>

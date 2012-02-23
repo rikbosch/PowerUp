@@ -47,6 +47,27 @@ function Copy-MirroredDirectory([string]$sourceDirectory, [string]$destinationDi
 	}
 }
 
+function Write-FileToConsole([string]$fileName)
+{	
+	$line=""
+
+	if ([System.IO.File]::Exists($fileName))
+	{
+		$streamReader=new-object System.IO.StreamReader($fileName)
+		$line=$streamReader.ReadLine()
+		while ($line -ne $null)
+		{
+			write-host $line
+			$line=$streamReader.ReadLine()
+		}
+		$streamReader.close()		
+	}
+	else
+	{
+	   write-host "Source file ($fileName) does not exist." 
+	}
+}
+
 Set-Alias Copy-Directory RobocopyDirectory
 
-Export-ModuleMember -function Ensure-Directory, Copy-MirroredDirectory, RobocopyDirectory -alias Copy-Directory
+Export-ModuleMember -function Write-FileToConsole, Ensure-Directory, Copy-MirroredDirectory, RobocopyDirectory -alias Copy-Directory

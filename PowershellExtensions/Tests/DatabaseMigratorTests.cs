@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using Id.PowershellExtensions.DatabaseMigrations;
 using Id.PowershellExtensions.ParsedSettings;
 using NUnit.Framework;
 using System.IO;
@@ -10,7 +11,6 @@ using Id.PowershellExtensions;
 using System.Reflection;
 using Moq;
 using Migrator.Framework;
-using Id.PowershellExtensions.PushDatabaseMigration;
 using NUnit.Framework.SyntaxHelpers;
 
 namespace Tests
@@ -32,8 +32,7 @@ namespace Tests
                                          "ExampleMigrationAssemblies\\Id.VisaDebitMicrositeAU.DatabaseMigrations.dll")).LocalPath);
             Log = new StringBuilder();
             Logger = new StringLogger(Log);
-            TempFile = Path.GetTempFileName();
-            DatabaseMigrator = new DatabaseMigrator(Logger, true, "SqlServer", TempFile, -1, true, true /*testmode*/);
+            DatabaseMigrator = new DatabaseMigrator(Logger, true, "SqlServer", -1, true/*testmode*/);
         }
 
         [TearDown]
@@ -60,7 +59,6 @@ namespace Tests
         public void DatabaseMigrator_Execute_ExecutesActions()
         {
             DatabaseMigrator.DryRun = false;
-            DatabaseMigrator.ScriptFile = string.Empty;
             DatabaseMigrator.Execute(MigrationsAssembly);
 
             Assert.That(Log.ToString(), Is.Not.Empty);

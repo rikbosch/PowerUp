@@ -82,6 +82,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatabaseMigrations\NewWindowsLogin.cs" />
+    <Compile Include="NewDatabaseWindowsLogin.cs" />
+    <Compile Include="DatabaseMigrations\NewUserAndLogin.cs" />
+    <Compile Include="NewDatabaseUserAndLogin.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="UmbracoResources\CourierWebServiceInitializer.cs" />
     <Compile Include="InitializeCourierWebService.cs" />
@@ -94,10 +98,10 @@
     <Compile Include="ParsedSettings\SettingsFileReader.cs" />
     <Compile Include="ParsedSettings\SettingsParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PushDatabaseMigration\BaseLogger.cs" />
-    <Compile Include="PushDatabaseMigration\DatabaseMigrator.cs" />
-    <Compile Include="PushDatabaseMigration\StringLogger.cs" />
-    <Compile Include="PushDatabaseMigration\TaskLogger.cs" />
+    <Compile Include="DatabaseMigrations\BaseLogger.cs" />
+    <Compile Include="DatabaseMigrations\DatabaseMigrator.cs" />
+    <Compile Include="DatabaseMigrations\StringLogger.cs" />
+    <Compile Include="DatabaseMigrations\TaskLogger.cs" />
     <Compile Include="SubstitutedSettingFiles\ISettingsSubstitutor.cs" />
     <Compile Include="SubstitutedSettingFiles\SettingsSubstitutor.cs" />
     <Compile Include="UmbracoResources\ResourcePublisher.cs" />

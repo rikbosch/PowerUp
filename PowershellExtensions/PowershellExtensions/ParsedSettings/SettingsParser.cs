@@ -9,7 +9,7 @@ namespace Id.PowershellExtensions.ParsedSettings
     {
         private const string KEYREGEXPATTERN = @"\${(?<KEY>[^>]*?)}";
         private const string COMMENTPATTERN = @"^\s{0,}#";
-        private readonly Regex KeyRegex = new Regex(KEYREGEXPATTERN);
+        private readonly Regex KeyRegex = new Regex(KEYREGEXPATTERN, RegexOptions.IgnoreCase);
         private readonly Regex CommentRegex = new Regex(COMMENTPATTERN);
 
         public Dictionary<string, string> Parse(IEnumerable<string> settingsLines, string deploymentMode)
@@ -41,10 +41,15 @@ namespace Id.PowershellExtensions.ParsedSettings
                         string key = setting[0].Trim();
                         string value = setting.Length == 1 ? string.Empty : setting[1].Trim();
 
-                        if (output.ContainsKey(key))
-                            output[key] = value;
+                        if (output.Keys.Any(x => x.ToLowerInvariant() == key.ToLowerInvariant()))
+                        {
+                            string oldKey = output.Keys.First(x => x.ToLowerInvariant() == key.ToLowerInvariant());
+                            output[oldKey] = value;
+                        }
                         else
+                        {
                             output.Add(key, value);
+                        }
                     }
                 }
             }

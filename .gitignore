@@ -3,3 +3,7 @@
 *.suo
 /SimpleWebsite/obj
 /SimpleWebsite/bin
+/PowershellExtensions/Tests/bin
+/PowershellExtensions/Tests/obj
+/PowershellExtensions/PowershellExtensions/bin
+/PowershellExtensions/PowershellExtensions/obj

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Management.Automation;
 using System.Text;
@@ -17,32 +18,22 @@ namespace Id.PowershellExtensions.PushDatabaseMigration
         public ILogger Logger { get; set; }
         public bool DryRun { get; set; }
         public string Provider { get; set; }
-        public string ScriptFile { get; set; }
         public long To { get; set; }
-        public bool Trace { get; set; }
         public bool TestMode { get; set; }
+        public bool Trace { get; set; }
 
         private ISqlServerSettings Settings;
         private SqlServerAdministrator SqlServerAdministrator;
 
-        public bool ScriptChanges
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(ScriptFile);
-            }
-        }
+        public DatabaseMigrator(ILogger logger, bool dryRun, string provider, long to, bool trace)
+            : this(logger, dryRun, provider, to, trace, false)
+        { }
 
-        public DatabaseMigrator(ILogger logger, bool dryRun, string provider, string scriptFile, long to, bool trace)
-            : this(logger, dryRun, provider, scriptFile, to, trace, false)
-        {  }
-
-        public DatabaseMigrator(ILogger logger, bool dryRun, string provider, string scriptFile, long to, bool trace, bool testMode)
+        public DatabaseMigrator(ILogger logger, bool dryRun, string provider, long to, bool trace, bool testMode)
         {
-            Logger = logger;            
+            Logger = logger;
             DryRun = dryRun;
             Provider = provider;
-            ScriptFile = scriptFile;
             To = to;
             Trace = trace;
             TestMode = testMode;
@@ -52,23 +43,23 @@ namespace Id.PowershellExtensions.PushDatabaseMigration
         {
             Settings = new XmlSettingsParser(asm);
             SqlServerAdministrator = new SqlServerAdministrator(Settings);
-            
+
             EnsureDatabaseExists();
 
-            Logger.Log("Running migrations with connection string {0}", new object[] { Settings.DefaultIntegratedSecurityConnectionString });
-            var migrator = new Migrator.Migrator(this.Provider, Settings.DefaultIntegratedSecurityConnectionString, asm,
-                                                 this.Trace, Logger) {DryRun = this.DryRun};
-            if (this.ScriptChanges)
+            Logger.Log("Running migrations with connection string {0}", new object[] { Settings.DefaultConnectionString });
+            var migrator = new Migrator.Migrator(this.Provider, Settings.DefaultConnectionString, asm,
+                                                 Trace, Logger) { DryRun = this.DryRun };
+
+            MemoryStream logOutputStream = new MemoryStream();
+
+            using (MemoryStream logStream = new MemoryStream())
+            using (StreamWriter writer = new StreamWriter(logStream))
             {
-                using (StreamWriter writer = new StreamWriter(this.ScriptFile))
-                {
-                    migrator.Logger = new SqlScriptFileLogger(migrator.Logger, writer);
-                    this.RunMigration(migrator);
-                }
-            }
-            else
-            {
+                migrator.Logger = new SqlScriptFileLogger(migrator.Logger, writer);
                 this.RunMigration(migrator);
+
+                logOutputStream = new MemoryStream(logStream.ToArray());
+                Logger.Log(GetStringFromStream(logOutputStream));
             }
         }
 
@@ -99,10 +90,10 @@ namespace Id.PowershellExtensions.PushDatabaseMigration
             {
                 Logger.Log("Dropping login and user '{0}'", new object[] { Settings.DefaultUserName });
                 SqlServerAdministrator.DropDefaultUser();
-                SqlServerAdministrator.DropDefaultLogin();                
+                SqlServerAdministrator.DropDefaultLogin();
             }
 
-            Logger.Log("Dropping database '{0}'", new object[] { Settings.DatabaseName });   
+            Logger.Log("Dropping database '{0}'", new object[] { Settings.DatabaseName });
             SqlServerAdministrator.DropDatabase();
         }
 
@@ -115,7 +106,7 @@ namespace Id.PowershellExtensions.PushDatabaseMigration
                 AmbientSettings.Settings = Settings;
             }
 
-            Logger.Log("Ensuring database '{0}'", new object[] { Settings.DatabaseName });            
+            Logger.Log("Ensuring database '{0}'", new object[] { Settings.DatabaseName });
             SqlServerAdministrator.CreateDatabase();
 
             if (!string.IsNullOrEmpty(Settings.DefaultUserName))
@@ -124,6 +115,23 @@ namespace Id.PowershellExtensions.PushDatabaseMigration
                 SqlServerAdministrator.CreateDefaultLogin();
                 SqlServerAdministrator.CreateDefaultUser();
             }
+        }
+
+        private static string GetStringFromStream(Stream stream)
+        {
+            if (stream == null)
+                throw new ArgumentNullException("stream");
+
+            if (stream.Length > 0)
+            {
+                byte[] buffer = new byte[stream.Length];
+                stream.Position = 0;
+                stream.Read(buffer, 0, (int)stream.Length);
+
+                return Encoding.UTF8.GetString(buffer);
+            }
+
+            return string.Empty;
         }
     }
 }
