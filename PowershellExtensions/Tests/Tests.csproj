@@ -126,6 +126,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="ExampleSettingsFiles\Servers.txt" />
+    <EmbeddedResource Include="ExampleSettingsFiles\MultipleSettings.txt" />
     <Content Include="ExampleUmbracoRevisions\V1\manifest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

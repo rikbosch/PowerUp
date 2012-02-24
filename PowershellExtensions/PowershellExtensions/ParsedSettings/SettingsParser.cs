@@ -12,30 +12,40 @@ namespace Id.PowershellExtensions.ParsedSettings
         private readonly Regex KeyRegex = new Regex(KEYREGEXPATTERN, RegexOptions.IgnoreCase);
         private readonly Regex CommentRegex = new Regex(COMMENTPATTERN);
 
-        public Dictionary<string, string> Parse(IEnumerable<string> settingsLines, string deploymentMode)
+        public Dictionary<string, string[]> Parse(IEnumerable<string> settingsLines, string deploymentMode, char? settingDelimiter = null)
         {            
-            Dictionary<string, string> output = ReadSettingsForDeploymentMode(settingsLines, deploymentMode);
+            var output = ReadSettingsForDeploymentMode(settingsLines, deploymentMode);
 
             if (ContainsDependentSettings(output))
                 output = ResolveDependentSettings(output, null, null);
-
-            return output;
+           
+            if (settingDelimiter.HasValue)
+                return output.ToDictionary(setting => setting.Key, setting => setting.Value.Split(settingDelimiter.Value));
+            else
+            {
+                return output.ToDictionary(setting => setting.Key, setting => new[]{setting.Value});
+                
+            }
         }
+
 
         private Dictionary<string, string> ReadSettingsForDeploymentMode(IEnumerable<string> settingsLines, string deploymentMode)
         {
-            Dictionary<string, string> output = new Dictionary<string, string>();
+            var output = new Dictionary<string, string>();
             bool isSetting = false;
 
             foreach (var line in settingsLines.Where(x => !CommentRegex.IsMatch(x)))
             {               
                 if (!char.IsWhiteSpace(line[0]))
                 {
-                    isSetting = line.Equals(deploymentMode, StringComparison.InvariantCultureIgnoreCase) || line.Equals("default", StringComparison.InvariantCultureIgnoreCase);
+                    isSetting = line.Equals(deploymentMode, StringComparison.InvariantCultureIgnoreCase) ||
+                                line.Equals("default", StringComparison.InvariantCultureIgnoreCase);
                 }
                 else if (isSetting)
                 {
-                    string[] setting = line.Split(new char[] { '\t' }, StringSplitOptions.RemoveEmptyEntries).Where(x => !string.IsNullOrEmpty(x.Trim())).ToArray();
+                    string[] setting =
+                        line.Split(new char[] {'\t'}, StringSplitOptions.RemoveEmptyEntries).Where(
+                            x => !string.IsNullOrEmpty(x.Trim())).ToArray();
                     if (setting.Length > 0)
                     {
                         string key = setting[0].Trim();
@@ -70,7 +80,7 @@ namespace Id.PowershellExtensions.ParsedSettings
                         foreach (Match match in matches)
                         {
                             if (!settings.ContainsKey(match.Groups["KEY"].Value))
-                                throw new KeyNotFoundException(match.Groups["KEY"].Value);
+                                throw new KeyNotFoundException("The setting " + key + " has a dependency on the unknown setting " + match.Groups["KEY"].Value);
                         }
                     }
                 }

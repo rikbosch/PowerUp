@@ -11,25 +11,29 @@ namespace Id.PowershellExtensions
     [Cmdlet(VerbsCommon.Get, "ParsedSettings", SupportsShouldProcess=true)]
     public class GetParsedSettings : PSCmdlet
     {
-        private string _filename = null;
-        private string _deploymentMode = null;
-        
+        private char _delimiter = ';';
+
         [Parameter(Mandatory = true, Position = 1, ValueFromPipelineByPropertyName = true)]
-        public string Filename
-        {
-            get { return _filename; }
-            set { _filename = value; }
-        }
+        public string Filename { get; set; }
 
         [Parameter(Mandatory = true, Position = 2, ValueFromPipelineByPropertyName = true)]
-        public string DeploymentMode
+        public string DeploymentMode { get; set; }
+
+        [Parameter(Position = 3, ValueFromPipelineByPropertyName = true)]
+        public char Delimiter
         {
-            get { return _deploymentMode; }
-            set { _deploymentMode = value; }
+            get { return _delimiter; }
+            set { _delimiter = value; }
         }
 
         private SettingsFileReader FileReader = null;
         private SettingsParser Parser = new SettingsParser();
+
+        public GetParsedSettings()
+        {
+            DeploymentMode = null;
+            Filename = null;
+        }
 
         protected override void BeginProcessing()
         {
@@ -59,9 +63,8 @@ namespace Id.PowershellExtensions
             {
                 if (FileReader != null)
                 {
-                    Dictionary<string, string> settings = null;
-                    IEnumerable<string> settingsLines = FileReader.ReadSettings();
-                    settings = Parser.Parse(settingsLines, DeploymentMode);
+                    var settingsLines = FileReader.ReadSettings();
+                    var settings = Parser.Parse(settingsLines, DeploymentMode, Delimiter);
 
                     this.WriteObject(settings);
                 }

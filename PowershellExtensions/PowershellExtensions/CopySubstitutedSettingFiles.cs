@@ -41,7 +41,7 @@ namespace Id.PowershellExtensions
             {
                 var substitutor = new SettingsSubstitutor();
 
-                var settingsDictionary = Settings.Keys.Cast<string>().ToDictionary(key => key, key => (string) Settings[key]);
+                var settingsDictionary = Settings.Keys.Cast<string>().ToDictionary(key => key, key => (string [])Settings[key]);
                 substitutor.CreateSubstitutedDirectory(TemplatesDirectory, TargetDirectory, DeploymentEnvironment, settingsDictionary);
             }
             catch (Exception e)

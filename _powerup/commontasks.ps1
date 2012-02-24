@@ -35,13 +35,7 @@ function run($task, $servers, $remoteWorkingSubFolder = $null)
 		$remoteWorkingSubFolder =	Get-Content $currentPath\package.id	
 	}
 	
-	$serverNames = $servers.split(';')
-	if (!$serverNames)
-	{
-		$serverNames = @($servers)
-	}
-	
-	invoke-remotetasks $task $serverNames ${deployment.profile} $remoteWorkingSubFolder $serverSettingsScriptBlock
+	invoke-remotetasks $task $servers ${deployment.profile} $remoteWorkingSubFolder $serverSettingsScriptBlock
 }
 
 

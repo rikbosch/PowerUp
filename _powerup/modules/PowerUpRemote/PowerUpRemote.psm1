@@ -9,11 +9,10 @@ function invoke-remotetasks($tasks, $serverNames, $deploymentEnvironment, $packa
 	foreach ($server in $servers)
 	{			
 		if (!$remoteexecutiontool)
-		{	
-			$remoteexecutiontool = $server['remote.task.execution.remoteexecutiontool']
-			
-			if (!$remoteexecutiontool)
+		{		
+			if ($server.ContainsKey('remote.task.execution.remoteexecutiontool'))
 			{
+				$remoteexecutiontool = $server['remote.task.execution.remoteexecutiontool'][0]
 				$remoteexecutiontool = 'psexec'
 			}			
 		}
@@ -43,15 +42,15 @@ function invoke-remotetaskswithremoting( $tasks, $serverNames, $deploymentEnviro
 
 function invoke-remotetaskwithpsexec( $tasks, $server, $deploymentEnvironment, $packageName )
 {
-	$serverName = $server['server.name']
+	$serverName = $server['server.name'][0]
 	write-host "===== Beginning execution of tasks $tasks on server $serverName ====="
 
-	$fullLocalReleaseWorkingFolder = $server['local.temp.working.folder'] + '\' + $packageName
+	$fullLocalReleaseWorkingFolder = $server['local.temp.working.folder'][0] + '\' + $packageName
 	$batchFile = $fullLocalReleaseWorkingFolder + '\' + 'deploy.bat'
 
 	if ($server.ContainsKey('username'))
 	{
-		cmd /c cscript.exe $PSScriptRoot\cmd.js $PSScriptRoot\psexec.exe \\$serverName /accepteula -u $server['username'] -p $server['password'] -w $fullLocalReleaseWorkingFolder $batchFile $deploymentEnvironment $tasks
+		cmd /c cscript.exe $PSScriptRoot\cmd.js $PSScriptRoot\psexec.exe \\$serverName /accepteula -u $server['username'][0] -p $server['password'][0] -w $fullLocalReleaseWorkingFolder $batchFile $deploymentEnvironment $tasks
 	}
 	else
 	{
@@ -69,10 +68,10 @@ function invoke-remotetaskwithpsexec( $tasks, $server, $deploymentEnvironment, $
 
 function invoke-remotetaskwithremoting( $tasks, $server, $deploymentEnvironment, $packageName )
 {	
-	$serverName = $server['server.name']
+	$serverName = $server['server.name'][0]
 	write-host "===== Beginning execution of tasks $tasks on server $serverName ====="
 
-	$fullLocalReleaseWorkingFolder = $server['local.temp.working.folder'] + '\' + $packageName
+	$fullLocalReleaseWorkingFolder = $server['local.temp.working.folder'][0] + '\' + $packageName
 
 	$command = ".$psakeFile -buildFile $deployFile -deploymentEnvironment $deploymentEnvironment -tasks $tasks"		
 	Invoke-Command -scriptblock { param($workingFolder, $env, $tasks) set-location $workingFolder; .\_powerup\deploy_with_psake.ps1 -buildFile .\deploy.ps1 -deploymentEnvironment $env -tasks $tasks } -computername $serverName -ArgumentList $fullLocalReleaseWorkingFolder, $deploymentEnvironment, $tasks 
@@ -86,8 +85,8 @@ function copy-package($servers, $packageName)
 
 	foreach ($server in $servers)
 	{	
-		$remoteDir = $server['remote.temp.working.folder']
-		$serverName = $server['server.name']
+		$remoteDir = $server['remote.temp.working.folder'][0]
+		$serverName = $server['server.name'][0]
 		
 		if(!$remoteDir)
 		{

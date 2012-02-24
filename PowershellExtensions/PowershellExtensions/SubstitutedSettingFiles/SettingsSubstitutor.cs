@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using href.Utils;
 
 namespace Id.PowershellExtensions.SubstitutedSettingFiles
@@ -14,7 +16,7 @@ namespace Id.PowershellExtensions.SubstitutedSettingFiles
             public Encoding Encoding { get; set; }
         }
 
-        public void CreateSubstitutedDirectory(string templatesDirectory, string targetDirectory, string environment, IDictionary<string, string> settings)
+        public void CreateSubstitutedDirectory(string templatesDirectory, string targetDirectory, string environment, IDictionary<string, string[]> settings)
         {
             var fullEnvironmentFolder = Path.Combine(targetDirectory, environment);
 
@@ -23,8 +25,10 @@ namespace Id.PowershellExtensions.SubstitutedSettingFiles
         }
         
 
-        private static void SubstituteDirectory(string environmentFolder, IDictionary<string, string> settings)
+        private static void SubstituteDirectory(string environmentFolder, IDictionary<string, string[]> settings)
         {
+            var unreplacedSettings = new Dictionary<string, IList<string>>();
+
             if (settings.Count == 0)
                 return;
 
@@ -37,13 +41,30 @@ namespace Id.PowershellExtensions.SubstitutedSettingFiles
 
                 foreach (var file in GetVisibleFiles(dir))
                 {
-                    SubstituteFile(file.FullName, settings);
+                    var unreplaced = SubstituteFile(file.FullName, settings);
+
+                    if (unreplaced.Count > 0)
+                        unreplacedSettings.Add(file.FullName, unreplaced);
                 }
 
                 foreach (var dn in GetVisibleDirectories(dir))
                 {
                     dirStack.Push(dn.FullName);
                 }
+            }
+
+            if (unreplacedSettings.Count >0)
+            {
+                StringBuilder builder = new StringBuilder();
+                builder.AppendLine("The following settings could not be resolved:");
+                foreach(var file in unreplacedSettings)
+                {
+                    builder.AppendLine(file.Key + ":" );
+                    builder.Append(file.Value.Aggregate("", (current, setting) => current + (setting + Environment.NewLine)));
+                    builder.AppendLine();
+                }
+
+                throw new Exception(builder.ToString());
             }
         }
         
@@ -72,17 +93,41 @@ namespace Id.PowershellExtensions.SubstitutedSettingFiles
             return (info.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden;
         }
 
-        private static void SubstituteFile(string file, IDictionary<string, string> settings)
+        private static IList<string> SubstituteFile(string file, IEnumerable<KeyValuePair<string, string[]>> settings)
         {
             var encodedFile = GetFileWithEncoding(file);
             var content = encodedFile.Contents;
 
-            foreach (var keyValuePair in settings)
-            {
-                content = content.Replace("${" + keyValuePair.Key + "}", keyValuePair.Value);
-            }
+            content = SubstituteString(settings, content);
 
             File.WriteAllText( file, content,encodedFile.Encoding);
+
+            return GetUnsubstitutedSettings(content);
+        }
+
+        private static IList<string> GetUnsubstitutedSettings(string content)
+        {
+            var matches = new Regex(@"\$([^}]*)}").Matches(content);
+            return (matches.Cast<object>().Select(match => match.ToString())).ToList();
+        }
+
+        private static string SubstituteString(IEnumerable<KeyValuePair<string, string[]>> settings, string content)
+        {
+            foreach (var keyValuePair in settings)
+            {
+                if (keyValuePair.Value.Length == 1)
+                {
+                    content = content.Replace("${" + keyValuePair.Key + "}", keyValuePair.Value[0]);                    
+                }
+                else
+                {
+                    for (var i = 0; i < keyValuePair.Value.Length; i++ )
+                    {
+                        content = content.Replace("${" + keyValuePair.Key + "}["+i+"]", keyValuePair.Value[i]);
+                    }
+                }
+            }
+            return content;
         }
 
         private static EncodedFile GetFileWithEncoding(string file)
