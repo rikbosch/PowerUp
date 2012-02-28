@@ -17,7 +17,7 @@ staging
 	example.setting			staging
 	
 live
-	web.servers				liveweb1;liveweb2 
+	web.servers				liveweb1|liveweb2 
 	root.drive				g:
 	example.setting			live
 

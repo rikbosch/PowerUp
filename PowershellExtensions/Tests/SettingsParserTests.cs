@@ -48,7 +48,7 @@ namespace Tests
         public void SettingsParser_Parse_BasicSettings_ReturnsExpectedResult()
         {
             SettingsParser sp = new SettingsParser();
-            var settings = sp.Parse(BasicSettings.ReadSettings(), "Dev");
+            var settings = sp.Parse(BasicSettings.ReadSettings(), "Dev", '|');
 
             Assert.IsNotNull(settings);
             Assert.AreEqual(3, settings.Keys.Count);
@@ -65,7 +65,7 @@ namespace Tests
         public void SettingsParser_Parse_AdvancedSettings_ReturnsExpectedResult()
         {
             SettingsParser sp = new SettingsParser();
-            var settings = sp.Parse(AdvancedSettings.ReadSettings(), "Dev");
+            var settings = sp.Parse(AdvancedSettings.ReadSettings(), "Dev", '|');
 
             Assert.IsNotNull(settings);
             Assert.AreEqual(3, settings.Keys.Count);
@@ -81,7 +81,7 @@ namespace Tests
         public void SettingsParser_Parse_TGSettings_ReturnsExpectedResult()
         {
             SettingsParser sp = new SettingsParser();
-           var settings = sp.Parse(TGSettings.ReadSettings(), "DEV");
+            var settings = sp.Parse(TGSettings.ReadSettings(), "DEV", '|');
 
             Assert.IsNotNull(settings);
         }
@@ -90,7 +90,7 @@ namespace Tests
         public void SettingsParser_Parse_VisaSettings_ReturnsExpectedResult()
         {
             SettingsParser sp = new SettingsParser();
-            var  settings = sp.Parse(VisaSettings.ReadSettings(), "Test");
+            var settings = sp.Parse(VisaSettings.ReadSettings(), "Test", '|');
 
             Assert.IsNotNull(settings);
             Assert.AreEqual(9, settings.Keys.Count);
@@ -109,14 +109,15 @@ namespace Tests
         public void SettingsParser_Parse_DelimitedReturnsMultipleValues()
         {
             SettingsParser sp = new SettingsParser();
-            var settings = sp.Parse(MultipleSettings.ReadSettings(), "Live", ';');
+            var settings = sp.Parse(MultipleSettings.ReadSettings(), "Live", '|');
 
             Assert.IsNotNull(settings);
-            Assert.AreEqual(2, settings.Keys.Count);
+            Assert.AreEqual(4, settings.Keys.Count);
             Assert.AreEqual("Other", settings.Keys.ElementAt(1));
             Assert.AreEqual("2", settings["Other"][0]);
             Assert.AreEqual("3", settings["Other"][1]);
-
+            Assert.AreEqual("2|3", settings["Quoted"][0]);
+            Assert.AreEqual("", settings["Nothing"][0]);
         }
 
         [Test]
@@ -124,14 +125,14 @@ namespace Tests
         public void SettingsParser_Parse_InvalidSettings_ReturnsExpectedResult()
         {
             SettingsParser sp = new SettingsParser();
-            var settings = sp.Parse(InvalidSettings.ReadSettings(), "Dev");
+            var settings = sp.Parse(InvalidSettings.ReadSettings(), "Dev", '|');
         }
 
         [Test]
         public void SettingsParser_Parse_Servers_ReturnsExpectedResult()
         {
             SettingsParser sp = new SettingsParser();
-            var settings = sp.Parse(ServerSettings.ReadSettings(), "icevm069");
+            var settings = sp.Parse(ServerSettings.ReadSettings(), "icevm069", '|');
 
             Assert.IsNotNull(settings);
             Assert.AreEqual(5, settings.Keys.Count);

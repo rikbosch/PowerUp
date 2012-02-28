@@ -21,7 +21,7 @@ namespace Tests.Integration
         {
             CleanOutput();
 
-            var hash = new Hashtable { { "Key A", "Value A" }, { "Key B", "Value B" } };
+            var hash = new Hashtable { { "Key A", new []{"Value A"} }, { "Key B", new []{"Value B" }} };
 
             var cmd = new CopySubstitutedSettingFiles()
                           {
@@ -46,8 +46,8 @@ namespace Tests.Integration
         public void WhenSubtituteSettingsCalled_SubstitutionsMaintainEncoding()
         {
             CleanOutput();
-            
-            var hash = new Hashtable { { "Key A", "Value A" }, { "Key B", "Value B" } };
+
+            var hash = new Hashtable { { "Key A", new[] { "Value A" } },  { "Key B", new[] {"Value B" }} };
 
             var cmd = new CopySubstitutedSettingFiles()
             {

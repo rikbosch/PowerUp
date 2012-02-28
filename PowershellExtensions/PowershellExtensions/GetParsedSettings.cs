@@ -11,7 +11,7 @@ namespace Id.PowershellExtensions
     [Cmdlet(VerbsCommon.Get, "ParsedSettings", SupportsShouldProcess=true)]
     public class GetParsedSettings : PSCmdlet
     {
-        private char _delimiter = ';';
+        private char _delimiter = '|';
 
         [Parameter(Mandatory = true, Position = 1, ValueFromPipelineByPropertyName = true)]
         public string Filename { get; set; }

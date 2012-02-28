@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.VisualBasic.FileIO;
 
 namespace Id.PowershellExtensions.ParsedSettings
 {
@@ -12,20 +14,36 @@ namespace Id.PowershellExtensions.ParsedSettings
         private readonly Regex KeyRegex = new Regex(KEYREGEXPATTERN, RegexOptions.IgnoreCase);
         private readonly Regex CommentRegex = new Regex(COMMENTPATTERN);
 
-        public Dictionary<string, string[]> Parse(IEnumerable<string> settingsLines, string deploymentMode, char? settingDelimiter = null)
+        public Dictionary<string, string[]> Parse(IEnumerable<string> settingsLines, string deploymentMode, char settingDelimiter)
         {            
             var output = ReadSettingsForDeploymentMode(settingsLines, deploymentMode);
 
             if (ContainsDependentSettings(output))
                 output = ResolveDependentSettings(output, null, null);
            
-            if (settingDelimiter.HasValue)
-                return output.ToDictionary(setting => setting.Key, setting => setting.Value.Split(settingDelimiter.Value));
-            else
-            {
-                return output.ToDictionary(setting => setting.Key, setting => new[]{setting.Value});
-                
-            }
+            return ParseSettings(output, settingDelimiter);
+        }
+
+
+        private static Dictionary<string, string[]> ParseSettings(Dictionary<string, string> output, char settingDelimiter)
+        {
+            return output.ToDictionary(setting => setting.Key, setting => ParseSetting(setting.Value, settingDelimiter));
+        }
+
+        private static string [] ParseSetting(string setting, char settingDelimiter)
+        {
+            var textReader = new StringReader(setting);
+            var parser = new TextFieldParser(textReader)
+                             {
+                                 Delimiters = new[] {settingDelimiter.ToString()},
+                                 TextFieldType = FieldType.Delimited,
+                                 HasFieldsEnclosedInQuotes = true,
+                                 TrimWhiteSpace = true
+                             };
+
+            var fields = parser.ReadFields();
+
+            return fields ?? new[]{""};
         }
 
 

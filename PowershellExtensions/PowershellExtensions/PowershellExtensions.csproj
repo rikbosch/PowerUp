@@ -47,6 +47,7 @@
     <Reference Include="interfaces">
       <HintPath>..\Lib\interfaces.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Migrator">
       <HintPath>..\Lib\Migrator.dll</HintPath>
     </Reference>
