@@ -7,7 +7,7 @@ function set-website($options)
 	{
 		$options.stopwebsitefirst = $true
 	}
-
+	
 	if(!$options.startwebsiteafter)
 	{
 		$options.startwebsiteafter = $true
@@ -98,7 +98,14 @@ function set-website($options)
 		stop-apppoolandsite $options.apppool.name $options.websitename
 	}
 	
-	copy-mirroreddirectory $options.fullsourcepath $options.fulldestinationpath
+	if($options.copywithoutmirror)
+	{
+		copy-directory $options.fullsourcepath $options.fulldestinationpath
+	}
+	else
+	{
+		copy-mirroreddirectory $options.fullsourcepath $options.fulldestinationpath
+	}
 
 	set-webapppool $options.apppool.name $options.apppool.executionmode $options.apppool.dotnetversion
 	
@@ -108,7 +115,7 @@ function set-website($options)
 	}
 	
 	$firstBinding = $options.bindings[0]	
-	set-website $options.websitename $options.apppoolname $options.fulldestinationpath $firstBinding.url $firstBinding.protocol $firstBinding.ip $firstBinding.port 
+	set-website $options.websitename $options.apppool.name $options.fulldestinationpath $firstBinding.url $firstBinding.protocol $firstBinding.ip $firstBinding.port 
 	
 	foreach($binding in $options.bindings)
 	{

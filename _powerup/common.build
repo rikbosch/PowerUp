@@ -63,9 +63,9 @@
   </target> 
   
   <target name="zip-package">
-	<zip zipfile="${package.dir}\package_${solution.name}_${build.number}.zip">
+	<zip zipfile="${package.dir}\package_${solution.name}_${build.number}.zip" includeemptydirs="true">
 	  <fileset basedir="${package.dir}">
-		<include name="**\*.*" />		
+		<include name="**/*" />		
 	  </fileset>
 	</zip>
   </target>
