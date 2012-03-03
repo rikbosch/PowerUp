@@ -9,7 +9,8 @@ try {
 
 	write-host "Importing basic modules required by PowerUp"
 	$currentPath = Get-Location
-	$env:PSModulePath = $env:PSModulePath + ";$currentPath\_powerup\modules\"
+	$env:PSModulePath = $env:PSModulePath + ";$currentPath\_powerup\modules\" + ";$currentPath\_powerup\recipes\"
+
 	import-module psake.psm1
 			
 	write-host "Calling psake with deployment file $deployFile "
