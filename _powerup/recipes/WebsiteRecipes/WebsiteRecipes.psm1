@@ -31,7 +31,7 @@ function set-website($options)
 	
 	if (!$options.fulldestinationpath)
 	{
-		$options.fulldestinationpath = "$($options.deploymentroot)\$($options.destinationfolder)"
+		$options.fulldestinationpath = "$($options.webroot)\$($options.destinationfolder)"
 	}
 
 	if (!$options.fullsourcepath)
@@ -60,44 +60,71 @@ function set-website($options)
 	}
 	if (!$options.bindings)
 	{
-		$options.bindings = @{}
+		$options.bindings = @(@{})
 	}
 
-	if (!$options.bindings.protocol)
+	foreach($binding in $options.bindings)
 	{
-		$options.bindings.protocol = "http"
-	}
+		if (!$binding.protocol)
+		{
+			$binding.protocol = "http"
+		}
 
-	if (!$options.bindings.ip)
-	{
-		$options.bindings.ip = "*"
-	}
-	
-	if (!$options.bindings.url)
-	{
-		$options.bindings.url = $options.websitename
-	}
-
-	if (!$options.bindings.port)
-	{
-		$options.bindings.port = 80
+		if (!$binding.ip)
+		{
+			$binding.ip = "*"
+		}
+		
+		if (!$binding.port)
+		{
+			$binding.port = 80
+		}
+		
+		if (!$binding.useselfsignedcert)
+		{
+			$binding.useselfsignedcert = $true
+		}
+		
+		if (!$binding.certname)
+		{
+			$binding.certname = $options.websitename
+		}
 	}
 	
 	$options | Format-Table -property *
 	
 	if($options.stopwebsitefirst)
 	{
-		stop-apppoolandsite $options.apppoolname $options.websitename
+		stop-apppoolandsite $options.apppool.name $options.websitename
 	}
 	
 	copy-mirroreddirectory $options.fullsourcepath $options.fulldestinationpath
 
 	set-webapppool $options.apppool.name $options.apppool.executionmode $options.apppool.dotnetversion
-	set-website $options.websitename $options.apppoolname $options.fulldestinationpath $options.bindings.url $options.bindings.protocol $options.bindings.ip $options.bindings.port
+	
+	if ($options.apppool.username)
+	{
+		set-apppoolidentitytouser $options.apppool.name $options.apppool.username $options.apppool.password
+	}
+	
+	$firstBinding = $options.bindings[0]	
+	set-website $options.websitename $options.apppoolname $options.fulldestinationpath $firstBinding.url $firstBinding.protocol $firstBinding.ip $firstBinding.port 
+	
+	foreach($binding in $options.bindings)
+	{
+		if($binding.protocol -eq "https")
+		{
+			Set-WebsiteForSsl $binding.useselfsignedcert $options.websitename $binding.certname $binding.ip $binding.port $binding.url		
+		}
+		else
+		{
+			set-websitebinding $options.websitename $binding.url $binding.protocol $binding.ip $binding.port
+		}
+	}
 
 	if($options.startwebsiteafter)
 	{
-		start-apppoolandsite $options.apppoolname $options.websitename
+		start-apppoolandsite $options.apppool.name $options.websitename
 	}
 
 }

@@ -84,7 +84,7 @@ function Set-WebsiteForSsl($useSelfSignedCert, $websiteName, $certificateName, $
 	}
 		
 	set-sslbinding $certificateName $ipAddress $port
-	new-websitebinding $websiteName $url "https" $ipAddress $port 
+	set-websitebinding $websiteName $url "https" $ipAddress $port 
 }
 
 
@@ -230,6 +230,16 @@ function EnsureSelfSignedSslCertificate($certName)
 	}
 }
 
+function Set-WebSiteBinding($websiteName, $hostHeader, $protocol="http", $ip="*", $port="80")
+{
+	$existingBinding = get-webbinding -Name $websiteName -IP $ip -Port $port -Protocol $protocol -HostHeader $hostHeader
+	
+	if(!$existingBinding)
+	{
+		new-websitebinding $websiteName $hostHeader $protocol $ip $port 
+	}
+}
+
 
 function New-WebSiteBinding($websiteName, $hostHeader, $protocol="http", $ip="*", $port="80")
 {
@@ -310,4 +320,4 @@ function set-property($applicationPath, $propertyName, $value)
 	Set-ItemProperty $sitesPath\$applicationPath -name $propertyName -value $value
 }
 
-export-modulemember -function set-apppoolidentitytouser, set-apppoolidentityType, set-apppoolstartMode, new-webapplication, start-apppoolandsite, start-apppool, start-site, stop-apppoolandsite, set-website,set-webapppool,New-WebSiteBinding,New-WebSiteBindingNonHttp,set-SelfSignedSslCertificate, set-sslbinding, Set-WebsiteForSsl, set-property
+export-modulemember -function set-apppoolidentitytouser, set-apppoolidentityType, set-apppoolstartMode, new-webapplication, start-apppoolandsite, start-apppool, start-site, stop-apppoolandsite, set-website,set-webapppool,set-websitebinding,New-WebSiteBinding,New-WebSiteBindingNonHttp,set-SelfSignedSslCertificate, set-sslbinding, Set-WebsiteForSsl, set-property

@@ -9,8 +9,11 @@ task web-deploy  {
 
 	$websiteOptions = @{
 		websitename = ${website.name};
-		deploymentroot = ${deployment.root};
-		bindings = @{port = ${http.port};};
+		webroot = ${deployment.root};
+		bindings = @(
+					@{port = ${http.port};}
+					@{port = ${https.port};protocol='https';}
+					);
 	}	
 				
 	set-website($websiteOptions)
