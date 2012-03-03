@@ -1,10 +1,10 @@
 include .\_powerup\commontasks.ps1
 
 task deploy {
-	run web-deploy ${web.servers}
+	run web-deploy-declarative ${web.servers}
 }
 
-task web-deploy  {
+task web-deploy-declarative  {
 	import-module websiterecipes
 
 	$websiteOptions = @{
@@ -19,3 +19,13 @@ task web-deploy  {
 	set-website($websiteOptions)
 }
 
+task web-deploy-explicit  {
+	import-module powerupfilesystem
+	import-module powerupweb
+
+	$packageFolder = get-location
+	copy-mirroreddirectory $packageFolder\simplewebsite ${deployment.root}\${website.name} 
+
+	set-webapppool ${website.name} "Integrated" "v4.0"
+	set-website ${website.name} ${website.name} ${deployment.root}\${website.name} "" "http" "*" ${http.port} 	
+}
