@@ -1,5 +1,5 @@
 <project default="build-package-common">
-	<include buildfile="_powerup\common.build" />
+	<include buildfile="_powerup\build\nant\common.build" />
 
 	<property name="solution.name" value="SampleSolution" />
   

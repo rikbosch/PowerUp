@@ -7,7 +7,7 @@
 		<BuildConfiguration>Release</BuildConfiguration>
 	</PropertyGroup>
 
-	<Import Project="$(MSBuildThisFileDirectory)\_powerup\common.targets"/>
+	<Import Project="$(MSBuildThisFileDirectory)\_powerup\build\msbuild\common.targets"/>
 
   <Target Name="package-project">
     <PropertyGroup>

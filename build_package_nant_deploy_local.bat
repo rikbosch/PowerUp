@@ -1,4 +1,4 @@
-_powerup\nant\bin\nant
+_powerup\build\nant\nant\bin\nant
 cd _package
 call deploy local
 cd ..

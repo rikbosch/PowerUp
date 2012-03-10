@@ -1,25 +1,25 @@
-include .\_powerup\commontasks.ps1
+include .\_powerup\deploy\core\coretasks.ps1
 
 task deploy {
-	run web-deploy-declarative ${web.servers}
+	run web-deploy-combo ${web.servers}
 }
 
-task web-deploy-declarative  {
-	import-module websiterecipes
+task web-deploy-combo  {
+	import-module websitecombos
 
-	$websiteOptions = @{
+	$comboOptions = @{
 		websitename = ${website.name};
 		webroot = ${deployment.root};
 		bindings = @(
 					@{port = ${http.port};}
 					@{port = ${https.port};protocol='https';}
 					);
-	}	
+	}
 				
-	set-website($websiteOptions)
+	invoke-combo-standardwebsite($comboOptions)
 }
 
-task web-deploy-explicit  {
+task web-deploy-moves  {
 	import-module powerupfilesystem
 	import-module powerupweb
 

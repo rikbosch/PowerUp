@@ -1,8 +1,8 @@
-function set-website($options)
+function Invoke-Combo-StandardWebsite($options)
 {
 	import-module powerupfilesystem
 	import-module powerupweb
-	
+		
 	if(!$options.stopwebsitefirst)
 	{
 		$options.stopwebsitefirst = $true
@@ -17,8 +17,7 @@ function set-website($options)
 	{
 		$options.port = 80
 	}
-	
-	
+		
 	if (!$options.destinationfolder)
 	{
 		$options.destinationfolder = $options.websitename
@@ -90,9 +89,7 @@ function set-website($options)
 			$binding.certname = $options.websitename
 		}
 	}
-	
-	$options | Format-Table -property *
-	
+		
 	if($options.stopwebsitefirst)
 	{
 		stop-apppoolandsite $options.apppool.name $options.websitename
@@ -114,7 +111,7 @@ function set-website($options)
 		set-apppoolidentitytouser $options.apppool.name $options.apppool.username $options.apppool.password
 	}
 	
-	$firstBinding = $options.bindings[0]	
+	$firstBinding = $options.bindings[0]
 	set-website $options.websitename $options.apppool.name $options.fulldestinationpath $firstBinding.url $firstBinding.protocol $firstBinding.ip $firstBinding.port 
 	
 	foreach($binding in $options.bindings)

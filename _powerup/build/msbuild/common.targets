@@ -10,7 +10,7 @@
   <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets"/>
 
   <Target Name="Build">
-	<CallTarget Targets="clean-package;clean-bin;compile-solution;package-project;copy-deploy-files;zip-package"/>
+	<CallTarget Targets="clean-package;compile-solution;package-project;copy-deploy-files;zip-package"/>
   </Target>
   
   <Target Name="clean-package">
@@ -20,10 +20,10 @@
 
   <Target Name="copy-deploy-files">
     <ItemGroup>
-      <PowerUp Include="_powerup\**\*.*" Exclude="_powerup\nant\**;_powerup\MSBuild.Community.Tasks\**"/>
+      <PowerUp Include="_powerup\deploy\**\*.*" />
       <Environments Include="_environments\**\*.*" />
       <Templates Include="_templates\**\*.*" />
-      <FilesForRoot Include="$(PackageFolder)\_powerup\deploy.bat" />
+      <FilesForRoot Include="$(PackageFolder)\_powerup\deploy\core\deploy.bat" />
     </ItemGroup>
 
 	<WriteLinesToFile
@@ -34,7 +34,7 @@
 	
     <Copy
             SourceFiles="@(PowerUp)"
-            DestinationFolder="$(PackageFolder)\_powerup\%(RecursiveDir)"/>
+            DestinationFolder="$(PackageFolder)\_powerup\deploy\%(RecursiveDir)"/>
 
     <Copy
             SourceFiles="@(Environments)"
@@ -66,17 +66,10 @@
        ZipLevel="9" />
   </Target>
 
-  <Target Name="clean-bin">
-    <ItemGroup>
-      <BinFiles Include="**\bin\*.*" Exclude="$(PackageFolder)\**\*.*;_powerup\**\*.*;Powershellextensions\**\*.*;**\_Environments\"/>
-    </ItemGroup>
-    <Delete Files="@(BinFiles)" />
-  </Target>
-
   <Target Name="compile-solution">
     <ItemGroup>
-    <Solution Include="$(SolutionName).sln">
-      <Properties>Configuration=$(BuildConfiguration)</Properties>
+    <Solution Include="$(SolutionName).sln">	
+      <Properties>Configuration=$(BuildConfiguration);Targets=Rebuild</Properties>
     </Solution>
   </ItemGroup>
 
