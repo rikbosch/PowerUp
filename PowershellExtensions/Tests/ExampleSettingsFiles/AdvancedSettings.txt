@@ -1,8 +1,0 @@
-﻿Live
-	Thing	1 ${Other}
-	Other	2
-
-Dev
-	Wotsit	${Thing} 5 
-	Thing	3 ${Other}
-	Other	4

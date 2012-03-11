@@ -1,5 +1,0 @@
-﻿Live
-	Thing	1 ${Other}
-	Other	2|3
-	Quoted	"2|3"
-	Nothing 
