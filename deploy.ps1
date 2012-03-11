@@ -1,4 +1,4 @@
-include .\_powerup\deploy\combos\TaskBootstrapCombos\standardtasks.ps1
+include .\_powerup\deploy\combos\PsakeCombos\StandardSettingsAndRemoteExec.ps1
 
 task deploy {
 	run web-deploy-combo ${web.servers}
