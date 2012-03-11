@@ -1,4 +1,4 @@
-include .\_powerup\deploy\core\coretasks.ps1
+include .\_powerup\deploy\combos\TaskBootstrapCombos\standardtasks.ps1
 
 task deploy {
 	run web-deploy-combo ${web.servers}
