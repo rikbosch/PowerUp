@@ -1,6 +1,6 @@
 function install-CloudBerry {	
 	try{
-		C:\Windows\Microsoft.NET\Framework64\v2.0.50727\InstallUtil.exe ".\_powerup\modules\PowerUpAmazonWebServices\CloudBerryLab.Explorer.PSSnapIn.dll"
+		C:\Windows\Microsoft.NET\Framework64\v2.0.50727\InstallUtil.exe "$PSScriptRoot\CloudBerryLab.Explorer.PSSnapIn.dll"
 	}
 	catch{
 		Write-Host "Unable to install CloudBerry"

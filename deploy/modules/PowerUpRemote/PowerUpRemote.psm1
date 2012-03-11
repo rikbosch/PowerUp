@@ -74,7 +74,7 @@ function invoke-remotetaskwithremoting( $tasks, $server, $deploymentEnvironment,
 	$fullLocalReleaseWorkingFolder = $server['local.temp.working.folder'][0] + '\' + $packageName
 
 	$command = ".$psakeFile -buildFile $deployFile -deploymentEnvironment $deploymentEnvironment -tasks $tasks"		
-	Invoke-Command -scriptblock { param($workingFolder, $env, $tasks) set-location $workingFolder; .\_powerup\deploy_with_psake.ps1 -buildFile .\deploy.ps1 -deploymentEnvironment $env -tasks $tasks } -computername $serverName -ArgumentList $fullLocalReleaseWorkingFolder, $deploymentEnvironment, $tasks 
+	Invoke-Command -scriptblock { param($workingFolder, $env, $tasks) set-location $workingFolder; .\_powerup\deploy\core\deploy_with_psake.ps1 -buildFile .\deploy.ps1 -deploymentEnvironment $env -tasks $tasks } -computername $serverName -ArgumentList $fullLocalReleaseWorkingFolder, $deploymentEnvironment, $tasks 
 	
 	write-host "========= Finished execution of tasks $tasks on server $serverName ====="
 }
@@ -144,7 +144,7 @@ function enable-psremotingforpowerup
 	Enable-PSRemoting -Force 
 
 	$currentPath = get-location
-	Copy-Item $currentPath\_powerup\powershell.exe.config -destination C:\Windows\System32\wsmprovhost.exe.config -force
+	Copy-Item $currentPath\_powerup\deploy\core\powershell.exe.config -destination C:\Windows\System32\wsmprovhost.exe.config -force
 }
 				
 export-modulemember -function invoke-remotetasks, invoke-remotetaskswithpsexec, invoke-remotetaskswithremoting, enable-psremotingforpowerup
