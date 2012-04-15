@@ -122,6 +122,12 @@ function StopWebItem($itemPath, $itemName)
 	}
 }
 
+function set-webapppool32bitcompatibility($appPoolName)
+{
+	$appPool = Get-Item $appPoolsPath\$appPoolName
+	$appPool.enable32BitAppOnWin64 = "true"
+	$appPool | set-item
+}
 
 function SetAppPoolProperties($appPoolName, $pipelineMode, $runtimeVersion)
 {
@@ -320,4 +326,14 @@ function set-property($applicationPath, $propertyName, $value)
 	Set-ItemProperty $sitesPath\$applicationPath -name $propertyName -value $value
 }
 
-export-modulemember -function set-apppoolidentitytouser, set-apppoolidentityType, set-apppoolstartMode, new-webapplication, start-apppoolandsite, start-apppool, start-site, stop-apppoolandsite, set-website,set-webapppool,set-websitebinding,New-WebSiteBinding,New-WebSiteBindingNonHttp,set-SelfSignedSslCertificate, set-sslbinding, Set-WebsiteForSsl, set-property
+function Begin-WebChangeTransaction()
+{
+	return Begin-WebCommitDelay
+}
+
+function End-WebChangeTransaction()
+{
+	return End-WebCommitDelay
+}
+
+export-modulemember -function set-webapppool32bitcompatibility, set-apppoolidentitytouser, set-apppoolidentityType, set-apppoolstartMode, new-webapplication, start-apppoolandsite, start-apppool, start-site, stop-apppoolandsite, set-website,set-webapppool,set-websitebinding,New-WebSiteBinding,New-WebSiteBindingNonHttp,set-SelfSignedSslCertificate, set-sslbinding, Set-WebsiteForSsl, set-property, Begin-WebChangeTransaction, End-WebChangeTransaction

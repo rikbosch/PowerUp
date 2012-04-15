@@ -69,7 +69,7 @@ function sync-folderswiths3($secret, $key, $rootlocalFolderPath, $folders, $buck
 }
 
 
-function SyncFoldersWithS3($secret, $key, $rootlocalFolderPath, $folders, $bucketPath) {	
+function SyncFoldersWithS3($secret, $key, $rootlocalFolderPath, $folders, $bucketPath) {
 	$folderNames = $folders.split(';')
 	if (!$folderNames)
 	{
@@ -81,6 +81,11 @@ function SyncFoldersWithS3($secret, $key, $rootlocalFolderPath, $folders, $bucke
 	
 	foreach ($folder in $folderNames)
 	{
+		#rename all files and folders to lowercase
+		Write-Host "Converting all files and folders in $rootlocalFolderPath\$folder to lower case"
+		dir $rootlocalFolderPath\$folder -r | % { if ((!$_.PSIsContainer) -and ($_.Name -cne $_.Name.ToLower())) { ren $_.FullName $_.Name.ToLower() } }
+		dir $rootlocalFolderPath\$folder -r | % { if (($_.PSIsContainer) -and ($_.Name -cne $_.Name.ToLower())) { ren $_.FullName ($_.Name + '_rename_temp'); ren ($_.FullName+ '_rename_temp') $_.Name.ToLower() } }
+
 		$destination
 		try {
 			$destination = $s3 | Select-CloudFolder -Path $bucketPath/$folder
@@ -90,12 +95,10 @@ function SyncFoldersWithS3($secret, $key, $rootlocalFolderPath, $folders, $bucke
 		}
 		$src = Get-CloudFilesystemConnection | Select-CloudFolder $rootlocalFolderPath\$folder
 	
-		Write-Host "Copying all files in $rootlocalFolderPath\$folder to $bucketPath/$folder"
-		$src | Copy-CloudSyncFolders $destination -IncludeSubfolders -ExcludeFiles "*.tmp" -ExcludeFolders "temp"
-		#Write-Host "Enabling all files in $bucketPath for public read"
-		#$s3 | Select-CloudFolder $bucketPath | Add-CloudItemPermission -UserName "All Users" -Read -Descendants
+		Write-Host "Copying (and setting permissions on) all files in $rootlocalFolderPath\$folder to $bucketPath/$folder"
+		$src | Copy-CloudSyncFolders $destination -IncludeSubfolders -ExcludeFiles "*.tmp" -ExcludeFolders "temp" | Add-CloudItemPermission -UserName "All Users" -Read -Descendants
 	}
-	
+
 	$s3 = $null	
 }
 
