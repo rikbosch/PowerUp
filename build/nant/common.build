@@ -35,7 +35,7 @@
 		<copy todir="${package.dir}" overwrite="true" flatten="false" includeemptydirs="true">
 			<fileset basedir="${solution.dir}">
 		<include name="_powerup\deploy\**"/>
-				<include name="_Environments\**"/>
+				<include name="_profilefiles\**"/>
 				<include name="_Templates\**"/>
 				<include name="deploy.ps1"/>
 				<include name="settings.txt"/>

@@ -47,6 +47,7 @@ task preprocesspackage {
 }
 
 tasksetup {
+	copyDeploymentProfileSpecificFiles
 	mergePackageInformation
 	mergeSettings
 }
@@ -66,6 +67,12 @@ function mergePackageInformation()
 	{
 		import-settings $packageInformation
 	}
+}
+
+function copyDeploymentProfileSpecificFiles()
+{
+	import-module poweruptemplates
+	Merge-ProfileSpecificFiles ${deployment.profile}
 }
 
 function mergeSettings()
