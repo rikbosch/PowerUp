@@ -32,7 +32,7 @@ function run($task, $servers, $remoteWorkingSubFolder = $null)
 	
 	if ($remoteWorkingSubFolder -eq $null)
 	{
-		$remoteWorkingSubFolder = Get-Content $currentPath\package.id
+		$remoteWorkingSubFolder = ${package.name}
 	}
 	
 	invoke-remotetasks $task $servers ${deployment.profile} $remoteWorkingSubFolder $serverSettingsScriptBlock
