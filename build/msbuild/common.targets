@@ -21,24 +21,34 @@
   <Target Name="copy-deploy-files">
     <ItemGroup>
       <PowerUp Include="_powerup\deploy\**\*.*" />
-      <Environments Include="_environments\**\*.*" />
+      <ProfileFiles Include="_profilefiles\**\*.*" />
       <Templates Include="_templates\**\*.*" />
       <FilesForRoot Include="$(PackageFolder)\_powerup\deploy\core\deploy.bat" />
     </ItemGroup>
+	
+	
+	<ItemGroup>
+	   <Tokens Include="packagename">
+		<ReplacementValue>$(SolutionName)</ReplacementValue>
+	   </Tokens>
+	  </ItemGroup>
 
-	<WriteLinesToFile
-            File="$(PackageFolder)\package.id"
-            Lines="$(SolutionName)"
-            Overwrite="true"
-            />
+    <Copy
+            SourceFiles="_powerup\build\msbuild\templates\package.id"
+            DestinationFiles="$(PackageFolder)\templatepackage.id"/>
+	  
+  <TemplateFile Template="$(PackageFolder)\templatepackage.id" OutputFileName="package.id" Tokens="@(Tokens)" />
+
+    <Delete
+            Files="$(PackageFolder)\templatepackage.id" />
 	
     <Copy
             SourceFiles="@(PowerUp)"
             DestinationFolder="$(PackageFolder)\_powerup\deploy\%(RecursiveDir)"/>
 
     <Copy
-            SourceFiles="@(Environments)"
-            DestinationFolder="$(PackageFolder)\_environments\%(RecursiveDir)"/>
+            SourceFiles="@(ProfileFiles)"
+            DestinationFolder="$(PackageFolder)\_profilefiles\%(RecursiveDir)"/>
 
     <Copy
             SourceFiles="@(Templates)"
@@ -72,7 +82,8 @@
       <Properties>Configuration=$(BuildConfiguration);Targets=Rebuild</Properties>
     </Solution>
   </ItemGroup>
-
+  
+ 
   
     <MSBuild Projects="@(Solution)" />
   </Target>
