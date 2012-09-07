@@ -2,6 +2,7 @@ function Invoke-Combo-StandardWebsite($options)
 {
 	import-module powerupfilesystem
 	import-module powerupweb
+	import-module powerupappfabric\ApplicationServer
 		
 	if(!$options.stopwebsitefirst)
 	{
@@ -89,6 +90,8 @@ function Invoke-Combo-StandardWebsite($options)
 			$binding.certname = $options.websitename
 		}
 	}
+	
+	
 		
 	if($options.stopwebsitefirst)
 	{
@@ -111,6 +114,11 @@ function Invoke-Combo-StandardWebsite($options)
 		set-apppoolidentitytouser $options.apppool.name $options.apppool.username $options.apppool.password
 	}
 	
+	if ($options.apppool.identity -eq "NT AUTHORITY\NETWORK SERVICE")
+	{
+		set-apppoolidentityType $options.apppool.name 2 #2 = NetworkService
+	}
+	
 	$firstBinding = $options.bindings[0]
 	set-website $options.websitename $options.apppool.name $options.fulldestinationpath $firstBinding.url $firstBinding.protocol $firstBinding.ip $firstBinding.port 
 	
@@ -123,6 +131,16 @@ function Invoke-Combo-StandardWebsite($options)
 		else
 		{
 			set-websitebinding $options.websitename $binding.url $binding.protocol $binding.ip $binding.port
+		}
+	}
+	
+	if($options.appfabricapplications)
+	{
+		foreach($application in $options.appfabricapplications)
+		{
+			new-webapplication $options.websitename $options.apppool.name $application.virtualdirectory "$($options.fulldestinationpath)\$($application.virtualdirectory)" 
+			Set-ASApplication -SiteName $options.websitename -VirtualPath $application.virtualdirectory -AutoStartMode All -EnableApplicationPool -Force
+			set-apppoolstartMode $options.websitename 1
 		}
 	}
 

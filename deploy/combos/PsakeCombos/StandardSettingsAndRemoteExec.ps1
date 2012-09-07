@@ -16,12 +16,12 @@ function getPlainTextSettings($parameter, $fileName)
 	$fullFilePath = "$currentPath\$fileName"
 	
 	import-module AffinityId\Id.PowershellExtensions.dll
-
+	
 	if (!(test-path $fullFilePath))
 	{
-		return $null
+		return @()
 	}
-	
+
 	get-parsedsettings $fullFilePath $parameter
 }
 
@@ -92,26 +92,30 @@ function processTemplates()
 	import-module powerupsettings
 	import-module poweruptemplates
 
+	
 	#This is the second time we are reading the settings file. Should probably be using the settings from the merge process.
 	$deploymentProfileSettings = &$deploymentProfileSettingsScriptBlock ${deployment.profile}
 	$packageInformation = getPlainTextSettings "PackageInformation" "package.id"
 	
-	if ($packageInformation)
+	if (!$deploymentProfileSettings)
 	{
+		$deploymentProfileSettings = @{}
+	}
+	
+	if ($packageInformation)
+	{	
 		foreach ($item in $packageInformation.GetEnumerator())
 		{
 			$deploymentProfileSettings.Add($item.Key, $item.Value)
 		}
 	}
 
-	if ($deploymentProfileSettings)
-	{
-		Write-Host "Package settings for this profile are:"
-		$deploymentProfileSettings | Format-Table -property *
+	Write-Host "Package settings for this profile are:"
+	$deploymentProfileSettings | Format-Table -property *
 
-		Write-Host "Substituting and copying templated files"
-		merge-templates $deploymentProfileSettings ${deployment.profile}
-	}
+	Write-Host "Substituting and copying templated files"
+	merge-templates $deploymentProfileSettings ${deployment.profile}
+	
 }
 
 $deploymentProfileSettingsScriptBlock = $function:getPlainTextDeploymentProfileSettings

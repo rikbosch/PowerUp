@@ -91,6 +91,10 @@ function Set-WebsiteForSsl($useSelfSignedCert, $websiteName, $certificateName, $
 
 function GetSslCertificate($certName)
 {
+	if ($certName.StartsWith("*")) {
+		#escape the leading asterisk which breaks the regex below (-match ....)
+		$certName = "\" + $certName
+	}
 	Get-ChildItem cert:\LocalMachine\MY | Where-Object {$_.Subject -match "${certName}"} | Select-Object -First 1
 }
 
@@ -204,12 +208,24 @@ if ($LoadAsSnapin)
     }
 }
 
+function Uninstall-WebAppPool($appPoolName)
+{
+	write-host "Removing apppool $appPoolName"
+	DeleteAppPool $appPoolName
+}
+
 function set-WebAppPool($appPoolName, $pipelineMode, $runtimeVersion)
 {
 	write-host "Recreating apppool $appPoolName with pipeline mode $pipelineMode and .Net version $runtimeVersion"
 	DeleteAppPool $appPoolName
 	CreateAppPool $appPoolName
 	SetAppPoolProperties $appPoolName $pipelineMode $runtimeVersion
+}
+
+function Uninstall-WebSite($websiteName)
+{
+	write-host "Removing website $websiteName"
+	DeleteWebsite $websiteName
 }
 
 function set-WebSite($websiteName, $appPoolName, $fullPath, $hostHeader, $protocol="http", $ip="*", $port="80")
@@ -246,7 +262,6 @@ function Set-WebSiteBinding($websiteName, $hostHeader, $protocol="http", $ip="*"
 	}
 }
 
-
 function New-WebSiteBinding($websiteName, $hostHeader, $protocol="http", $ip="*", $port="80")
 {
 	write-host "Binding website $websiteName to host header $hostHeader with IP $ip, port $port over $protocol"
@@ -272,8 +287,14 @@ function Set-SslBinding($certName, $ip, $port)
 	{
 		CreateSslBinding $certificate $ip $port
 	}
-	
 }
+
+function new-virtualdirectory($websiteName, $subPath, $physicalPath)
+{
+	write-host "Adding virtual directory $subPath to web site $websiteName pointing to $physicalPath"
+	New-Item $sitesPath\$websiteName\$subPath -physicalPath $physicalPath -type VirtualDirectory 
+}
+
 
 function new-webapplication($websiteName, $appPoolName, $subPath, $physicalPath)
 {
@@ -336,4 +357,4 @@ function End-WebChangeTransaction()
 	return End-WebCommitDelay
 }
 
-export-modulemember -function set-webapppool32bitcompatibility, set-apppoolidentitytouser, set-apppoolidentityType, set-apppoolstartMode, new-webapplication, start-apppoolandsite, start-apppool, start-site, stop-apppoolandsite, set-website,set-webapppool,set-websitebinding,New-WebSiteBinding,New-WebSiteBindingNonHttp,set-SelfSignedSslCertificate, set-sslbinding, Set-WebsiteForSsl, set-property, Begin-WebChangeTransaction, End-WebChangeTransaction
+export-modulemember -function set-webapppool32bitcompatibility, set-apppoolidentitytouser, set-apppoolidentityType, set-apppoolstartMode, new-webapplication, new-virtualdirectory, start-apppoolandsite, start-apppool, start-site, stop-apppoolandsite, set-website, uninstall-website, set-webapppool, uninstall-webapppool,set-websitebinding, New-WebSiteBinding, New-WebSiteBindingNonHttp, set-SelfSignedSslCertificate, set-sslbinding, Set-WebsiteForSsl, set-property, Begin-WebChangeTransaction, End-WebChangeTransaction

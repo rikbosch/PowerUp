@@ -1,0 +1,104 @@
+function Set-ServiceCredentials
+{
+    param
+    (
+        [string] $Name = $(throw 'Must provide a service name'),
+        [string] $Username = $(throw "Must provide a username"),
+        [string] $Password = $(throw "Must provide a password")
+    ) 
+    
+	if (!($Username.Contains("\")))
+	{
+        $Username = "$env:COMPUTERNAME\$Username"
+    }
+    
+    $service = gwmi win32_service -filter "name='$Name'"
+	if ($service -ne $null)
+	{
+        $params = $service.psbase.getMethodParameters("Change");
+        $params["StartName"] = $Username
+        $params["StartPassword"] = $Password
+    
+        $service.invokeMethod("Change", $params, $null)
+
+		Write-Output "Credentials changed for service '$Name'"
+	}
+	else
+	{
+		Write-Output "Could not find service '$Name' for which to change credentials"
+	}
+}
+
+function Set-ServiceFailureOptions
+{
+    param
+    (
+        [string] $Name = $(throw 'Must provide a service name'),
+        [int] $ResetDays,
+        [string] $Action,
+        [int] $DelayMinutes
+    ) 
+    	
+	$ResetSeconds = $($ResetDays*60*60*24)
+	$DelayMilliseconds = $($DelayMinutes*1000*60)
+	$Action = "restart"
+	$Actions = "$Action/$DelayMilliseconds/$Action/$DelayMilliseconds/$Action/$DelayMilliseconds"
+		
+	write-host "Setting service failure options for service $Name to reset after $ResetDays days, and $Action after $DelayMinutes minutes"
+	
+	& sc.exe failure $Name reset= $ResetSeconds actions= $Actions
+}
+
+function Stop-MaybeNonExistingService
+{
+	param
+    (
+        [string] $Name = $(throw 'Must provide a service name')
+    ) 
+
+	$serviceExists = !((Get-Service | Where-Object {$_.Name -eq $Name}) -eq $null)
+	
+	if ($serviceExists) {
+		Write-Host "$Name Service is installed"
+		
+		Write-Host "Stopping $Name"
+		Stop-Service $Name		
+	}
+
+}
+
+function Set-Service
+{
+	param
+    (
+        [string] $Name = $(throw 'Must provide a service name'),
+		[string] $InstallPath = $(throw 'Must provide a service name'),
+		[string] $ExeFileName = $(throw 'Must provide a service name')
+    ) 
+
+	$serviceExists = !((Get-Service | Where-Object {$_.Name -eq $Name}) -eq $null)
+	
+	if ($serviceExists) {
+		Write-Host "$Name Service is installed"
+		
+		Write-Host "Stopping $Name"
+		Stop-Service $Name
+		
+		Write-Host "Uninstalling $Name"
+
+		try{
+			& "$PSScriptRoot\InstallUtil.exe" "$InstallPath\$ExeFileName" /u /LogToConsole=true
+		}
+		catch{
+			throw "Could not uninstall $Name Service"
+		}		
+	}
+		
+	try{
+		& "$PSScriptRoot\InstallUtil.exe" "$InstallPath\$ExeFileName" /LogToConsole=true
+	}
+	catch{
+		throw "Could not uninstall $Name Service"
+	}
+	
+}

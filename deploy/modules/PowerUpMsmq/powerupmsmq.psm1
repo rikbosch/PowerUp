@@ -16,6 +16,15 @@ function Has-MsmqQueueWithName([string]$name)
 	return $found
 }
 
+function set-msmqqueue($computerName, $queuename, $private, $user, $permission, $transactional)
+{
+	if (!(Has-MsmqQueueWithName $queuename))
+	{
+		Write-Host "Creating Queue $queuename"
+		Create-MsmqQueue $computerName $queuename $private $user $permission $transactional
+	}
+}
+
 function Create-MsmqQueue($computerName, $queuename, $private, $user, $permission, $transactional)
 {
 	[Reflection.Assembly]::LoadWithPartialName("System.Messaging")
@@ -60,5 +69,5 @@ function Create-MsmqQueue($computerName, $queuename, $private, $user, $permissio
 	}
 }
 
-export-modulemember -function Has-MsmqQueueWithName, Create-MsmqQueue
+export-modulemember -function Has-MsmqQueueWithName, Create-MsmqQueue, set-msmqqueue
 

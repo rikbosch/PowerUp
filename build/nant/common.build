@@ -7,7 +7,10 @@
 	<property name="build.verbosity" value="Normal" />
 	<property name="build.vcs.number" value="0" />
 	<property name="solution.name" value="${project::get-name()}" unless="${property::exists('solution.name')}" />
-	<property name="solution.dir" value="${project::get-base-directory()}" />
+	<property name="solution.extension" value="sln" unless="${property::exists('solution.extension')}" />
+	<property name="solution.dir" value="${project::get-base-directory()}"  unless="${property::exists('solution.dir')}"/>
+	<property name="root.dir" value="${project::get-base-directory()}"/>
+	<property name="package.name" value="${solution.name}" unless="${property::exists('package.name')}" />
 	<property name="package.dir" value="${solution.dir}\_package" />
 
 	<target name="build-package-common" depends="clean compile-solution package-project copy-build-files create-package-info zip-package" />
@@ -21,19 +24,18 @@
 		<delete dir="${package.dir}" />
 		<mkdir dir="${package.dir}" />
 	</target>
-
-
+	
 	<target name="compile-solution">
-		<msbuild project="${solution.dir}\${solution.name}.sln" verbosity="${build.verbosity}">
+		<msbuild project="${solution.dir}\${solution.name}.${solution.extension}" verbosity="${build.verbosity}">
 			<arg value="/property:Configuration=${build.configuration}" />
 			<arg value="/property:Platform=${build.platform}" />
-<arg value="/target:Rebuild" />
+			<arg value="/target:Rebuild" />
 		</msbuild>
 	</target>
 
 	<target name="copy-build-files">
 		<copy todir="${package.dir}" overwrite="true" flatten="false" includeemptydirs="true">
-			<fileset basedir="${solution.dir}">
+			<fileset basedir="${root.dir}">
 		<include name="_powerup\deploy\**"/>
 				<include name="_profilefiles\**"/>
 				<include name="_Templates\**"/>
@@ -55,7 +57,7 @@
 		<loadfile file="${package.id.file}" property="package.id.file.content">
 			<filterchain>
 				<replacetokens>
-					<token key="PACKAGENAME" value="${solution.name}" />
+					<token key="PACKAGENAME" value="${package.name}" />
 					<token key="BUILDNUMBER" value="${build.number}" />
 					<token key="BUILDDATE" value="${build.date}" />
 				</replacetokens>
@@ -65,7 +67,7 @@
 	</target>
 
 	<target name="zip-package">
-		<zip zipfile="${package.dir}\package_${solution.name}_${build.number}.zip" includeemptydirs="true">
+		<zip zipfile="${package.dir}\package_${package.name}_${build.number}.zip" includeemptydirs="true">
 			<fileset basedir="${package.dir}">
 				<include name="**/*" />
 			</fileset>
