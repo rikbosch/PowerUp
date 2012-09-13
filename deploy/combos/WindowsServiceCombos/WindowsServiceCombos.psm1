@@ -28,7 +28,7 @@ function Invoke-Combo-StandardWindowsService($options)
 		$options.exename = "$($options.servicename).exe"
 	}
 		
-	Stop-MaybeNonExistingService $options.servicename
+	Uninstall-Service $options.servicename
 
 	if($options.copywithoutmirror)
 	{

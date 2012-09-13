@@ -67,6 +67,47 @@ function Stop-MaybeNonExistingService
 
 }
 
+function Start-MaybeNonExistingService
+{
+	param
+    (
+        [string] $Name = $(throw 'Must provide a service name')
+    ) 
+
+	$serviceExists = !((Get-Service | Where-Object {$_.Name -eq $Name}) -eq $null)
+	
+	if ($serviceExists) {
+		Write-Host "$Name Service is installed"
+		
+		Write-Host "Starting $Name"
+		Start-Service $Name		
+	}
+
+}
+
+function Uninstall-Service 
+{
+	param
+	(
+		[string] $Name = $(throw 'Must provide a service name')
+	) 
+
+	$service = get-wmiobject -query "select * from win32_service where name='$Name'"
+		
+	if ($service) {
+		Write-Host "$Name Service is installed"
+		
+		Write-Host "Uninstalling $Name"
+
+		try{
+			& "$PSScriptRoot\InstallUtil.exe" $service.pathname /u /LogToConsole=true
+		}
+		catch{
+			throw "Could not uninstall $Name Service"
+		}		
+	}
+}
+
 function Set-Service
 {
 	param
@@ -76,23 +117,7 @@ function Set-Service
 		[string] $ExeFileName = $(throw 'Must provide a service name')
     ) 
 
-	$serviceExists = !((Get-Service | Where-Object {$_.Name -eq $Name}) -eq $null)
-	
-	if ($serviceExists) {
-		Write-Host "$Name Service is installed"
-		
-		Write-Host "Stopping $Name"
-		Stop-Service $Name
-		
-		Write-Host "Uninstalling $Name"
-
-		try{
-			& "$PSScriptRoot\InstallUtil.exe" "$InstallPath\$ExeFileName" /u /LogToConsole=true
-		}
-		catch{
-			throw "Could not uninstall $Name Service"
-		}		
-	}
+	uninstall-service $Name $InstallPath $ExeFileName
 		
 	try{
 		& "$PSScriptRoot\InstallUtil.exe" "$InstallPath\$ExeFileName" /LogToConsole=true
