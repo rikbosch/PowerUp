@@ -64,6 +64,10 @@ function Stop-MaybeNonExistingService
 		Write-Host "Stopping $Name"
 		Stop-Service $Name		
 	}
+	else
+	{
+		Write-Host "$Name Service is not installed, so cannot be stopped"
+	}
 
 }
 
@@ -81,6 +85,10 @@ function Start-MaybeNonExistingService
 		
 		Write-Host "Starting $Name"
 		Start-Service $Name		
+	}
+	else
+	{
+		Write-Host "$Name Service is not installed, so cannot be started"
 	}
 
 }

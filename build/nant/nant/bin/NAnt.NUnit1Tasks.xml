@@ -4,6 +4,34 @@
         <name>NAnt.NUnit1Tasks</name>
     </assembly>
     <members>
+        <member name="T:NAnt.NUnit1.Types.TestResultExtra">
+             <summary>
+             Decorates NUnits <see cref="T:NUnit.Framework.TestResult"/> with extra information such as 
+             run-time.
+            </summary>
+        </member>
+        <member name="M:NAnt.NUnit1.Types.TestResultExtra.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:NAnt.NUnit1.Types.TestResultExtra"/>
+            class.
+            </summary>
+        </member>
+        <member name="P:NAnt.NUnit1.Types.TestResultExtra.RunTime">
+            <summary>
+            Gets or sets the total run-time of a test.
+            </summary>
+            <value>The total run-time of a test.</value>
+        </member>
+        <member name="T:NAnt.NUnit1.Types.NUnitTestData">
+            <summary>
+            Carries data specified through the test element.
+            </summary>
+        </member>
+        <member name="T:NAnt.NUnit1.Types.LogFormatter">
+            <summary>
+            Prints information about running tests directly to the build log.
+            </summary>
+        </member>
         <member name="M:NAnt.NUnit1.Types.IResultFormatter.StartTestSuite(NAnt.NUnit1.Types.NUnitTestData)">
             <summary>
             The whole test suite started.
@@ -19,6 +47,20 @@
             Sets the <see cref="T:System.IO.TextWriter"/> the formatter is supposed to write 
             its results to.
             </summary>
+        </member>
+        <member name="M:NAnt.NUnit1.Types.LogFormatter.SetOutput(System.IO.TextWriter)">
+            <summary>Not used, all output goes to Log class.</summary>
+        </member>
+        <member name="M:NAnt.NUnit1.Types.LogFormatter.StartTestSuite(NAnt.NUnit1.Types.NUnitTestData)">
+            <summary>Called when the whole test suite has started.</summary>
+        </member>
+        <member name="M:NAnt.NUnit1.Types.LogFormatter.EndTestSuite(NAnt.NUnit1.Types.TestResultExtra)">
+            <summary>Called when the whole test suite has ended.</summary>
+        </member>
+        <member name="M:NAnt.NUnit1.Types.LogFormatter.FormatError(System.String,System.String)">
+            <summary>Convert a stack trace line into something that can be clicked on in an IDE output window.</summary>
+            <param name="trace">The StackTrace string, see <see cref="P:System.Exception.StackTrace"/>.</param>
+            <param name="message">The string that gets appended to the end of file(line): portion.</param>
         </member>
         <member name="T:NAnt.NUnit1.Types.IResultFormatterCollection">
             <summary>
@@ -150,138 +192,31 @@
             The current element in the collection.
             </returns>
         </member>
-        <member name="T:NAnt.NUnit1.Types.LogFormatter">
+        <member name="T:NAnt.NUnit1.Types.XmlResultFormatter">
             <summary>
-            Prints information about running tests directly to the build log.
+            Prints detailed information about running tests in XML format.
             </summary>
         </member>
-        <member name="M:NAnt.NUnit1.Types.LogFormatter.SetOutput(System.IO.TextWriter)">
-            <summary>Not used, all output goes to Log class.</summary>
-        </member>
-        <member name="M:NAnt.NUnit1.Types.LogFormatter.StartTestSuite(NAnt.NUnit1.Types.NUnitTestData)">
-            <summary>Called when the whole test suite has started.</summary>
-        </member>
-        <member name="M:NAnt.NUnit1.Types.LogFormatter.EndTestSuite(NAnt.NUnit1.Types.TestResultExtra)">
-            <summary>Called when the whole test suite has ended.</summary>
-        </member>
-        <member name="M:NAnt.NUnit1.Types.LogFormatter.FormatError(System.String,System.String)">
-            <summary>Convert a stack trace line into something that can be clicked on in an IDE output window.</summary>
-            <param name="trace">The StackTrace string, see <see cref="P:System.Exception.StackTrace"/>.</param>
-            <param name="message">The string that gets appended to the end of file(line): portion.</param>
-        </member>
-        <member name="T:NAnt.NUnit1.Tasks.NUnitTask">
+        <member name="M:NAnt.NUnit1.Types.XmlResultFormatter.#ctor">
             <summary>
-            Runs tests using the NUnit V1.0 framework.
-            </summary>
-            <remarks>
-              <para>
-              See the <see href="http://nunit.sf.net">NUnit home page</see> for more 
-              information.
-              </para>
-              <para>
-              The <see cref="P:NAnt.NUnit1.Tasks.NUnitTask.HaltOnFailure"/> or <see cref="P:NAnt.NUnit1.Tasks.NUnitTask.HaltOnError"/> 
-              attributes are only used to stop more than one test suite to stop 
-              running.  If any test suite fails a build error will be thrown.  
-              Set <see cref="P:NAnt.Core.Task.FailOnError"/> to <see langword="false"/> to 
-              ignore test errors and continue build.
-              </para>
-            </remarks>
-            <example>
-              <para>
-              Run tests in the <c>MyProject.Tests.dll</c> assembly.
-              </para>
-              <para>
-              The test results are logged in <c>results.xml</c> and <c>results.txt</c> 
-              using the <see cref="F:NAnt.NUnit.Types.FormatterType.Xml"/> and <see cref="F:NAnt.NUnit.Types.FormatterType.Plain"/> 
-              formatters, respectively.
-              </para>
-              <code>
-                <![CDATA[
-            <nunit basedir="build" verbose="false" haltonerror="true" haltonfailure="true">
-                <formatter type="Xml" />
-                <formatter type="Plain" />
-                <test name="MyProject.Tests.AllTests" assembly="MyProject.Tests.dll" outfile="results"/>
-            </nunit>
-                ]]>
-              </code>
-            </example>
-        </member>
-        <member name="P:NAnt.NUnit1.Tasks.NUnitTask.HaltOnError">
-            <summary>
-            Stops running tests when a test causes an error. The default is 
-            <see langword="false" />.
-            </summary>
-            <remarks>
-            Implies haltonfailure.
-            </remarks>
-        </member>
-        <member name="P:NAnt.NUnit1.Tasks.NUnitTask.HaltOnFailure">
-            <summary>
-            Stops running tests if a test fails (errors are considered failures 
-            as well). The default is <see langword="false" />.
+            Initializes a new instance of the <see cref="T:NAnt.NUnit1.Types.XmlResultFormatter"/>
+            class.
             </summary>
         </member>
-        <member name="P:NAnt.NUnit1.Tasks.NUnitTask.Timeout">
+        <member name="M:NAnt.NUnit1.Types.XmlResultFormatter.SetOutput(System.IO.TextWriter)">
             <summary>
-            Cancel the individual tests if they do not finish in the specified 
-            time (measured in milliseconds). Ignored if fork is disabled.
+            Sets the <see cref="T:System.IO.TextWriter"/> the formatter is supposed to 
+            write its results to.
             </summary>
         </member>
-        <member name="P:NAnt.NUnit1.Tasks.NUnitTask.Tests">
+        <member name="M:NAnt.NUnit1.Types.XmlResultFormatter.StartTestSuite(NAnt.NUnit1.Types.NUnitTestData)">
             <summary>
-            Tests to run.
+            Called when the whole test suite has started.
             </summary>
         </member>
-        <member name="P:NAnt.NUnit1.Tasks.NUnitTask.FormatterElements">
+        <member name="M:NAnt.NUnit1.Types.XmlResultFormatter.EndTestSuite(NAnt.NUnit1.Types.TestResultExtra)">
             <summary>
-            Formatters to output results of unit tests.
-            </summary>
-        </member>
-        <member name="T:NAnt.NUnit1.Types.NUnitTest">
-            <summary>
-            Represents a test element of an <see cref="T:NAnt.NUnit1.Tasks.NUnitTask"/>.
-            </summary>
-        </member>
-        <member name="P:NAnt.NUnit1.Types.NUnitTest.OutFile">
-            <summary>
-            Base name of the test result. The full filename is determined by this 
-            attribute and the extension of formatter.
-            </summary>
-        </member>
-        <member name="P:NAnt.NUnit1.Types.NUnitTest.ToDir">
-            <summary>
-            Directory to write the reports to.
-            </summary>
-        </member>
-        <member name="P:NAnt.NUnit1.Types.NUnitTest.Class">
-            <summary>
-            Class name of the test.
-            </summary>
-        </member>
-        <member name="P:NAnt.NUnit1.Types.NUnitTest.Assembly">
-            <summary>
-            Assembly to load the test from.
-            </summary>
-        </member>
-        <member name="P:NAnt.NUnit1.Types.NUnitTest.Fork">
-            <summary>
-            Run the tests in a separate <see cref="T:System.AppDomain"/>.
-            </summary>
-        </member>
-        <member name="P:NAnt.NUnit1.Types.NUnitTest.HaltOnError">
-            <summary>
-            Stop the build process if an error occurs during the test run.
-            </summary>
-        </member>
-        <member name="P:NAnt.NUnit1.Types.NUnitTest.HaltOnFailure">
-            <summary>
-            Stop the build process if a test fails (errors are considered failures 
-            as well).
-            </summary>
-        </member>
-        <member name="P:NAnt.NUnit1.Types.NUnitTest.AppConfigFile">
-            <summary>
-            The application configuration file to use for the NUnit test domain.
+            Called when the whole test suite has ended.
             </summary>
         </member>
         <member name="T:NAnt.NUnit1.Types.NUnitTestCollection">
@@ -414,9 +349,138 @@
             The current element in the collection.
             </returns>
         </member>
-        <member name="T:NAnt.NUnit1.Types.NUnitTestData">
+        <member name="T:NAnt.NUnit1.Types.PlainTextFormatter">
             <summary>
-            Carries data specified through the test element.
+            Prints information about running tests in plain text.
+            </summary>
+        </member>
+        <member name="M:NAnt.NUnit1.Types.PlainTextFormatter.SetOutput(System.IO.TextWriter)">
+            <summary>Sets the Writer the formatter is supposed to write its results to.</summary>
+        </member>
+        <member name="M:NAnt.NUnit1.Types.PlainTextFormatter.StartTestSuite(NAnt.NUnit1.Types.NUnitTestData)">
+            <summary>Called when the whole test suite has started.</summary>
+        </member>
+        <member name="M:NAnt.NUnit1.Types.PlainTextFormatter.EndTestSuite(NAnt.NUnit1.Types.TestResultExtra)">
+            <summary>Called when the whole test suite has ended.</summary>
+        </member>
+        <member name="M:NAnt.NUnit1.Types.PlainTextFormatter.FormatError(System.String,System.String)">
+            <summary>Convert a stack trace line into something that can be clicked on in an IDE output window.</summary>
+            <param name="trace">The StackTrace string, see <see cref="P:System.Exception.StackTrace"/>.</param>
+            <param name="message">The string that gets appended to the end of file(line): portion.</param>
+        </member>
+        <member name="T:NAnt.NUnit1.Tasks.NUnitTask">
+            <summary>
+            Runs tests using the NUnit V1.0 framework.
+            </summary>
+            <remarks>
+              <para>
+              See the <see href="http://nunit.sf.net">NUnit home page</see> for more 
+              information.
+              </para>
+              <para>
+              The <see cref="P:NAnt.NUnit1.Tasks.NUnitTask.HaltOnFailure"/> or <see cref="P:NAnt.NUnit1.Tasks.NUnitTask.HaltOnError"/> 
+              attributes are only used to stop more than one test suite to stop 
+              running.  If any test suite fails a build error will be thrown.  
+              Set <see cref="P:NAnt.Core.Task.FailOnError"/> to <see langword="false"/> to 
+              ignore test errors and continue build.
+              </para>
+            </remarks>
+            <example>
+              <para>
+              Run tests in the <c>MyProject.Tests.dll</c> assembly.
+              </para>
+              <para>
+              The test results are logged in <c>results.xml</c> and <c>results.txt</c> 
+              using the <see cref="F:NAnt.NUnit.Types.FormatterType.Xml"/> and <see cref="F:NAnt.NUnit.Types.FormatterType.Plain"/> 
+              formatters, respectively.
+              </para>
+              <code>
+                <![CDATA[
+            <nunit basedir="build" verbose="false" haltonerror="true" haltonfailure="true">
+                <formatter type="Xml" />
+                <formatter type="Plain" />
+                <test name="MyProject.Tests.AllTests" assembly="MyProject.Tests.dll" outfile="results"/>
+            </nunit>
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="P:NAnt.NUnit1.Tasks.NUnitTask.HaltOnError">
+            <summary>
+            Stops running tests when a test causes an error. The default is 
+            <see langword="false" />.
+            </summary>
+            <remarks>
+            Implies haltonfailure.
+            </remarks>
+        </member>
+        <member name="P:NAnt.NUnit1.Tasks.NUnitTask.HaltOnFailure">
+            <summary>
+            Stops running tests if a test fails (errors are considered failures 
+            as well). The default is <see langword="false" />.
+            </summary>
+        </member>
+        <member name="P:NAnt.NUnit1.Tasks.NUnitTask.Timeout">
+            <summary>
+            Cancel the individual tests if they do not finish in the specified 
+            time (measured in milliseconds). Ignored if fork is disabled.
+            </summary>
+        </member>
+        <member name="P:NAnt.NUnit1.Tasks.NUnitTask.Tests">
+            <summary>
+            Tests to run.
+            </summary>
+        </member>
+        <member name="P:NAnt.NUnit1.Tasks.NUnitTask.FormatterElements">
+            <summary>
+            Formatters to output results of unit tests.
+            </summary>
+        </member>
+        <member name="T:NAnt.NUnit1.Types.NUnitTest">
+            <summary>
+            Represents a test element of an <see cref="T:NAnt.NUnit1.Tasks.NUnitTask"/>.
+            </summary>
+        </member>
+        <member name="P:NAnt.NUnit1.Types.NUnitTest.OutFile">
+            <summary>
+            Base name of the test result. The full filename is determined by this 
+            attribute and the extension of formatter.
+            </summary>
+        </member>
+        <member name="P:NAnt.NUnit1.Types.NUnitTest.ToDir">
+            <summary>
+            Directory to write the reports to.
+            </summary>
+        </member>
+        <member name="P:NAnt.NUnit1.Types.NUnitTest.Class">
+            <summary>
+            Class name of the test.
+            </summary>
+        </member>
+        <member name="P:NAnt.NUnit1.Types.NUnitTest.Assembly">
+            <summary>
+            Assembly to load the test from.
+            </summary>
+        </member>
+        <member name="P:NAnt.NUnit1.Types.NUnitTest.Fork">
+            <summary>
+            Run the tests in a separate <see cref="T:System.AppDomain"/>.
+            </summary>
+        </member>
+        <member name="P:NAnt.NUnit1.Types.NUnitTest.HaltOnError">
+            <summary>
+            Stop the build process if an error occurs during the test run.
+            </summary>
+        </member>
+        <member name="P:NAnt.NUnit1.Types.NUnitTest.HaltOnFailure">
+            <summary>
+            Stop the build process if a test fails (errors are considered failures 
+            as well).
+            </summary>
+        </member>
+        <member name="P:NAnt.NUnit1.Types.NUnitTest.AppConfigFile">
+            <summary>
+            The application configuration file to use for the NUnit test domain.
             </summary>
         </member>
         <member name="M:NAnt.NUnit1.Tasks.NUnitTestRunner.NeedsRunning">
@@ -469,70 +533,6 @@
             Gets the result of the test.
             </summary>
             <value>The result of the test.</value>
-        </member>
-        <member name="T:NAnt.NUnit1.Types.PlainTextFormatter">
-            <summary>
-            Prints information about running tests in plain text.
-            </summary>
-        </member>
-        <member name="M:NAnt.NUnit1.Types.PlainTextFormatter.SetOutput(System.IO.TextWriter)">
-            <summary>Sets the Writer the formatter is supposed to write its results to.</summary>
-        </member>
-        <member name="M:NAnt.NUnit1.Types.PlainTextFormatter.StartTestSuite(NAnt.NUnit1.Types.NUnitTestData)">
-            <summary>Called when the whole test suite has started.</summary>
-        </member>
-        <member name="M:NAnt.NUnit1.Types.PlainTextFormatter.EndTestSuite(NAnt.NUnit1.Types.TestResultExtra)">
-            <summary>Called when the whole test suite has ended.</summary>
-        </member>
-        <member name="M:NAnt.NUnit1.Types.PlainTextFormatter.FormatError(System.String,System.String)">
-            <summary>Convert a stack trace line into something that can be clicked on in an IDE output window.</summary>
-            <param name="trace">The StackTrace string, see <see cref="P:System.Exception.StackTrace"/>.</param>
-            <param name="message">The string that gets appended to the end of file(line): portion.</param>
-        </member>
-        <member name="T:NAnt.NUnit1.Types.TestResultExtra">
-             <summary>
-             Decorates NUnits <see cref="T:NUnit.Framework.TestResult"/> with extra information such as 
-             run-time.
-            </summary>
-        </member>
-        <member name="M:NAnt.NUnit1.Types.TestResultExtra.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:NAnt.NUnit1.Types.TestResultExtra"/>
-            class.
-            </summary>
-        </member>
-        <member name="P:NAnt.NUnit1.Types.TestResultExtra.RunTime">
-            <summary>
-            Gets or sets the total run-time of a test.
-            </summary>
-            <value>The total run-time of a test.</value>
-        </member>
-        <member name="T:NAnt.NUnit1.Types.XmlResultFormatter">
-            <summary>
-            Prints detailed information about running tests in XML format.
-            </summary>
-        </member>
-        <member name="M:NAnt.NUnit1.Types.XmlResultFormatter.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:NAnt.NUnit1.Types.XmlResultFormatter"/>
-            class.
-            </summary>
-        </member>
-        <member name="M:NAnt.NUnit1.Types.XmlResultFormatter.SetOutput(System.IO.TextWriter)">
-            <summary>
-            Sets the <see cref="T:System.IO.TextWriter"/> the formatter is supposed to 
-            write its results to.
-            </summary>
-        </member>
-        <member name="M:NAnt.NUnit1.Types.XmlResultFormatter.StartTestSuite(NAnt.NUnit1.Types.NUnitTestData)">
-            <summary>
-            Called when the whole test suite has started.
-            </summary>
-        </member>
-        <member name="M:NAnt.NUnit1.Types.XmlResultFormatter.EndTestSuite(NAnt.NUnit1.Types.TestResultExtra)">
-            <summary>
-            Called when the whole test suite has ended.
-            </summary>
         </member>
     </members>
 </doc>

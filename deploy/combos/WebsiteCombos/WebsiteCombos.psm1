@@ -134,6 +134,30 @@ function Invoke-Combo-StandardWebsite($options)
 		}
 	}
 	
+	if($options.virtualdirectories)
+	{
+		foreach($virtualdirectory in $options.virtualdirectories)
+		{
+			if (!$virtualdirectory.fulldestinationpath) {
+				$virtualdirectory.fulldestinationpath = "$($options.webroot)\$($virtualdirectory.destinationfolder)"
+			}
+			
+			if ($virtualdirectory.fullsourcepath -or $virtualdirectory.sourcefolder)
+			{
+				if (!$virtualdirectory.fullsourcepath) {
+					$virtualdirectory.fullsourcepath = "$(get-location)\$($virtualdirectory.sourcefolder)"
+				}
+				copy-mirroreddirectory $virtualdirectory.fullsourcepath $virtualdirectory.fulldestinationpath
+			}
+			
+			if ($virtualdirectory.isapplication) {
+				new-webapplication $options.websitename $options.apppool.name $virtualdirectory.directoryname $virtualdirectory.fulldestinationpath
+			} else {
+				new-virtualdirectory $options.websitename $virtualdirectory.directoryname $virtualdirectory.fulldestinationpath
+			}
+		}
+	}
+	
 	if($options.appfabricapplications)
 	{
 		foreach($application in $options.appfabricapplications)

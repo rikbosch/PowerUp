@@ -4,6 +4,156 @@
         <name>NAnt.MSNetTasks</name>
     </assembly>
     <members>
+        <member name="T:NAnt.MSNet.Tasks.ServiceControllerTask">
+            <summary>
+            Allows a Windows service to be controlled.
+            </summary>
+            <example>
+              <para>Starts the World Wide Web Publishing Service on the local computer.</para>
+              <code>
+                <![CDATA[
+            <servicecontroller action="Start" service="w3svc" />
+                ]]>
+              </code>
+            </example>
+            <example>
+              <para>Stops the Alerter service on computer 'MOTHER'.</para>
+              <code>
+                <![CDATA[
+            <servicecontroller action="Stop" service="Alerter" machine="MOTHER" />
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:NAnt.MSNet.Tasks.ServiceControllerTask"/>
+            class.
+            </summary>
+        </member>
+        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.ExecuteTask">
+            <summary>
+            Peforms actions on the service in order to reach the desired status.
+            </summary>
+        </member>
+        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.DetermineDesiredStatus">
+            <summary>
+            Determines the desired status of the service based on the action
+            that should be performed on it.
+            </summary>
+            <returns>
+            The <see cref="T:System.ServiceProcess.ServiceControllerStatus"/> that should be reached
+            in order for the <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.Action"/> to be considered successful.
+            </returns>
+        </member>
+        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.StartService(System.ServiceProcess.ServiceController)">
+            <summary>
+            Starts the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and
+            <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.
+            </summary>
+            <param name="serviceController"><see cref="T:System.ServiceProcess.ServiceController"/> instance for controlling the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.</param>
+        </member>
+        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.StopService(System.ServiceProcess.ServiceController)">
+            <summary>
+            Stops the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and
+            <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.
+            </summary>
+            <param name="serviceController"><see cref="T:System.ServiceProcess.ServiceController"/> instance for controlling the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.</param>
+        </member>
+        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.RestartService(System.ServiceProcess.ServiceController)">
+            <summary>
+            Restarts the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and
+            <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.
+            </summary>
+            <param name="serviceController"><see cref="T:System.ServiceProcess.ServiceController"/> instance for controlling the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.</param>
+        </member>
+        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.PauseService(System.ServiceProcess.ServiceController)">
+            <summary>
+            Pauses the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and
+            <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.
+            </summary>
+            <param name="serviceController"><see cref="T:System.ServiceProcess.ServiceController"/> instance for controlling the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.</param>
+        </member>
+        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.ContinueService(System.ServiceProcess.ServiceController)">
+            <summary>
+            Continues the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and
+            <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.
+            </summary>
+            <param name="serviceController"><see cref="T:System.ServiceProcess.ServiceController"/> instance for controlling the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.</param>
+        </member>
+        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask._serviceName">
+            <summary>
+            Holds the name of the service that should be controlled.
+            </summary>
+        </member>
+        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask._machineName">
+            <summary>
+            Holds the name of the computer on which the service resides.
+            </summary>
+        </member>
+        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask._action">
+            <summary>
+            Holds the action that should be performed on the service.
+            </summary>
+        </member>
+        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask._timeout">
+            <summary>
+            Holds the time, in milliseconds, the task will wait for a service
+            to reach the desired status.
+            </summary>
+        </member>
+        <member name="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName">
+            <summary>
+            The name of the service that should be controlled.
+            </summary>
+        </member>
+        <member name="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName">
+            <summary>
+            The name of the computer on which the service resides. The default
+            is the local computer.
+            </summary>
+        </member>
+        <member name="P:NAnt.MSNet.Tasks.ServiceControllerTask.Action">
+            <summary>
+            The action that should be performed on the service.
+            </summary>
+        </member>
+        <member name="P:NAnt.MSNet.Tasks.ServiceControllerTask.Timeout">
+            <summary>
+            The time, in milliseconds, the task will wait for the service to
+            reach the desired status. The default is 5000 milliseconds.
+            </summary>
+        </member>
+        <member name="T:NAnt.MSNet.Tasks.ServiceControllerTask.ActionType">
+            <summary>
+            Defines the actions that can be performed on a service.
+            </summary>
+        </member>
+        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask.ActionType.Start">
+            <summary>
+            Starts a service.
+            </summary>
+        </member>
+        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask.ActionType.Stop">
+            <summary>
+            Stops a service.
+            </summary>
+        </member>
+        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask.ActionType.Restart">
+            <summary>
+            Restarts a service.
+            </summary>
+        </member>
+        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask.ActionType.Pause">
+            <summary>
+            Pauses a running service.
+            </summary>
+        </member>
+        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask.ActionType.Continue">
+            <summary>
+            Continues a paused service.
+            </summary>
+        </member>
         <member name="T:NAnt.MSNet.Tasks.IldasmTask">
             <summary>
             Disassembles any portable executable (PE) file that contains
@@ -424,156 +574,6 @@
             A <see cref="T:System.String"/> that contains the command-line
             arguments for the external program.
             </value>
-        </member>
-        <member name="T:NAnt.MSNet.Tasks.ServiceControllerTask">
-            <summary>
-            Allows a Windows service to be controlled.
-            </summary>
-            <example>
-              <para>Starts the World Wide Web Publishing Service on the local computer.</para>
-              <code>
-                <![CDATA[
-            <servicecontroller action="Start" service="w3svc" />
-                ]]>
-              </code>
-            </example>
-            <example>
-              <para>Stops the Alerter service on computer 'MOTHER'.</para>
-              <code>
-                <![CDATA[
-            <servicecontroller action="Stop" service="Alerter" machine="MOTHER" />
-                ]]>
-              </code>
-            </example>
-        </member>
-        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:NAnt.MSNet.Tasks.ServiceControllerTask"/>
-            class.
-            </summary>
-        </member>
-        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.ExecuteTask">
-            <summary>
-            Peforms actions on the service in order to reach the desired status.
-            </summary>
-        </member>
-        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.DetermineDesiredStatus">
-            <summary>
-            Determines the desired status of the service based on the action
-            that should be performed on it.
-            </summary>
-            <returns>
-            The <see cref="T:System.ServiceProcess.ServiceControllerStatus"/> that should be reached
-            in order for the <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.Action"/> to be considered successful.
-            </returns>
-        </member>
-        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.StartService(System.ServiceProcess.ServiceController)">
-            <summary>
-            Starts the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and
-            <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.
-            </summary>
-            <param name="serviceController"><see cref="T:System.ServiceProcess.ServiceController"/> instance for controlling the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.</param>
-        </member>
-        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.StopService(System.ServiceProcess.ServiceController)">
-            <summary>
-            Stops the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and
-            <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.
-            </summary>
-            <param name="serviceController"><see cref="T:System.ServiceProcess.ServiceController"/> instance for controlling the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.</param>
-        </member>
-        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.RestartService(System.ServiceProcess.ServiceController)">
-            <summary>
-            Restarts the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and
-            <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.
-            </summary>
-            <param name="serviceController"><see cref="T:System.ServiceProcess.ServiceController"/> instance for controlling the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.</param>
-        </member>
-        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.PauseService(System.ServiceProcess.ServiceController)">
-            <summary>
-            Pauses the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and
-            <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.
-            </summary>
-            <param name="serviceController"><see cref="T:System.ServiceProcess.ServiceController"/> instance for controlling the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.</param>
-        </member>
-        <member name="M:NAnt.MSNet.Tasks.ServiceControllerTask.ContinueService(System.ServiceProcess.ServiceController)">
-            <summary>
-            Continues the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and
-            <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.
-            </summary>
-            <param name="serviceController"><see cref="T:System.ServiceProcess.ServiceController"/> instance for controlling the service identified by <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName"/> and <see cref="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName"/>.</param>
-        </member>
-        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask._serviceName">
-            <summary>
-            Holds the name of the service that should be controlled.
-            </summary>
-        </member>
-        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask._machineName">
-            <summary>
-            Holds the name of the computer on which the service resides.
-            </summary>
-        </member>
-        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask._action">
-            <summary>
-            Holds the action that should be performed on the service.
-            </summary>
-        </member>
-        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask._timeout">
-            <summary>
-            Holds the time, in milliseconds, the task will wait for a service
-            to reach the desired status.
-            </summary>
-        </member>
-        <member name="P:NAnt.MSNet.Tasks.ServiceControllerTask.ServiceName">
-            <summary>
-            The name of the service that should be controlled.
-            </summary>
-        </member>
-        <member name="P:NAnt.MSNet.Tasks.ServiceControllerTask.MachineName">
-            <summary>
-            The name of the computer on which the service resides. The default
-            is the local computer.
-            </summary>
-        </member>
-        <member name="P:NAnt.MSNet.Tasks.ServiceControllerTask.Action">
-            <summary>
-            The action that should be performed on the service.
-            </summary>
-        </member>
-        <member name="P:NAnt.MSNet.Tasks.ServiceControllerTask.Timeout">
-            <summary>
-            The time, in milliseconds, the task will wait for the service to
-            reach the desired status. The default is 5000 milliseconds.
-            </summary>
-        </member>
-        <member name="T:NAnt.MSNet.Tasks.ServiceControllerTask.ActionType">
-            <summary>
-            Defines the actions that can be performed on a service.
-            </summary>
-        </member>
-        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask.ActionType.Start">
-            <summary>
-            Starts a service.
-            </summary>
-        </member>
-        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask.ActionType.Stop">
-            <summary>
-            Stops a service.
-            </summary>
-        </member>
-        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask.ActionType.Restart">
-            <summary>
-            Restarts a service.
-            </summary>
-        </member>
-        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask.ActionType.Pause">
-            <summary>
-            Pauses a running service.
-            </summary>
-        </member>
-        <member name="F:NAnt.MSNet.Tasks.ServiceControllerTask.ActionType.Continue">
-            <summary>
-            Continues a paused service.
-            </summary>
         </member>
     </members>
 </doc>
