@@ -13,7 +13,7 @@ It also bundles convenient  tools to enable the configuration of Windows servers
 
 # Status
 
-PowerUp is already being regularly used internally by Affinity ID to release projects through to production.  
+PowerUp is regularly used by Affinity ID, BBC Worldwide and Universal Music to release projects through to production.  
 This includes file deployment, website creation (with SSL), App Fabric, Windows Service, scheduled tasks, MSMQ, Amazon Web Services, database migrations, fonts and Umbraco Courier revision publications.  
 
 The basic framework should now be fairly stable.
