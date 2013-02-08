@@ -302,11 +302,23 @@ function new-webapplication($websiteName, $appPoolName, $subPath, $physicalPath)
 	New-Item $sitesPath\$websiteName\$subPath -physicalPath $physicalPath -applicationPool $appPoolName -type Application 
 }
 
+function Stop-AppPool($appPoolName)
+{
+	write-host "Stopping app pool $appPoolName"
+	StopAppPool($appPoolName)	
+}
+
 function Stop-AppPoolAndSite($appPoolName, $siteName)
 {
 	write-host "Stopping app pool $appPoolName and site $siteName"
 	StopAppPool($appPoolName)
 	StopSite($siteName)
+}
+
+function Start-AppPool($appPoolNamee)
+{
+	write-host "Starting app pool $appPoolName"
+	StartSite($siteName)
 }
 
 function Start-AppPoolAndSite($appPoolName, $siteName)
@@ -347,6 +359,11 @@ function set-property($applicationPath, $propertyName, $value)
 	Set-ItemProperty $sitesPath\$applicationPath -name $propertyName -value $value
 }
 
+function set-webproperty($websiteName, $propertyPath, $property, $value)
+{
+	Set-WebConfigurationProperty -filter $propertyPath -name $property -value $value -location $websiteName
+}
+
 function Begin-WebChangeTransaction()
 {
 	return Begin-WebCommitDelay
@@ -357,4 +374,4 @@ function End-WebChangeTransaction()
 	return End-WebCommitDelay
 }
 
-export-modulemember -function set-webapppool32bitcompatibility, set-apppoolidentitytouser, set-apppoolidentityType, set-apppoolstartMode, new-webapplication, new-virtualdirectory, start-apppoolandsite, start-apppool, start-site, stop-apppoolandsite, set-website, uninstall-website, set-webapppool, uninstall-webapppool,set-websitebinding, New-WebSiteBinding, New-WebSiteBindingNonHttp, set-SelfSignedSslCertificate, set-sslbinding, Set-WebsiteForSsl, set-property, Begin-WebChangeTransaction, End-WebChangeTransaction
+export-modulemember -function set-webapppool32bitcompatibility, set-apppoolidentitytouser, set-apppoolidentityType, set-apppoolstartMode, new-webapplication, new-virtualdirectory, start-apppoolandsite, start-apppool, start-site, stop-apppool, stop-apppoolandsite, set-website, uninstall-website, set-webapppool, uninstall-webapppool,set-websitebinding, New-WebSiteBinding, New-WebSiteBindingNonHttp, set-SelfSignedSslCertificate, set-sslbinding, Set-WebsiteForSsl, set-property, set-webproperty, Begin-WebChangeTransaction, End-WebChangeTransaction

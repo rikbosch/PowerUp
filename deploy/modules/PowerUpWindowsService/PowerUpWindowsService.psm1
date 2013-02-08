@@ -25,9 +25,33 @@ function Set-ServiceCredentials
 	}
 	else
 	{
-		Write-Output "Could not find service '$Name' for which to change credentials"
+		throw "Could not find service '$Name' for which to change credentials"
 	}
 }
+
+function Set-ServiceStartMode
+{
+    param
+    (
+        [string] $Name = $(throw 'Must provide a service name'),
+        [string] $Mode = $(throw 'Must provide a new start mode')
+    ) 
+        
+    $service = gwmi win32_service -filter "name='$Name'"
+	if ($service -ne $null)
+	{
+        $params = $service.psbase.getMethodParameters("Change");
+        $params["StartMode"] = $Mode
+        $service.invokeMethod("Change", $params, $null)
+
+		Write-Output "Start mode change to '$Mode' for service '$Name'"
+	}
+	else
+	{
+		throw "Could not find service '$Name' for which to change start mode"
+	}
+}
+
 
 function Set-ServiceFailureOptions
 {
@@ -49,6 +73,18 @@ function Set-ServiceFailureOptions
 	& sc.exe failure $Name reset= $ResetSeconds actions= $Actions
 }
 
+function Get-SpecificService
+{
+	param
+    (
+        [string] $Name = $(throw 'Must provide a service name')
+    )
+	
+	return Get-Service | Where-Object {$_.Name -eq $Name}
+}
+	
+	
+	
 function Stop-MaybeNonExistingService
 {
 	param
