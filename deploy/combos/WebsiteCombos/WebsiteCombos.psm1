@@ -138,6 +138,8 @@ function Invoke-Combo-StandardWebsite($options)
 	{
 		foreach($virtualdirectory in $options.virtualdirectories)
 		{
+			write-host "Deploying virtual directory $($virtualdirectory.directoryname) to $($options.websitename)."
+			
 			if (!$virtualdirectory.fulldestinationpath) {
 				$virtualdirectory.fulldestinationpath = "$($options.webroot)\$($virtualdirectory.destinationfolder)"
 			}
@@ -154,6 +156,12 @@ function Invoke-Combo-StandardWebsite($options)
 				new-webapplication $options.websitename $options.apppool.name $virtualdirectory.directoryname $virtualdirectory.fulldestinationpath
 			} else {
 				new-virtualdirectory $options.websitename $virtualdirectory.directoryname $virtualdirectory.fulldestinationpath
+			}
+			
+			if ($virtualdirectory.useapppool)
+			{
+				write-host "Switching virtual directory $($options.websitename)/$($virtualdirectory.directoryname) to use app pool identity for anonymous authentication."
+				set-webproperty "$($options.websitename)/$($virtualdirectory.directoryname)" "/system.WebServer/security/authentication/AnonymousAuthentication" "username" ""
 			}
 		}
 	}

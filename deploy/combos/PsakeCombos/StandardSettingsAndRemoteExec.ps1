@@ -21,7 +21,7 @@ function getPlainTextSettings($parameter, $fileName)
 	{
 		return @()
 	}
-
+	Write-Host "Processing settings file at $fullFilePath with the following parameter: $parameter"
 	get-parsedsettings $fullFilePath $parameter
 }
 
