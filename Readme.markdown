@@ -13,7 +13,7 @@ It also bundles convenient  tools to enable the configuration of Windows servers
 
 # Status
 
-PowerUp is regularly used by Affinity ID, BBC Worldwide and Universal Music to release projects through to production.  
+PowerUp is regularly used by Wynyard Group, Affinity ID, BBC Worldwide and Universal Music to release projects through to production. Andrew, the main contributor currently works for Wynyard Group.
 This includes file deployment, website creation (with SSL), IIS managment, windows features, App Fabric, Windows Services, scheduled tasks, MSMQ, Amazon Web Services, database migrations, fonts and Umbraco Courier revision publications.  
 
 The basic framework should now be fairly stable.
