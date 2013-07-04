@@ -25,9 +25,6 @@ Different deployment cmdlets are being actively developed all the time. Coming u
 Other aspects that may make an appearance in the future are:  
 - Alternative setting formats (eg YML)  
 
-Follow @powerupdeploy on Twitter to keep up to date with progress.
-Also, I will be posting a series a blog entries at http://llevera.wordpress.com/2011/09/04/building-powerup-the-exclusive-behind-the-scenes-making-of-mini-series/ which will detail the design and use of PowerUp.
-
 # Disclaimer of Background Influences
 
 PowerUp is influenced by a number of existing tools, including proprietary ones.
