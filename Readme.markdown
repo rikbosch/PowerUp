@@ -22,9 +22,6 @@ Different deployment cmdlets are being actively developed all the time. Coming u
 - "Side by side" no-downtime website deployments, in the style of capistrano 
 - InstallShield integration
 
-Other aspects that may make an appearance in the future are:  
-- Alternative setting formats (eg YML)  
-
 # Disclaimer of Background Influences
 
 PowerUp is influenced by a number of existing tools, including proprietary ones.
