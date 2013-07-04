@@ -27,20 +27,6 @@ Other aspects that may make an appearance in the future are:
 Follow @powerupdeploy on Twitter to keep up to date with progress.
 Also, I will be posting a series a blog entries at http://llevera.wordpress.com/2011/09/04/building-powerup-the-exclusive-behind-the-scenes-making-of-mini-series/ which will detail the design and use of PowerUp.
 
-# QuickStart
-
-This quick start will work on any Windows installation with Powershell and IIS 7+ installed.
-It demonstrates the build and automated deployment of a simple Asp.Net web application. The best way to understand PowerUp is to run it and trace through what is happening. 
-
-To run, do the following:  
-
-- Git clone or download to any local directory
-- Install the IIS Powershell snapin http://learn.iis.net/page.aspx/429/installing-the-iis-70-powershell-snap-in/
-- Run build_package_nant_deploy_local.bat to deploy a typical website to localhost
-- Browse to http://localhost:9000 
-
-This quickstart can be found in more detail here: http://llevera.wordpress.com/2011/10/01/powerup-quickstart/
-
 # Disclaimer of Background Influences
 
 PowerUp is influenced by a number of existing tools, including proprietary ones.
