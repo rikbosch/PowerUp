@@ -14,15 +14,16 @@ It also bundles convenient  tools to enable the configuration of Windows servers
 # Status
 
 PowerUp is regularly used by Affinity ID, BBC Worldwide and Universal Music to release projects through to production.  
-This includes file deployment, website creation (with SSL), App Fabric, Windows Service, scheduled tasks, MSMQ, Amazon Web Services, database migrations, fonts and Umbraco Courier revision publications.  
+This includes file deployment, website creation (with SSL), IIS managment, windows features, App Fabric, Windows Services, scheduled tasks, MSMQ, Amazon Web Services, database migrations, fonts and Umbraco Courier revision publications.  
 
 The basic framework should now be fairly stable.
 Different deployment cmdlets are being actively developed all the time. Coming up are:  
 - Database admin, such as backing up/restoring  
-- "Rolling" no-downtime website deployments, in the style of capistrano 
+- "Side by side" no-downtime website deployments, in the style of capistrano 
+- InstallShield integration
 
 Other aspects that may make an appearance in the future are:  
-- Alertnative setting formats (eg YML)  
+- Alernative setting formats (eg YML)  
 
 Follow @powerupdeploy on Twitter to keep up to date with progress.
 Also, I will be posting a series a blog entries at http://llevera.wordpress.com/2011/09/04/building-powerup-the-exclusive-behind-the-scenes-making-of-mini-series/ which will detail the design and use of PowerUp.
