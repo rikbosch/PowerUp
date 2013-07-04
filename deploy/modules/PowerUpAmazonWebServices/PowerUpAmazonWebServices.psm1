@@ -15,7 +15,7 @@ function install-CloudBerry {
 	{
 		if ((Get-Module -ListAvailable | ForEach-Object {$_.Name}) -contains $ModuleName)
 		{
-			Import-Module $ModuleName
+			Import-Module -disablenamechecking $ModuleName
 			if ((Get-Module | ForEach-Object {$_.Name}) -contains $ModuleName)
 			{
 				$ModuleLoaded = $true
@@ -57,15 +57,7 @@ function install-CloudBerry {
 }
 
 function sync-folderswiths3($secret, $key, $rootlocalFolderPath, $folders, $bucketPath, $bucketRootFolder = "") {
-	#import-module powerupfilesystem
-	
-	#$logFilePath = [System.IO.Path]::GetTempFileName()	
-	#Write-Host "Logging to $logFilePath"	
-	#Set-Logging –LogPath $logFilePath -LogLevel info
 	SyncFoldersWithS3 $secret $key $rootlocalFolderPath $folders $bucketPath $bucketRootFolder
-	#Write-Host "Log for activity ($logFilePath):"
-	#Write-FileToConsole $logFilePath		
-	#Remove-Item $logFilePath -force
 }
 
 
@@ -135,7 +127,7 @@ function SyncFoldersWithS3($secret, $key, $rootlocalFolderPath, $folders, $bucke
 
 function copy-localfilestos3($accessKey, $secret, $bucket, $setPublicRead, $folder, $recurse)
 {	
-	import-module AffinityId\Id.PowershellExtensions.dll
+	import-module -disablenamechecking AffinityId\Id.PowershellExtensions.dll
 
 	if (!(test-path $folder))
 	{

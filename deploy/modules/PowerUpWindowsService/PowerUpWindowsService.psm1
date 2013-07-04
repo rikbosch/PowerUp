@@ -70,7 +70,7 @@ function Set-ServiceFailureOptions
 		
 	write-host "Setting service failure options for service $Name to reset after $ResetDays days, and $Action after $DelayMinutes minutes"
 	
-	& sc.exe failure $Name reset= $ResetSeconds actions= $Actions
+	$output = & sc.exe failure $Name reset= $ResetSeconds actions= $Actions
 }
 
 function Get-SpecificService
@@ -144,7 +144,7 @@ function Uninstall-Service
 		Write-Host "Uninstalling $Name"
 
 		try{
-			& "$PSScriptRoot\InstallUtil.exe" $service.pathname /u /LogToConsole=true
+			$output = & "$PSScriptRoot\InstallUtil.exe" $service.pathname /u /LogToConsole=true
 		}
 		catch{
 			throw "Could not uninstall $Name Service"

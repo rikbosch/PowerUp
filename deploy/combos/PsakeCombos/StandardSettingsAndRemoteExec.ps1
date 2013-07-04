@@ -27,15 +27,22 @@ function getPlainTextSettings($parameter, $fileName)
 
 function run($task, $servers, $remoteWorkingSubFolder = $null)
 {
-	import-module powerupremote	
-	$currentPath = Get-Location
-	
-	if ($remoteWorkingSubFolder -eq $null)
+	if(!$servers)
 	{
-		$remoteWorkingSubFolder = ${package.name}
+		invoke-task $task
 	}
-	
-	invoke-remotetasks $task $servers ${deployment.profile} $remoteWorkingSubFolder $serverSettingsScriptBlock
+	else
+	{
+		import-module powerupremote	
+		$currentPath = Get-Location
+		
+		if ($remoteWorkingSubFolder -eq $null)
+		{
+			$remoteWorkingSubFolder = ${package.name}
+		}
+		
+		invoke-remotetasks $task $servers ${deployment.profile} $remoteWorkingSubFolder $serverSettingsScriptBlock
+	}
 }
 
 

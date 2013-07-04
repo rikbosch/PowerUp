@@ -2,6 +2,7 @@
 <project>
 	<property name="build.configuration" value="Release" unless="${property::exists('build.configuration')}" />
 	<property name="build.platform" value="Any CPU" unless="${property::exists('build.platform')}" />
+	<property name="build.out.dir" value="" unless="${property::exists('build.out.dir')}" />
 	<property name="build.number" value="Manual" unless="${property::exists('build.number')}" />
 	<tstamp property="build.date" pattern="yyyyMMdd-HHmm" verbose="true" />
 	<property name="build.verbosity" value="Normal" unless="${property::exists('build.verbosity')}"  />
@@ -29,16 +30,28 @@
 		<msbuild project="${solution.dir}\${solution.name}.${solution.extension}" verbosity="${build.verbosity}">
 			<arg value="/property:Configuration=${build.configuration}" />
 			<arg value="/property:Platform=${build.platform}" />
+			<arg value="/property:OutDir=${build.out.dir}" />
 			<arg value="/target:Rebuild" />
 		</msbuild>
 	</target>
 
+	<target name="compile-solution-silverlight">
+		<exec program="C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe">
+    		<arg line='"${solution.dir}\${solution.name}.${solution.extension}"' />
+    		<arg line="/property:Configuration=${build.configuration}" />
+    		<arg line="/property:OutDir=${build.out.dir}" />
+    		<arg value="/target:Rebuild" />
+    		<arg value="/verbosity:normal" />
+    		<arg value="/nologo" />
+    	</exec>
+	</target>
+	
 	<target name="copy-build-files">
 		<copy todir="${package.dir}" overwrite="true" flatten="false" includeemptydirs="true">
 			<fileset basedir="${root.dir}">
 		<include name="_powerup\deploy\**"/>
 				<include name="_profilefiles\**"/>
-				<include name="_Templates\**"/>
+				<include name="_templates\**"/>
 				<include name="deploy.ps1"/>
 				<include name="settings.txt"/>
 				<include name="servers.txt"/>

@@ -1,9 +1,32 @@
 function Invoke-Combo-StandardWebsite($options)
 {
-	import-module powerupfilesystem
-	import-module powerupweb
-	import-module powerupappfabric\ApplicationServer
+	import-module -disablenamechecking powerupfilesystem
+	import-module -disablenamechecking powerupweb
 		
+	# set up all the default options based on conventions - no actions yet taken
+	ConfigureBasicDefaultOptions $options
+	ConfigureApppoolDefaultOptions $options
+	ConfigureBindingDefaultOptions $options
+			
+	if($options.stopwebsitefirst)
+	{
+		stop-apppoolandsite $options.websiteapppool.name $options.websitename
+	}
+	
+	SetupAppPools $options
+	SetupWebsite $options
+	SetupBindings $options
+	SetupVirtualDirectories $options
+	SetupAppFabricApplications $options
+	
+	if($options.startwebsiteafter)
+	{
+		start-apppoolandsite $options.websiteapppool.name $options.websitename
+	}
+}
+
+function ConfigureBasicDefaultOptions($options)
+{
 	if(!$options.stopwebsitefirst)
 	{
 		$options.stopwebsitefirst = $true
@@ -38,26 +61,66 @@ function Invoke-Combo-StandardWebsite($options)
 	{
 		$options.fullsourcepath = "$(get-location)\$($options.sourcefolder)"
 	}
-	
-	if (!$options.apppool)
+}
+
+function ConfigureApppoolDefaultOptions($options)
+{
+	if (!$options.apppools)
 	{
-		$options.apppool = @{}
+
+		if($options.apppool)
+		{
+			$firstapppool = $options.apppool
+		}
+		else
+		{
+			$firstapppool = @{}
+		}
+		$options.apppools = @($firstapppool)
 	}
+	
+	
+	foreach($apppool in $options.apppools)
+	{
+		if (!$apppool.executionmode)
+		{
+			$apppool.executionmode = "Integrated"
+		}
 		
-	if (!$options.apppool.executionmode)
-	{
-		$options.apppool.executionmode = "Integrated"
+		if(!$apppool.username)
+		{
+			$apppool.username = $apppool.identity
+		}
+		
+		if (!$appool.dotnetversion)
+		{
+			$apppool.dotnetversion = "v4.0"
+		}
+		if (!$apppool.name)
+		{
+			$apppool.name = $options.websitename
+		}
 	}
 	
-	if (!$options.apppool.dotnetversion)
+	if($options.websiteapppoolname)
 	{
-		$options.apppool.dotnetversion = "v4.0"
+		foreach($appool in $options.apppools)
+		{
+			if($options.websiteapppoolname -eq $apppool.name)
+			{
+				$options.websiteapppool = $appool
+			}
+		}
 	}
 	
-	if (!$options.apppool.name)
+	if(!$options.websiteapppool)
 	{
-		$options.apppool.name = $options.websitename
+		$options.websiteapppool = $options.apppools[0]
 	}
+}
+
+function ConfigureBindingDefaultOptions($options)
+{
 	if (!$options.bindings)
 	{
 		$options.bindings = @(@{})
@@ -77,7 +140,14 @@ function Invoke-Combo-StandardWebsite($options)
 		
 		if (!$binding.port)
 		{
-			$binding.port = 80
+			if($binding.protocol -eq "https")
+			{
+				$binding.port = 443
+			}
+			else
+			{
+				$binding.port = 80
+			}
 		}
 		
 		if (!$binding.useselfsignedcert)
@@ -90,38 +160,81 @@ function Invoke-Combo-StandardWebsite($options)
 			$binding.certname = $options.websitename
 		}
 	}
-	
-	
-		
-	if($options.stopwebsitefirst)
-	{
-		stop-apppoolandsite $options.apppool.name $options.websitename
-	}
-	
-	if($options.copywithoutmirror)
-	{
-		copy-directory $options.fullsourcepath $options.fulldestinationpath
-	}
-	else
-	{
-		copy-mirroreddirectory $options.fullsourcepath $options.fulldestinationpath
-	}
+}
 
-	set-webapppool $options.apppool.name $options.apppool.executionmode $options.apppool.dotnetversion
-	
-	if ($options.apppool.username)
+function SetupAppPools($options)
+{
+	foreach($apppool in $options.apppools)
 	{
-		set-apppoolidentitytouser $options.apppool.name $options.apppool.username $options.apppool.password
-	}
 	
-	if ($options.apppool.identity -eq "NT AUTHORITY\NETWORK SERVICE")
+		set-webapppool $apppool.name $apppool.executionmode $apppool.dotnetversion $apppool.preserveexisting
+		
+		if ($apppool.username -eq "NT AUTHORITY\NETWORK SERVICE")
+		{
+			set-apppoolidentityType $apppool.name 2 #2 = NetworkService
+		}
+		elseif ($apppool.username)
+		{
+			set-apppoolidentitytouser $apppool.name $apppool.username $apppool.password
+		}
+	}
+}
+
+function SetupVirtualDirectories($options)
+{
+	if($options.virtualdirectories)
 	{
-		set-apppoolidentityType $options.apppool.name 2 #2 = NetworkService
+		foreach($virtualdirectory in $options.virtualdirectories)
+		{
+			write-host "Deploying virtual directory $($virtualdirectory.directoryname) to $($options.websitename)."
+			
+			if (!$virtualdirectory.fulldestinationpath) {
+			
+				if(!$virtualdirectory.destinationfolder) {
+					$virtualdirectory.destinationfolder = $virtualdirectory.sourcefolder
+				}
+					
+				$virtualdirectory.fulldestinationpath = "$($options.webroot)\$($virtualdirectory.destinationfolder)"
+			}
+			
+			if (!$virtualdirectory.apppoolname) {
+				$virtualdirectory.apppoolname = $options.websiteapppool.name
+			}
+			
+			if ($virtualdirectory.fullsourcepath -or $virtualdirectory.sourcefolder)
+			{		
+				if (!$virtualdirectory.fullsourcepath) {
+					$virtualdirectory.fullsourcepath = "$(get-location)\$($virtualdirectory.sourcefolder)"
+				}
+				
+				if($virtualdirectory.copywithoutmirror)
+				{
+					copy-directory $virtualdirectory.fullsourcepath $virtualdirectory.fulldestinationpath
+				}
+				else
+				{
+					copy-mirroreddirectory $virtualdirectory.fullsourcepath $virtualdirectory.fulldestinationpath
+				}			
+			}
+			
+			if ($virtualdirectory.isapplication) {
+				set-webapplication $options.websitename $virtualdirectory.apppoolname $virtualdirectory.directoryname $virtualdirectory.fulldestinationpath
+			} else {
+				set-virtualdirectory $options.websitename $virtualdirectory.directoryname $virtualdirectory.fulldestinationpath
+			}
+			
+			if ($virtualdirectory.useapppool)
+			{
+				write-host "Switching virtual directory $($options.websitename)/$($virtualdirectory.directoryname) to use app pool identity for anonymous authentication."
+				set-webproperty "$($options.websitename)/$($virtualdirectory.directoryname)" "/system.WebServer/security/authentication/AnonymousAuthentication" "username" ""
+			}
+		}
 	}
-	
-	$firstBinding = $options.bindings[0]
-	set-website $options.websitename $options.apppool.name $options.fulldestinationpath $firstBinding.url $firstBinding.protocol $firstBinding.ip $firstBinding.port 
-	
+}
+
+
+function SetupBindings($options)
+{
 	foreach($binding in $options.bindings)
 	{
 		if($binding.protocol -eq "https")
@@ -133,52 +246,37 @@ function Invoke-Combo-StandardWebsite($options)
 			set-websitebinding $options.websitename $binding.url $binding.protocol $binding.ip $binding.port
 		}
 	}
-	
-	if($options.virtualdirectories)
+}
+
+function SetupWebsite($options)
+{
+	if($options.copywithoutmirror)
 	{
-		foreach($virtualdirectory in $options.virtualdirectories)
-		{
-			write-host "Deploying virtual directory $($virtualdirectory.directoryname) to $($options.websitename)."
-			
-			if (!$virtualdirectory.fulldestinationpath) {
-				$virtualdirectory.fulldestinationpath = "$($options.webroot)\$($virtualdirectory.destinationfolder)"
-			}
-			
-			if ($virtualdirectory.fullsourcepath -or $virtualdirectory.sourcefolder)
-			{
-				if (!$virtualdirectory.fullsourcepath) {
-					$virtualdirectory.fullsourcepath = "$(get-location)\$($virtualdirectory.sourcefolder)"
-				}
-				copy-mirroreddirectory $virtualdirectory.fullsourcepath $virtualdirectory.fulldestinationpath
-			}
-			
-			if ($virtualdirectory.isapplication) {
-				new-webapplication $options.websitename $options.apppool.name $virtualdirectory.directoryname $virtualdirectory.fulldestinationpath
-			} else {
-				new-virtualdirectory $options.websitename $virtualdirectory.directoryname $virtualdirectory.fulldestinationpath
-			}
-			
-			if ($virtualdirectory.useapppool)
-			{
-				write-host "Switching virtual directory $($options.websitename)/$($virtualdirectory.directoryname) to use app pool identity for anonymous authentication."
-				set-webproperty "$($options.websitename)/$($virtualdirectory.directoryname)" "/system.WebServer/security/authentication/AnonymousAuthentication" "username" ""
-			}
-		}
+		copy-directory $options.fullsourcepath $options.fulldestinationpath
 	}
+	else
+	{
+		copy-mirroreddirectory $options.fullsourcepath $options.fulldestinationpath
+	}
+
+	$firstBinding = $options.bindings[0]
 	
+	set-website $options.websitename $options.websiteapppool.name $options.fulldestinationpath $firstBinding.url $firstBinding.protocol $firstBinding.ip $firstBinding.port $options.preserveexistingwebsite
+}
+
+function SetupAppFabricApplications($options)
+{
+	import-module -disablenamechecking powerupappfabric\ApplicationServer
+
 	if($options.appfabricapplications)
 	{
 		foreach($application in $options.appfabricapplications)
 		{
-			new-webapplication $options.websitename $options.apppool.name $application.virtualdirectory "$($options.fulldestinationpath)\$($application.virtualdirectory)" 
+			new-webapplication $options.websitename $options.websiteapppool.name $application.virtualdirectory "$($options.fulldestinationpath)\$($application.virtualdirectory)" 
 			Set-ASApplication -SiteName $options.websitename -VirtualPath $application.virtualdirectory -AutoStartMode All -EnableApplicationPool -Force
 			set-apppoolstartMode $options.websitename 1
 		}
 	}
-
-	if($options.startwebsiteafter)
-	{
-		start-apppoolandsite $options.apppool.name $options.websitename
-	}
-
 }
+
+

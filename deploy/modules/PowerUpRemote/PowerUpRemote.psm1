@@ -13,7 +13,7 @@ function invoke-remotetasks($tasks, $serverNames, $deploymentEnvironment, $packa
 			if ($server.ContainsKey('remote.task.execution.remoteexecutiontool'))
 			{
 				$remoteexecutiontool = $server['remote.task.execution.remoteexecutiontool'][0]
-				$remoteexecutiontool = 'psexec'
+				
 			}			
 		}
 				
@@ -81,7 +81,7 @@ function invoke-remotetaskwithremoting( $tasks, $server, $deploymentEnvironment,
 
 function copy-package($servers, $packageName)
 {		
-	import-module powerupfilesystem
+	import-module -disablenamechecking powerupfilesystem
 
 	foreach ($server in $servers)
 	{	

@@ -1,7 +1,7 @@
 function Invoke-Combo-StandardWindowsService($options)
 {
-	import-module powerupfilesystem
-	import-module powerupwindowsservice
+	import-module -disablenamechecking powerupfilesystem
+	import-module -disablenamechecking powerupwindowsservice
 				
 	if (!$options.destinationfolder)
 	{

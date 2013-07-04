@@ -1,5 +1,5 @@
 function Expand-Templates($settingsFile, $deploymentProfile, $templatePath, $outputPath) {
-	import-module AffinityId\Id.PowershellExtensions.dll
+	import-module -disablenamechecking AffinityId\Id.PowershellExtensions.dll
 	
 	Write-Output "Reading settings"
 	$settings = get-parsedsettings $settingsFile $deploymentProfile 
@@ -23,7 +23,7 @@ function Merge-ProfileSpecificFiles($deploymentProfile)
 
 function Merge-Templates($settings, $deploymentProfile)
 {
-	import-module AffinityId\Id.PowershellExtensions.dll
+	import-module -disablenamechecking  AffinityId\Id.PowershellExtensions.dll
 
 	$currentPath = Get-Location
 	

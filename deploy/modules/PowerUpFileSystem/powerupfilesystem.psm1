@@ -4,7 +4,7 @@ function Ensure-Directory([string]$directory)
 	if (!(Test-Path $directory -PathType Container))
 	{
 		Write-Host "Creating folder $directory"
-		New-Item $directory -type directory
+		New-Item $directory -type directory | out-null
 	}
 }
 
@@ -19,32 +19,64 @@ function ReplaceDirectory([string]$sourceDirectory, [string]$destinationDirector
 	Copy-Item $sourceDirectory\ -destination $destinationDirectory\ -container:$false -recurse -force
 }
 
-function RobocopyDirectory([string]$sourceDirectory, [string]$destinationDirectory)
+function copy-directory([string]$sourceDirectory, [string]$destinationDirectory, $onlyNewer)
 {
-	Write-Host "copying newer files from $sourceDirectory to $destinationDirectory"
-	& "$PSScriptRoot\robocopy.exe" /E /np /njh /nfl /ns /nc $sourceDirectory $destinationDirectory 
+	Write-Host "Copying newer files from $sourceDirectory to $destinationDirectory"
+		
+	if($onlyNewer)
+	{
+		$output = & "$PSScriptRoot\robocopy.exe" $sourceDirectory $destinationDirectory /E /np /njh /nfl /ns /nc /xo
+	}
+	else
+	{	
+		$output = & "$PSScriptRoot\robocopy.exe" $sourceDirectory $destinationDirectory /E /np /njh /nfl /ns /nc
+	}	
 	
 	if ($lastexitcode -lt 8)
 	{
-		Write-Host "Successfully copied to $destinationDirectory "
 		cmd /c #reset the lasterrorcode strangely set by robocopy to be non-0
-	}		
+	}
+	else
+	{
+		throw "Robocopy failed to mirror to $destinationDirectory. Exited with exit code $lastexitcode"
+	}	
 }
 
-function Copy-MirroredDirectory([string]$sourceDirectory, [string]$destinationDirectory)
+function Copy-MirroredDirectory([string]$sourceDirectory, [string]$destinationDirectory, $excludedPaths)
 {
 	Write-Host "Mirroring $sourceDirectory to $destinationDirectory"
-	& "$PSScriptRoot\robocopy.exe" /E /np /njh /nfl /ns /nc /mir $sourceDirectory $destinationDirectory 
+	
+	if($excludedPaths)
+	{
+		$dirs = $excludedPaths -join " "
+		$output = & "$PSScriptRoot\robocopy.exe" $sourceDirectory $destinationDirectory /E /np /njh /nfl /ns /nc /mir /XD $dirs  
+	}
+	else
+	{
+		$output = & "$PSScriptRoot\robocopy.exe" $sourceDirectory $destinationDirectory  /E /np /njh /nfl /ns /nc /mir 
+	}
 	
 	if ($lastexitcode -lt 8)
 	{
-		Write-Host "Successfully mirrored to $destinationDirectory "
 		cmd /c #reset the lasterrorcode strangely set by robocopy to be non-0
 	}
 	else
 	{
 		throw "Robocopy failed to mirror to $destinationDirectory. Exited with exit code $lastexitcode"
 	}
+}
+
+function New-Shortcut ( [string]$targetPath, [string]$fullShortcutPath ){
+	Write-Host "Creating shortcut $fullShortcutPath targetting path $targetPath"
+	
+	$WshShell = New-Object -comObject WScript.Shell
+	$Shortcut = $WshShell.CreateShortcut($fullShortcutPath)
+	$Shortcut.TargetPath = $targetPath
+	$Shortcut.Save()
+}
+
+function New-DesktopShortcut ( [string]$targetPath , [string]$shortcutName ){
+	New-Shortcut $targetPath "$env:USERPROFILE\Desktop\$shortcutName"
 }
 
 function Write-FileToConsole([string]$fileName)
@@ -68,6 +100,6 @@ function Write-FileToConsole([string]$fileName)
 	}
 }
 
-Set-Alias Copy-Directory RobocopyDirectory
+Set-Alias RobocopyDirectory Copy-Directory 
 
-Export-ModuleMember -function Write-FileToConsole, Ensure-Directory, Copy-MirroredDirectory, RobocopyDirectory -alias Copy-Directory
+Export-ModuleMember -function copy-directory, New-Shortcut, New-DesktopShortcut, Write-FileToConsole, Ensure-Directory, Copy-MirroredDirectory, Copy-Directory -alias  RobocopyDirectory 
