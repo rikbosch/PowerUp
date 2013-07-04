@@ -53,3 +53,9 @@ It does, however, build a package per environment which goes against the environ
 https://github.com/jhicks/pstrami
 
 Has an attractively closer similarity to capistrano in terms of the script syntax, but has less functionality overall.
+
+### Carbon
+
+http://get-carbon.org/
+
+A solid collection of cmdlets, some of which have been incorporated
